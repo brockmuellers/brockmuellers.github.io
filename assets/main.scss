@@ -1,0 +1,14 @@
+---
+---
+$content-width:    1000px !default
+$on-palm:          800px !default;
+$on-laptop:        1000px !default;
+
+@import "minima";
+
+.footer-col-1 { width: -webkit-calc(29% - (30px / 2)); width: calc(29% - (30px / 2)); }
+
+.footer-col-2 { width: -webkit-calc(21% - (30px / 2)); width: calc(21% - (30px / 2)); }
+
+.footer-col-3 { width: -webkit-calc(50% - (30px / 2)); width: calc(50% - (30px / 2)); }
+

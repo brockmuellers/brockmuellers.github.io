@@ -1,0 +1,112 @@
+{
+    "name": "Sara Brockmueller",
+    "website": "brockmuellers.com",
+    "email": "brockmuellers@gmail.com",
+    "github":"github.com/brockmuellers",
+    "summary":"Software engineer with 6+ years professional experience. Currently, most experienced with system design, building platforms/frameworks, and scaling systems (but I'm always excited to learn new things!). Looking to work on hard problems, collaborate with smart and passionate people, and build important products.",
+    "code-priorities":"Shipping features quickly and confidently via readable/maintainable code, solid unit tests, and generic libraries to increase developer velocity.",
+    "culture-priorities":"Respect, transparency, social responsibility, curiosity, and using failure for growth.",
+    "education":{
+        "school":"Massachusetts Institute of Technology",
+        "year":"2013",
+        "major":"B. S. Computer Science and Engineering",
+        "minor":"Music"
+    },
+    "skills":[
+        {
+            "name":"Languages/Frameworks",
+            "value":"Proficient in Java, Python, and gRPC. Significant experience in Ruby on Rails. Some prior experience in Django, Meteor, and MATLAB."
+        },
+        {
+            "name":"Databases",
+            "value":"DynamoDB, PostgreSQL, some experience in MongoDB."
+        },
+        {
+            "name":"Infrastructure",
+            "value":"Proficient with AWS services for compute (EC2, ECS, Batch, Lambda), storage (S3, DynamoDB), integration (SQS, SNS). Some experience with metrics/monitoring (Prometheus/Grafana, AWS CloudWatch), infrastructure as code (Terraform)."
+        },
+        {
+            "name":"Architecture",
+            "value":"Distributed and concurrent systems, MapReduce, cloud-based services, microservices (both REST APIs and RPC), database design."
+        }
+    ],
+    "experience":{
+        "jobs":[
+            {
+                "company":"3Scan",
+                "role":"Software Engineer",
+                "start":"Jan 2017",
+                "end":"Oct 2019",
+                "items":[
+                    {
+                        "description":"N-dimensional spatially-aware database system and server, which handled 3+ petabytes of data.",
+                        "subitems":[
+                            "Worked with team to build RPC-based data storage service and client, and the backing storage system on DynamoDB and S3. Assisted with design and implementation of spatial abstractions for data indexing, and associated matrix manipulation logic.",
+                            "Managed feature development and operations for the data storage system. Provided developer support, built Java CLI tools for common data operations, made cost/performance optimizations, and ran deployments. Led the data storage/access team, which wrote tools to facilitate data viewing and export.",
+                            "Created an efficient batch tool to run delete operations, ultimately saving over $20K per month in AWS bills."
+                        ]
+                    },
+                    {
+                        "description":"Distributed data analysis for multi-terabyte biological imagery data sets.",
+                        "subitems":[
+                            "Built Python prototype of distributed, event-driven data analysis system, Set up AWS infrastructure to run it (SQS, ECS, DynamoDB), dealt with AWS service limits, and onboarded analysis developers. Enabled analysis algorithms to be run on approx. $100x larger data sets.",
+                            "Assisted with design of a similar system in Java, reducing key algorithm runtimes from 3 days to 30 minutes."
+                        ]
+                    },
+                    {
+                        "description":"Shared libraries and code quality.",
+                        "subitems":[
+                            "Led development of core libraries: runtime assertions, serialization, and test libraries for imagery and internal data structures. Focused on ease of use, discoverability, predictability, and debuggability.",
+                            "Built tools for writing more robust AWS-based services and gRPC services. Improved concurrency in network calls, retry strategies, logging, metric collection, and error handling.",
+                            "Initiated development of code quality and reliability standards. Worked with team to develop style guides, identify ways to reduce technical debt, standardize logging, integrate static analysis tools, and improve test coverage and reliability. Mentored junior engineers during pair programming and code reviews."
+                        ]
+                    }
+                ]
+            },
+            {
+                "company":"LevelUp",
+                "role":"Software Engineer",
+                "start":"Jul 2013",
+                "end":"Jan 2017",
+                "items":[
+                    {
+                        "description":"Worked on the platform team to develop and maintain full-stack Ruby on Rails apps and RESTful API. These powered hundreds of mobile payments and loyalty apps in the food service industry, processing $20M from 600K users monthly. Improved scalability with async processing, caching, and moving to  service-oriented architecture."
+                    },
+                    {
+                        "description":"Collaborated with a small team to architect and build a web service to enable order fulfillment through external online ordering provider. This included menu modeling and updating, suggesting orders, and integrating with provider APIs to process orders."
+                    },
+                    {
+                        "description":"Created dashboard for a sandbox server, to extend functionality for external developers using our API."
+                    }
+                ]
+            },
+        ],
+        "internships":[
+            {
+                "company":"Infosys Labs",
+                "start":"Jun 2012",
+                "end":"Aug 2012",
+                "description":"Built web app for manual validation of semantic annotation databases."
+            },
+            {
+                "company":"South Dakota State University Bioinformatics Group",
+                "start":"Jun 2011",
+                "end":"Dec 2011",
+                "description":"Designed and implemented full-stack web app to visualize gene expression correlation networks, and collect gene expression data from users."
+            },
+                        {
+                "company":"MIT Center for Brain and Computational Learning",
+                "start":"Sep 2010",
+                "end":"Dec 2011",
+                "description":"Designed and performed psychophysics and EEG experiments on the role of neural feedback mechanisms in human visual processing. Wrote MATLAB scripts for synthesis of image masks, running experiments, and data analysis."
+            },
+                        {
+                "company":"Sanford Research/University of South Dakota",
+                "start":"Jun 2010",
+                "end":"Aug 2010",
+                "description":"Researched pancreatic cell proliferation in Type I diabetes, using cryoslicing, fluorescent staining, microscopy, and photo-editing software."
+            }
+        ]
+    },
+    "interests":"Hiking, cultivating plants/animals, sci-fi, making music, sewing, learning new skills and creating cool things."
+}

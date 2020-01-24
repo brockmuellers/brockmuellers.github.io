@@ -1,0 +1,156 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{forloop}
+\usepackage[empty]{fullpage}
+\usepackage[pdftex]{hyperref}
+\usepackage{luacode}
+\usepackage{titlesec} % For sections formatting bit
+
+% Lua to load json file containing resume data and print it
+\begin{luacode}
+function read(file)
+    local handler = io.open(file, "rb")
+    local content = handler:read("*all")
+    handler:close()
+    return content
+end
+json = require("json")
+filename = '../../_data/resume.json'
+resdata = json.decode(read(filename))
+\end{luacode}
+
+% Margin formatting
+\addtolength{\oddsidemargin}{-0.4in}
+\addtolength{\evensidemargin}{-0.4in}
+\addtolength{\textwidth}{0.8in} %?
+\addtolength{\topmargin}{-0.4in}
+\addtolength{\textheight}{0.4in}
+
+% Sections formatting
+\titleformat{\section}{
+    \vspace{0pt}\scshape\raggedright\large
+}{}{0em}{}[\titlerule \vspace{0pt}]
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\newcommand{\luaprint}[1]{\directlua{tex.print(#1)}}
+
+% Custom commands
+\newcommand{\resHeadStart}{}
+\newcommand{\resHead}[4]{
+    \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+        \textbf{#1} - {#2} & \textit{#3 - #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+\newcommand{\resHeadEnd}{\vspace{-7pt}}
+
+\newcommand{\resItemsStart}{\begin{itemize}}
+\newcommand{\resItem}[1]{\item{#1\vspace{-3pt}}}
+\newcommand{\resItemsEnd}{\end{itemize}\vspace{0pt}}
+
+\newcommand{\resSubItemsStart}{\begin{itemize}}
+\newcommand{\resSubItem}[1]{\item{#1\vspace{0pt}}}
+\newcommand{\resSubItemsEnd}{\end{itemize}\vspace{0pt}}
+
+\newcommand{\resInternshipItem}[4]{\item{\textbf{#1} {\textit{(#2 - #3)}} - #4\vspace{0pt}}}
+
+\newcommand{\resSkillItem}[2]{\par \hangindent=15pt \textbf{#1}: \linebreak {#2}}
+
+\begin{document}
+
+%----------HEADING-----------------
+\begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{\LARGE\luaprint{resdata["name"]}}
+    &
+    \href{http://\luaprint{resdata["website"]}/}
+    {\luaprint{resdata["website"]}}
+    \\
+    \href{mailto:\luaprint{resdata["email"]}}
+    {\luaprint{resdata["email"]}}
+    &
+    \href{https://\luaprint{resdata["github"]}/}
+    {\luaprint{resdata["github"]}}
+\end{tabular*}
+
+
+%-----------SUMMARY-----------------
+\section{Summary}
+\luaprint{resdata["summary"]}
+
+
+%-----------EDUCATION-----------------
+\section{Education}
+\begin{tabular*}{1\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{\luaprint{resdata["education"]["school"]}, \luaprint{resdata["education"]["year"]}}
+    & {\luaprint{resdata["education"]["major"]}}
+    \\
+    & minor in \luaprint{resdata["education"]["minor"]}
+\end{tabular*}
+
+
+%-----------SKILLS-----------------
+\section{Skills}
+\begin{luacode}
+for i,v in ipairs(resdata["skills"]) do
+    tex.sprint(string.format('\\resSkillItem{%s}{%s}', v["name"], v["value"]))
+end
+-- without this line, last skill value is not indented...why??
+tex.print('\\par')
+\end{luacode}
+
+
+%-----------EXPERIENCE-----------------
+\section{Experience}
+
+\begin{luacode}
+for i,job in ipairs(resdata["experience"]["jobs"]) do
+    tex.sprint('\\resHeadStart')
+
+    tex.sprint('\\resHead{')
+        -- the -2 here is cool! permits special chars in json
+        tex.sprint(-2, job["company"])
+        tex.sprint('}{')
+        tex.sprint(-2, job["role"])
+        tex.sprint('}{')
+        tex.sprint(-2, job["start"])
+        tex.sprint('}{')
+        tex.sprint(-2, job["end"])
+        tex.sprint('}')
+    tex.sprint('\\resHeadEnd')
+
+    tex.sprint('\\resItemsStart')
+    for i,item in ipairs(job["simple-items"]) do
+        tex.sprint('\\resItem{')
+        tex.sprint(-2, item)
+        tex.sprint('}')
+    end
+    tex.print('\\resItemsEnd')
+end
+\end{luacode}
+
+
+{\vspace{0pt}}\subsection*{Internships}{\vspace{0pt}}
+\resItemsStart
+\begin{luacode}
+    for i,item in ipairs(resdata["experience"]["internships"]) do
+        tex.sprint('\\resInternshipItem{')
+        tex.sprint(-2, item["company"])
+        tex.sprint('}{')
+        tex.sprint(-2, item["start"])
+        tex.sprint('}{')
+        tex.sprint(-2, item["end"])
+        tex.sprint('}{')
+        tex.sprint(-2, item["description"])
+        tex.sprint('}')
+    end
+\end{luacode}
+\resItemsEnd
+
+
+%-----------INTERESTS-----------------
+\section{Interests}
+\luaprint{resdata["interests"]}
+    
+    
+\end{document}

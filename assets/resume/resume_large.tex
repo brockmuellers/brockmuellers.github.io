@@ -20,11 +20,11 @@ resdata = json.decode(read(filename))
 \end{luacode}
 
 % Margin formatting
-\addtolength{\oddsidemargin}{-0.2in}
-\addtolength{\evensidemargin}{-0.2in}
-\addtolength{\textwidth}{0.4in} %?
-\addtolength{\topmargin}{-0.2in}
-\addtolength{\textheight}{0.2in}
+\addtolength{\oddsidemargin}{-0.4in}
+\addtolength{\evensidemargin}{-0.4in}
+\addtolength{\textwidth}{0.8in} %?
+\addtolength{\topmargin}{-0.4in}
+\addtolength{\textheight}{0.4in}
 
 % Sections formatting
 \titleformat{\section}{
@@ -39,9 +39,9 @@ resdata = json.decode(read(filename))
 % Custom commands
 \newcommand{\resHeadStart}{}
 \newcommand{\resHead}[4]{
-\begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
-\textbf{#1} - {#2} & \textit{#3 - #4} \\
-\end{tabular*}\vspace{-7pt}
+    \begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} - {#2} & \textit{#3 - #4} \\
+    \end{tabular*}\vspace{-7pt}
 }
 \newcommand{\resHeadEnd}{\vspace{-7pt}}
 
@@ -53,7 +53,7 @@ resdata = json.decode(read(filename))
 \newcommand{\resSubItem}[1]{\item{#1\vspace{0pt}}}
 \newcommand{\resSubItemsEnd}{\end{itemize}\vspace{0pt}}
 
-\newcommand{\resInternshipItem}[4]{\item{\textbf{#1} \small\textit{(#2 - #3)} - \small{#4}\vspace{0pt}}}
+\newcommand{\resInternshipItem}[4]{\item{\textbf{#1} \small\textit{(#2 - #3)} - {#4}\vspace{0pt}}}
 
 \newcommand{\resSkillItem}[2]{\par \hangindent=15pt \textbf{#1}: \linebreak {#2}}
 
@@ -64,7 +64,7 @@ resdata = json.decode(read(filename))
     \textbf{\LARGE\luaprint{resdata["name"]}}
     &
     \href{http://\luaprint{resdata["website"]}/}
-        {\luaprint{resdata["website"]}}
+    {\luaprint{resdata["website"]}}
     \\
     \href{mailto:\luaprint{resdata["email"]}}
     {\luaprint{resdata["email"]}}
@@ -103,9 +103,7 @@ resdata = json.decode(read(filename))
 \section{Skills}
 \begin{luacode}
 for i,v in ipairs(resdata["skills"]) do
-tex.print('\\resSkillItem{'
-    .. v["name"] .. '}{'
-    .. v["value"] .. '}')
+    tex.sprint(string.format('\\resSkillItem{%s}{%s}', v["name"], v["value"]))
 end
 -- without this line, last skill value is not indented...why??
 tex.print('\\par')
@@ -117,34 +115,34 @@ tex.print('\\par')
 
 \begin{luacode}
 for i,job in ipairs(resdata["experience"]["jobs"]) do
-    tex.print('\\resHeadStart')
+    tex.sprint('\\resHeadStart')
 
-    tex.print('\\resHead{')
+    tex.sprint('\\resHead{')
     -- the -2 here is cool! permits special chars in json
-    tex.print(-2, job["company"])
-    tex.print('}{')
-    tex.print(-2, job["role"])
-    tex.print('}{')
-    tex.print(-2, job["start"])
-    tex.print('}{')
-    tex.print(-2, job["end"])
-    tex.print('}')
-    tex.print('\\resHeadEnd')
+    tex.sprint(-2, job["company"])
+    tex.sprint('}{')
+    tex.sprint(-2, job["role"])
+    tex.sprint('}{')
+    tex.sprint(-2, job["start"])
+    tex.sprint('}{')
+    tex.sprint(-2, job["end"])
+    tex.sprint('}')
+    tex.sprint('\\resHeadEnd')
 
-    tex.print('\\resItemsStart')
-    for i,item in ipairs(job["items"]) do
-        tex.print('\\resItem{')
-        tex.print(-2, item["description"])
-        tex.print('}')
+    tex.sprint('\\resItemsStart')
+    for i,item in ipairs(job["detailed-items"]) do
+        tex.sprint('\\resItem{')
+        tex.sprint(-2, item["description"])
+        tex.sprint('}')
 
         if item["subitems"] ~= nil then
             tex.print('\\resSubItemsStart')
             for i,subitem in ipairs(item["subitems"]) do
-                tex.print('\\resSubItem{')
-                tex.print(-2, subitem)
-                tex.print('}')
+                tex.sprint('\\resSubItem{')
+                tex.sprint(-2, subitem)
+                tex.sprint('}')
             end
-            tex.print('\\resSubItemsEnd')
+            tex.sprint('\\resSubItemsEnd')
         end
     end
     tex.print('\\resItemsEnd')
@@ -155,19 +153,20 @@ end
 {\vspace{0pt}}\subsection*{Internships}{\vspace{0pt}}
 \resItemsStart
 \begin{luacode}
-for i,item in ipairs(resdata["experience"]["internships"]) do
-    tex.print('\\resInternshipItem{')
-    tex.print(-2, item["company"])
-    tex.print('}{')
-    tex.print(-2, item["start"])
-    tex.print('}{')
-    tex.print(-2, item["end"])
-    tex.print('}{')
-    tex.print(-2, item["description"])
-    tex.print('}')
-end
-\end{luacode}
+    for i,item in ipairs(resdata["experience"]["internships"]) do
+        tex.sprint('\\resInternshipItem{')
+        tex.sprint(-2, item["company"])
+        tex.sprint('}{')
+        tex.sprint(-2, item["start"])
+        tex.sprint('}{')
+        tex.sprint(-2, item["end"])
+        tex.sprint('}{')
+        tex.sprint(-2, item["description"])
+        tex.sprint('}')
+    end
+    \end{luacode}
 \resItemsEnd
+
 
 %-----------INTERESTS-----------------
 \section{Interests}

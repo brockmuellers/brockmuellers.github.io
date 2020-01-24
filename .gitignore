@@ -1,8 +1,8 @@
 assets/resume/json.lua
-assets/resume/resume.aux
-assets/resume/resume.log
-assets/resume/resume.out
-assets/resume/resume.synctex.gz
+assets/resume/*.aux
+assets/resume/*.log
+assets/resume/*.out
+assets/resume/*.synctex.gz
 _site
 .sass-cache
 .jekyll-cache

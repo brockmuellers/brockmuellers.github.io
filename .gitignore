@@ -1,11 +1,13 @@
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+_posts/*-wip.md
+_site
 assets/resume/json.lua
 assets/resume/*.aux
 assets/resume/*.log
 assets/resume/*.out
 assets/resume/*.synctex.gz
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
 Gemfile.lock
+TODO.txt
 vendor

@@ -1,7 +1,7 @@
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
-_posts/*-wip.md
+_drafts/*
 _site
 assets/resume/json.lua
 assets/resume/*.aux

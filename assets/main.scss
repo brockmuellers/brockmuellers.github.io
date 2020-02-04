@@ -1,14 +1,40 @@
 ---
 ---
+// Note to self: defaults can be found here:
+// https://github.com/jekyll/minima/tree/v2.5.1/_sass
+
 $content-width:    1000px !default;
 $on-palm:          800px !default;
 $on-laptop:        1000px !default;
 
 @import "minima";
 
-.footer-col-1 { width: -webkit-calc(29% - (30px / 2)); width: calc(29% - (30px / 2)); }
+/**
+ * My name is too long to work with the default footer widths.
+ */
+.footer-col-1 {
+    width: -webkit-calc(29% - (30px / 2));
+    width: calc(29% - (30px / 2));
+}
+.footer-col-2 {
+    width: -webkit-calc(21% - (30px / 2));
+    width: calc(21% - (30px / 2));
+}
+.footer-col-3 {
+    width: -webkit-calc(50% - (30px / 2));
+    width: calc(50% - (30px / 2));
+}
 
-.footer-col-2 { width: -webkit-calc(21% - (30px / 2)); width: calc(21% - (30px / 2)); }
-
-.footer-col-3 { width: -webkit-calc(50% - (30px / 2)); width: calc(50% - (30px / 2)); }
-
+.normal-block {
+  color: $text-color;
+  border-left: 4px solid $grey-color;
+  border-right: 4px solid $grey-color;
+  background-color: $grey-color-light;
+  padding-left: $spacing-unit / 2;
+  padding-right: $spacing-unit / 2;
+  padding-top: $spacing-unit / 4;
+  padding-bottom: $spacing-unit / 4;
+  @include relative-font-size(1);
+  letter-spacing: 0px;
+  font-style: normal;
+}

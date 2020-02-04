@@ -4,7 +4,7 @@ My personal site. WIP.
 
 This is built on github pages with jekyll. There's some odd lualatex in here that generates a pdf resume. Wildly unnecessary, but it was fun to write.
 
-Find me at [brockmuellers.com](brockmuellers.com).
+Find me at [brockmuellers.com](http://brockmuellers.com).
 
 ## References for myself
 

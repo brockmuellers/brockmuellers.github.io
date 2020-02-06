@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Climate Change Resources
+title: Climate change resources
 summary:  >-
     A set of resources I've collected on 
     understanding and combating climate change.

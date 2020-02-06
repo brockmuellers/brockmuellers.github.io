@@ -13,16 +13,21 @@ $on-laptop:        1000px !default;
  * My name is too long to work with the default footer widths.
  */
 .footer-col-1 {
-    width: -webkit-calc(29% - (30px / 2));
-    width: calc(29% - (30px / 2));
+    width: -webkit-calc(29% - ($spacing-unit / 2));
+    width: calc(29% - ($spacing-unit / 2));
 }
 .footer-col-2 {
-    width: -webkit-calc(21% - (30px / 2));
-    width: calc(21% - (30px / 2));
+    width: -webkit-calc(21% - ($spacing-unit / 2));
+    width: calc(21% - ($spacing-unit / 2));
 }
 .footer-col-3 {
-    width: -webkit-calc(50% - (30px / 2));
-    width: calc(50% - (30px / 2));
+    width: -webkit-calc(50% - ($spacing-unit / 2));
+    width: calc(50% - ($spacing-unit / 2));
+}
+
+.footnotes {
+  padding-top: $spacing-unit / 2;
+  border-style: groove hidden groove hidden;
 }
 
 .normal-block {
@@ -37,4 +42,27 @@ $on-laptop:        1000px !default;
   @include relative-font-size(1);
   letter-spacing: 0px;
   font-style: normal;
+}
+
+.post-head-img {
+  width: 100%;
+  border-style: groove;
+}
+
+.post-img {
+  width: 50%;
+  border-style: groove;
+}
+
+.post-subtitle {
+  @include relative-font-size(1.5);
+  letter-spacing: -1px;
+  line-height: 1;
+  color: $grey-color-dark;
+  padding-bottom: $spacing-unit / 4;
+
+  // why is this here? copied from .post-title
+  @include media-query($on-laptop) {
+    @include relative-font-size(1.25);
+  }
 }

@@ -8,46 +8,53 @@ summary:  >-
 
 ## Staying positive
 
-http://brightyellow.co/hope
+**[outrage and optimism podcast](http://globaloptimism.com/podcast/)**
 
-https://www.bbc.com/future/article/20191010-how-to-beat-anxiety-about-climate-change-and-eco-awareness
+<http://brightyellow.co/hope>
+
+<https://www.bbc.com/future/article/20191010-how-to-beat-anxiety-about-climate-change-and-eco-awareness>
 
 ## General climate change education
 
-**https://www.drawdown.org/solutions-summary-by-rank**
+**<https://www.drawdown.org/solutions-summary-by-rank>**
 
-https://cmi.princeton.edu/wedges/intro
+<https://cmi.princeton.edu/wedges/intro>
 
-https://www.ipcc.ch/report/ar5/syr/
+<https://www.ipcc.ch/report/ar5/syr/>
 
-https://www.climaterealityproject.org/climate-change-basics
+<https://www.climaterealityproject.org/climate-change-basics>
 
-https://interactive.carbonbrief.org/
-impacts-climate-change-one-point-five-degrees-two-degrees/
+<https://interactive.carbonbrief.org/impacts-climate-change-one-point-five-degrees-two-degrees/>
 
-https://www.smartgrid.gov/the_smart_grid/smart_grid.html
+<https://www.smartgrid.gov/the_smart_grid/smart_grid.html>
 
-https://www.tmrow.com/climatechange
+<https://www.tmrow.com/climatechange>
 
-https://www.withouthotair.com/
+<https://www.withouthotair.com/>
 
-https://www.iea.org/weo2019/
+<https://www.iea.org/weo2019/>
 
 
 ## Tech-specific resources
 
-https://www.goodtechlab.io/reports
+**[ClimateAction.tech community](https://climateaction.tech/#join)**
 
-https://climateaction.tech/guide/
+**<http://worrydream.com/ClimateChange/>**
 
-https://www.notion.so/Near-tools-dc5421a5f4d84c40b846cf51a04bcd04
+<https://www.goodtechlab.io/reports>
 
-http://worrydream.com/ClimateChange/
+<https://climateaction.tech/guide/>
 
-https://bdtechtalks.com/2018/10/18/reduce-energy-consumption-with-right-code/amp/
+<https://www.notion.so/Near-tools-dc5421a5f4d84c40b846cf51a04bcd04>
 
-https://codewithoutrules.com/2019/09/10/software-developers-climage-change/
+<https://bdtechtalks.com/2018/10/18/reduce-energy-consumption-with-right-code/amp/>
 
-https://voice.ch.ckl.st/how-i-am-fighting-climate-change-as-a-software-developer/amp/
+<https://codewithoutrules.com/2019/09/10/software-developers-climage-change/>
 
-http://carbon.ycombinator.com/
+<https://voice.ch.ckl.st/how-i-am-fighting-climate-change-as-a-software-developer/amp/>
+
+<http://carbon.ycombinator.com/>
+
+## Finding a job
+
+<https://medium.com/@leventov/how-to-find-a-job-in-a-tech-company-helping-to-combat-climate-change-practical-guide-e212e262a32>

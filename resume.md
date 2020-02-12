@@ -8,10 +8,6 @@ permalink: /resume/
 
 ---
 
----
-
----
-
 Summary
 =======
 
@@ -20,10 +16,6 @@ Summary
 *Code priorities: {{site.data.resume.code-priorities}}*
 
 *Culture priorities: {{site.data.resume.culture-priorities}}*
-
----
-
----
 
 ---
 
@@ -36,10 +28,6 @@ Education
 
 ---
 
----
-
----
-
 Skills
 ======
 
@@ -49,10 +37,6 @@ Skills
 
 {{skill.value}}
 {% endfor %}
-
----
-
----
 
 ---
 
@@ -80,10 +64,6 @@ Experience
 * {{internship.company}}; *{{internship.start}} - {{internship.end}}*: {{internship.description}}
 {% endfor %}
 
-
----
-
----
 
 ---
 

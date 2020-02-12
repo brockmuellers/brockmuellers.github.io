@@ -9,6 +9,12 @@ $on-laptop:        1000px !default;
 
 @import "minima";
 
+// I don't care for the default minima hr spacing
+hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 /**
  * My name is too long to work with the default footer widths.
  */

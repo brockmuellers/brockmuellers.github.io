@@ -6,7 +6,7 @@ This is built on github pages with jekyll. There's some odd lualatex in here tha
 
 Disclaimer: I'm not a front-end dev and this site reflects that fact.
 
-Find me at [brockmuellers.com](http://brockmuellers.com).
+Find me at [brockmuellers.com](https://self.brockmuellers.com).
 
 ## References for myself
 

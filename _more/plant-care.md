@@ -69,7 +69,12 @@ shade_image: /assets/images/plant_care/black_sun_64.png
             <td>{% if plant.temp %}{{plant.temp}}°{% endif %}</td>
             <td>{{plant.humidity}}</td>
             <td>{{plant.feed}}</td>
-            <td>{{plant.notes}}</td>
+            <td>
+                {{plant.notes}}
+                {% if plant.link %}
+                    <a href="{{plant.link}}">More info.</a>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>

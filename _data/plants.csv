@@ -1,12 +1,12 @@
-genus,species,variety,grex,cultivar,water,humidity,light,temp,feed,notes
-Schlumbergera,,,,Thor Ritt,surface dry,,indirect-part,>35,2 wk,Cold induces flowering
-Philodendron,melanochrysum,,,,surface dry,high,shade,>55,2 mo,
-Phalaenopsis,sp.,,,,mostly dry,high,indirect,>50,1 mo,
-Maranta,leuconeura,erythroneura,,,partly dry,high,indirect,>60,1 mo,
-Dendrobium,,,Frieda Bratanata,,,,,,,
-Oncidium,,,Moon Shadow,Tiger Tail,,,,,,
-Dendrobium,loddigesii,,,,,,,,,
-Syngonium,podophyllum?,,,,surface dry,high,indirect,>50-60,2 wk,
-Aglaonema,,,,Sparkling Sarah,partly dry,,indirect,>65,1 mo,
-Anoectochilus,chapaensis,,,,partly dry,high,shade-indirect,>60,1 mo,
-Jasminium,sambac,,,Belle of India,surface dry,,full,>60,1 wk,
+genus,species,variety,grex,cultivar,water,humidity,light,temp,feed,notes,link
+Schlumbergera,,,,Thor Ritt,surface dry,,indirect-part,>35,2 wk,Cold induces flowering,
+Philodendron,melanochrysum,,,,surface dry,high,shade,>55,2 mo,,
+Phalaenopsis,sp.,,,,mostly dry,high,indirect,>50,1 mo,,
+Maranta,leuconeura,erythroneura,,,partly dry,high,indirect,>60,1 mo,,
+Dendrobium,,,Frieda Bratanata,,surface dry,high,full,>65,1 wk,Winter rest period: allow plant to just dry out between waterings.,
+Oncidium,,,Moon Shadow,Tiger Tail,,,,,,,
+Dendrobium,loddigesii,,,,,,,,,,https://travaldo.blogspot.com/2018/01/dendrobium-loddigesii-care-and-culture.html
+Syngonium,podophyllum?,,,,surface dry,high,indirect,>50-60,2 wk,,
+Aglaonema,,,,Sparkling Sarah,partly dry,,indirect,>65,1 mo,,
+Anoectochilus,chapaensis,,,,partly dry,high,shade-indirect,>60,1 mo,,
+Jasminium,sambac,,,Belle of India,surface dry,,full,>60,1 wk,,

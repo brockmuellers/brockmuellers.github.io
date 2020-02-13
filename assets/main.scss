@@ -60,6 +60,12 @@ hr {
   border-style: groove;
 }
 
+.icon {
+    height: 32px;
+    width: 32px;
+    display: block;
+}
+
 .post-subtitle {
   @include relative-font-size(1.5);
   letter-spacing: -1px;

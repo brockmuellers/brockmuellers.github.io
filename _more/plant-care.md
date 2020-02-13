@@ -2,6 +2,11 @@
 layout: page
 title: Plant care
 summary: Cheatsheet for plant care instructions.
+
+full_sun_image: /assets/images/plant_care/full_sun_64.png
+part_sun_image: /assets/images/plant_care/part_sun_64.png
+indirect_sun_image: /assets/images/plant_care/indirect_sun_64.png
+shade_image: /assets/images/plant_care/black_sun_64.png
 ---
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
@@ -29,11 +34,39 @@ summary: Cheatsheet for plant care instructions.
         {% for plant in site.data.plants %}
         <tr>
             <td>
-                <i>{{plant.species}}</i>
-                {% if plant.variety %}'{{plant.variety}}'{% endif %}
+                <i>{{plant.genus}}</i>
+                {% if plant.species == "sp." %}
+                    {{plant.species}}
+                {% elsif plant.species %}
+                    <i>{{plant.species}}</i>
+                {% endif %}
+                {% if plant.variety %}
+                    var. <i>{{plant.variety}}</i>
+                {% endif %}
+                {% if plant.grex %}
+                    {{plant.grex}}
+                {% endif %}
+                {% if plant.cultivar %}
+                    '{{plant.cultivar}}'
+                {% endif %}
             </td>
-            <td>{{plant.light}}</td>
-            <td>{{plant.temp}}</td>
+
+            <td>
+                {% if plant.light contains "full" %}
+                    <img src="{{page.full_sun_image}}" class="icon">
+                {% endif %}
+                {% if plant.light contains "part" %}
+                    <img src="{{page.part_sun_image}}" class="icon">
+                {% endif %}
+                {% if plant.light contains "indirect" %}
+                    <img src="{{page.indirect_sun_image}}" class="icon">
+                {% endif %}
+                {% if plant.light contains "shade" %}
+                    <img src="{{page.shade_image}}" class="icon">
+                {% endif %}
+            </td>
+
+            <td>{% if plant.temp %}{{plant.temp}}°{% endif %}</td>
             <td>{{plant.humidity}}</td>
             <td>{{plant.feed}}</td>
             <td>{{plant.notes}}</td>
@@ -41,3 +74,14 @@ summary: Cheatsheet for plant care instructions.
         {% endfor %}
     </tbody>
 </table>
+
+***
+
+[Plant troubleshooting guide](http://greenhouse.kenyon.edu/troubleshooting.htm)
+
+[How to write botanical names](http://libanswers.nybg.org/faq/223266)\\
+(Additional note: "sp." is unspecified species, "spp." is several species.)
+
+Icon sources\\
+<https://www.iconfinder.com/icons/183364/sun_icon>\\
+<https://www.iconfinder.com/icons/183365/sun_icon>

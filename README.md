@@ -32,3 +32,5 @@ https://kramdown.gettalong.org/quickref.html
 ### Other
 
 Image sources can be recorded and loaded from `_data/image_source.yml`.
+
+[Favicon source](https://www.iconfinder.com/icons/3561781/flower_garden_green_nature_plant_tree_icon)

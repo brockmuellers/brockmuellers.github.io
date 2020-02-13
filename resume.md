@@ -61,7 +61,8 @@ Experience
 **Internships**
 
 {% for internship in site.data.resume.experience.internships %}
-* {{internship.company}}; *{{internship.start}} - {{internship.end}}*: {{internship.description}}
+* *{{internship.company}}; {{internship.stSart}} - {{internship.end}}*\\
+{{internship.description}}
 {% endfor %}
 
 

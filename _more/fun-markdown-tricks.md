@@ -72,3 +72,7 @@ footnote[^1].
 Here's some more text.
 
 [^1]: And here is the definition.
+
+### Links and images
+
+Lots of fun stuff: <https://kramdown.gettalong.org/syntax.html#links-and-images>

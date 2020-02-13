@@ -77,6 +77,13 @@ shade_image: /assets/images/plant_care/black_sun_64.png
 
 ***
 
+Key:\\
+![full]({{page.full_sun_image}}){:class="icon"} Full sun\\
+![part]({{page.part_sun_image}}){:class="icon"} Partial sun\\
+![indirect]({{page.indirect_sun_image}}){:class="icon"} Indirect sun\\
+![shade]({{page.shade_image}}){:class="icon"} Shade
+
+
 [Plant troubleshooting guide](http://greenhouse.kenyon.edu/troubleshooting.htm)
 
 [How to write botanical names](http://libanswers.nybg.org/faq/223266)\\

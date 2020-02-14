@@ -57,6 +57,14 @@ show_dead_plants: false
 
                     <td>
                         {% assign light_amounts = plant.light | split: ";" %}
+                        <!-- include hidden span with vals for column sorting -->
+                        <span hidden>{% for amount in light_amounts %}
+                            {% if amount == "full" %}0{% endif %}
+                            {% if amount == "part" %}1{% endif %}
+                            {% if amount == "indirect" %}2{% endif %}
+                            {% if amount == "shade" %}3{% endif %}
+                        {% endfor %} </span>
+                        <!-- light icons -->
                         {% for amount in light_amounts %}
                             {% if amount == "full" %}
                                 <img src="{{page.full_sun_image}}" class="icon">

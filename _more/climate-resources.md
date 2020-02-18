@@ -58,3 +58,31 @@ summary:  >-
 ## Finding a job
 
 <https://medium.com/@leventov/how-to-find-a-job-in-a-tech-company-helping-to-combat-climate-change-practical-guide-e212e262a32>
+
+<https://ch.ckl.st/share/5c9007a24c6f1b004a6098ae>
+
+Places to look for jobs
+* **<https://climate.careers/>**
+* <https://techjobsforgood.com/>
+* <https://www.splashwithdolphin.com/>
+* <https://www.cleanenergyjobslist.com/>
+* Startups; can filter by industry <https://angel.co/jobs>
+* Look at the portfolios of VC firms that focus on social impact
+    * <https://www.congruentvc.com/>
+    * <https://www.fifty.vc/>
+    * <http://www.dblpartners.vc/>
+    * <https://obvious.com/>
+
+## Industries with most software jobs
+
+Tons of options:
+* Energy use optimization (for both businesses and consumers): smart buildings, smart motors, energy tracking tools
+* Renewable energy (mostly solar): installation design, management systems, financing/insurance
+* Food: reducing waste, robotic farming, ML for farm operations
+* Transportation: electric buses and fleet vehicles, electric cars (many electric car companies don't specifically have a clean energy focus, but the products are relevant)
+
+Just a few options:
+* Grid/microgrid optimization
+* Reforestation
+* Technology development (these tend to be less software-focused): battery development, engineering cleaner industrial materials, direct air capture
+* Female empowerment: microloans, improving birth control availability

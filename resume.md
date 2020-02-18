@@ -36,6 +36,7 @@ Skills
 **{{skill.name}}**
 
 {{skill.value}}
+
 {% endfor %}
 
 ---

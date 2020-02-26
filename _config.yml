@@ -19,7 +19,7 @@
 # in the templates via {{ site.myvariable }}.
 
 title: Sara Brockmueller
-email: brockmuellers+site@gmail.com
+email: brockmuellers@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   I'm Sara Brockmueller and I'm a software engineer.
   I'm excited about software, and also about

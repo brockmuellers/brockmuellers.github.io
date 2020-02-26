@@ -97,3 +97,7 @@ For asynchronous code, use `CompletableFuture`s. They allow async computation to
 ***
 
 It’s impossible to have a complete list of guidelines — there are whole books written on this subject. However, if there is contention over an issue, or if something keeps tripping people up, it’s valuable to define what to do in that situation in the future.
+
+---
+
+*[Also published in The Startup on medium.com](https://medium.com/swlh/guidelines-for-java-development-6cfa9c28fe7e)*

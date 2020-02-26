@@ -3,6 +3,8 @@ layout: page
 title: Plant care
 summary: Cheatsheet for plant care instructions.
 
+image: /assets/images/botanical_gardens.jpg
+
 full_sun_image: /assets/images/plant_care/full_sun_64.png
 part_sun_image: /assets/images/plant_care/part_sun_64.png
 indirect_sun_image: /assets/images/plant_care/indirect_sun_64.png
@@ -20,6 +22,8 @@ show_dead_plants: false
         "paging": false
     });
 } );</script>
+
+{% include sourced_image.html image=page.image image_class="large-img"%}
 
 <table id="plants" class="display">
     <thead>

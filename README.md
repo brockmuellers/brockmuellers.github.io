@@ -1,6 +1,6 @@
 # brockmuellers.github.io
 
-My personal site. WIP.
+My personal site.
 
 This is built on github pages with jekyll. There's some odd lualatex in here that generates a pdf resume. Wildly unnecessary, but it was fun to write.
 
@@ -29,7 +29,7 @@ https://kramdown.gettalong.org/quickref.html
 `bundle exec jekyll serve --trace --drafts` 
 (at localhost:4000)
 
-### Other
+#### Other
 
 Image sources can be recorded and loaded from `_data/image_source.yml`.
 

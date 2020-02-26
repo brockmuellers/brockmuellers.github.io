@@ -1,3 +1,11 @@
+/assets/images/botanical_gardens.jpg:
+    text: "Sara Brockmueller"
+    url: "https://self.brockmuellers.com"
+
+/assets/images/echo.jpg:
+    text: "Sara Brockmueller"
+    url: "https://self.brockmuellers.com"
+
 /assets/images/egret_orchid.jpg:
     text: "sunoochi"
     url: "https://commons.wikimedia.org/w/index.php?curid=81949089"
@@ -9,6 +17,10 @@
 /assets/images/foot.jpg:
     text: "Buenosia Carol"
     url: "https://www.pexels.com/photo/woman-touching-her-right-leg-1204473/"
+
+/assets/images/kings_canyon_sunset.jpg:
+    text: "Sara Brockmueller"
+    url: "https://self.brockmuellers.com"
 
 /assets/images/orchid_species.jpg:
     text: "The Plant List"

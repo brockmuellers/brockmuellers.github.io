@@ -34,6 +34,8 @@ summary:  >-
 
 <https://www.iea.org/weo2019/>
 
+<https://climate.mit.edu/symposia>
+
 
 ## Tech-specific resources
 
@@ -79,10 +81,14 @@ Tons of options:
 * Energy use optimization (for both businesses and consumers): smart buildings, smart motors, energy tracking tools
 * Renewable energy (mostly solar): installation design, management systems, financing/insurance
 * Food: reducing waste, robotic farming, ML for farm operations
-* Transportation: electric buses and fleet vehicles, electric cars (many electric car companies don't specifically have a clean energy focus, but the products are relevant)
+* Transportation: electric buses and fleet vehicles, charging infrastructure
 
 Just a few options:
 * Grid/microgrid optimization
 * Reforestation
 * Technology development (these tend to be less software-focused): battery development, engineering cleaner industrial materials, direct air capture
 * Female empowerment: microloans, improving birth control availability
+
+## Sort of related
+
+[The backend of America](https://aeon.co/essays/america-still-has-a-heartland-it-s-just-an-artificial-one)

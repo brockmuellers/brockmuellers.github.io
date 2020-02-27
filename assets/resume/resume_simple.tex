@@ -15,7 +15,7 @@ function read(file)
     return content
 end
 json = require("json")
-filename = '../../_data/resume.json'
+filename = 'resume.json'
 resdata = json.decode(read(filename))
 \end{luacode}
 
@@ -151,6 +151,6 @@ end
 %-----------INTERESTS-----------------
 \section{Interests}
 \luaprint{resdata["interests"]}
-    
-    
+
+
 \end{document}

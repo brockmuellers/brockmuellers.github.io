@@ -19,12 +19,12 @@ hr {
  * My name is too long to work with the default footer widths.
  */
 .footer-col-1 {
-    width: -webkit-calc(29% - ($spacing-unit / 2));
-    width: calc(29% - ($spacing-unit / 2));
+    width: -webkit-calc(25% - ($spacing-unit / 2));
+    width: calc(25% - ($spacing-unit / 2));
 }
 .footer-col-2 {
-    width: -webkit-calc(21% - ($spacing-unit / 2));
-    width: calc(21% - ($spacing-unit / 2));
+    width: -webkit-calc(25% - ($spacing-unit / 2));
+    width: calc(25% - ($spacing-unit / 2));
 }
 .footer-col-3 {
     width: -webkit-calc(50% - ($spacing-unit / 2));

@@ -4,6 +4,7 @@
 _drafts/*
 _site
 assets/resume/json.lua
+assets/resume/resume.json
 assets/resume/*.aux
 assets/resume/*.log
 assets/resume/*.out

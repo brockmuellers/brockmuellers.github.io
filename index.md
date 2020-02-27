@@ -11,7 +11,7 @@ image: /assets/images/kings_canyon_sunset.jpg
 
 #### [About me]({% link about.md %})
 
-#### [Resume]({% link resume.md %})
+#### [Professional experience]({% link resume.md %})
 
 #### [Github](https://github.com/{{ site.github_username }})
 

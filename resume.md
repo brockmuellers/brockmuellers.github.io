@@ -13,9 +13,9 @@ Summary
 
 {{site.data.resume.summary}}
 
-*Code priorities: {{site.data.resume.code-priorities}}*
+Code priorities: {{site.data.resume.code-priorities}}
 
-*Culture priorities: {{site.data.resume.culture-priorities}}*
+Culture priorities: {{site.data.resume.culture-priorities}}
 
 ---
 

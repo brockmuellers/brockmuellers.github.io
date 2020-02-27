@@ -50,6 +50,14 @@ hr {
   font-style: normal;
 }
 
+// This is a little janky, but I prefer the start of the image
+// inline with the text, not the start of the border
+.large-img, .small-img {
+  margin-left: -3px;
+  border-width: 3px;
+  box-sizing: content-box;
+}
+
 .large-img {
   width: 100%;
   border-style: groove;

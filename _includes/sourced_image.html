@@ -1,5 +1,5 @@
 <img class="{{include.image_class}}" src="{{ include.image }}" alt="{{ include.image }}">
 {% assign image_source = site.data.image_source[include.image] %}
 {%- if image_source -%}
-  <br><small><a href="{{image_source.url}}">{{image_source.text}}</a></small>
+  <br><small>Source: <a href="{{image_source.url}}">{{image_source.text}}</a></small>
 {%- endif -%}

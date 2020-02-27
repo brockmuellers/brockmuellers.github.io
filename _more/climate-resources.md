@@ -36,6 +36,8 @@ summary:  >-
 
 <https://climate.mit.edu/symposia>
 
+<https://www.carbonbrief.org/explainer-nine-tipping-points-that-could-be-triggered-by-climate-change>
+
 
 ## Tech-specific resources
 

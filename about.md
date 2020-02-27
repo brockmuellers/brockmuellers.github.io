@@ -16,7 +16,7 @@ I want to spend my day job working on important problems with serious social [im
 
 One of the most important things I look for in a job is the team. The best kind of team is collaborative, supportive, curious about a wide variety of things, and passionate (in both professional work and personal projects).
 
-(Here's [my resume page]({{ site.baseurl }}/resume.html), which describes my experience in more detail.)
+(Here's my [resume page]({% link resume.md %}), which describes my experience in more detail.)
 
 ### Personal
 

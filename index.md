@@ -19,6 +19,8 @@ Some quick links:
 
 * [My plant roster]({% link _more/plant-care.md %})
 
+* [Non-tech projects]({% link _more/projects.md %})
+
 * A silly tool I wrote about: [tutorial]({% post_url 2020-02-26-web-scraper-to-find-new-products %}) and [code](https://github.com/brockmuellers/watch-products)
 
 ---

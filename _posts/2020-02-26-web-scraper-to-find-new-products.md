@@ -1,7 +1,9 @@
 ---
 layout: post
 title:  "Web scraper to find new products"
+subtitle: "Watching for new additions to REI Used Gear"
 categories: software
+image: /assets/images/lost_coast_hikers.jpg
 ---
 
 I'm a huge fan of the REI used gear program. Unfortunately, they don't always have all products available. It's a pain to keep checking the used gear website until the product is available, and I'm often inclined to go buy it new. So, I thought I'd write a little script to scrape the site and do the work for me!
@@ -16,9 +18,9 @@ This is my first foray into web scraping! I don't know why it took me so long - 
 
 Let's get set up!
 
-For starters, I'm using python 3.6.9 and pip3 as a package installer. (I should probably get to the modern age and update to 3.8, but this works just fine.)
+For starters, I'm using Python 3.6.9 and pip3 as a package installer. (I should probably get to the modern age and update to 3.8, but this works just fine.)
 
-Since I'm doing something new, I did a bit of web sleuthing to find out how people typically do this sort of thing. Python seems to be a common choice, which makes sense - it's a great language for quick scripts and munging data. The `requests` library is a clear choice for making HTTP requests, and Beautiful Soup is popular for pulling data from HTML.
+Since I'm trying something new, I did a bit of web sleuthing to find out how people typically do this sort of thing. Python seems to be a common choice, which makes sense - it's a great language for quick scripts and munging data. The `requests` library is a clear choice for making HTTP requests, and Beautiful Soup is popular for pulling data from HTML.
 
 Let's go ahead and install those dependencies:
 
@@ -38,7 +40,7 @@ We can install dependencies from that file by running `pip3 install -r requireme
 
 ---
 
-I'll start out by playing around in IPython (`pip3 install ipython`). It's my favorite way to play around with python. I'll also create a file to hold code that I want to keep. Let's call it `scrape.py`. (People like using Jupyter Notebooks for this sort of interactive development, but I've never tried that and it doesn't seem necessary in this case.)
+I'll start out by playing around in IPython (`pip3 install ipython`). It's my favorite way to play around with Python. I'll also create a file to hold code that I want to keep. Let's call it `scrape.py`. (People like using Jupyter Notebooks for this sort of interactive development, but I've never tried it and it doesn't seem necessary in this case.)
 
 Starting IPython is easy: just run `ipython`.
 
@@ -46,9 +48,9 @@ Starting IPython is easy: just run `ipython`.
 
 ## Playing around with our new libraries
 
-Great! We can start writing code now. First, I know that we'll need to make an HTTP request to get the page we're scraping.
+Great! We can start writing code now. First, I know that we'll need to make an HTTP request to get the page we're scraping. Let's work that out.
 
-The requests library is easy to use - docs are [here](<https://requests.readthedocs.io/en/master/>). Let's try getting the HTML for a page in IPython.
+The Python requests library is easy to use - docs are [here](<https://requests.readthedocs.io/en/master/>). Let's try getting the HTML for a page in IPython.
 
 ```python
 >> import requests
@@ -58,7 +60,7 @@ The requests library is easy to use - docs are [here](<https://requests.readthed
 
 That's some HTML! Now we need to choose the right URL to scrape. This project is automating something that I already do - making a search for a product I'm interested in. So let's use the URL for that search. There may be a better way to scrape the site for products, but this is a decent place to start.
 
-A big blob of HTML text isn't particularly useful on it's own. That's where Beautiful Soup comes in. We'll follow the quick start instructions in the [docs](https://beautiful-soup-4.readthedocs.io/en/latest/) and get soup for our page:
+A big blob of HTML text isn't particularly useful on it's own. That's where Beautiful Soup comes in. We'll follow the quick start instructions in the [docs](https://beautiful-soup-4.readthedocs.io/en/latest/) and get "soup" for our page:
 
 ```python
 >> url = "https://www.rei.com/used/shop/search?q=magma%2030%20sleeping%20bag"
@@ -71,7 +73,7 @@ Now we have a soup object! We can run stuff like `soup.a` to get `<a>` tags in t
 
 ---
 
-I'm going to want to run this repeatedly as I play around, so I'm going to make a function in my `scrape.py` file to hold that logic.
+That's a nice, self-contained piece of functionality there. Let's make a function in the `scrape.py` file to hold that logic, so we can use it later.
 
 (I had to google how to write a python function, yikes. It's been a while.)
 
@@ -92,7 +94,7 @@ To use this in IPython, import the module: `import scrape`. When we make changes
 ```
 ---
 
-Now things get a little tricky. What do we want to pull out of the page? How do we select the right thing, and make sure it won't break when REI makes minor changes to the website?
+Now things get a little tricky. What do we want to pull out of the page? How do we select the right elements, and make sure it won't break when REI makes minor changes to the website?
 
 Let's use Chrome DevTools to examine the page. All of the products that come up in the search are in a `<ul>` list, and each `<li>` item has the class `"TileItem`". Nothing else on the page has the class `"TileItem"`, so that seems like a safe thing to filter by.
 
@@ -100,7 +102,7 @@ Let's use Chrome DevTools to examine the page. All of the products that come up 
 >> items = search_soup.find_all("li", class_="TileItem")
 ```
 
-Now we have the correct items, but each of those is still a long blob of HTML. We just want the title of the item. Titles are located in a `<span>` with class `"title"`. So, for an individual item, we can run:
+Now we have the correct items, but each of those is still a long blob of HTML. We just want the title of the item. Titles are located in a `<span>` with class `"title"`. So, to get the title of the first item, we can run:
 
 ```python
 >> title = item.find_all("span", class_="title")[0].contents[0]
@@ -117,7 +119,7 @@ Finally this is starting to come together. I'd like to run what we have as a scr
 
 To make the file executable, we need to put this line at the top: `#!/usr/bin/env python3`. Additionally, in the command line, we run `chmod +x scrape.py` to give us permission to execute the file.
 
-There needs to be an entrypoint that specifies the code to run. In `scrape.py`, let's add this block at the bottom of the file:
+There also needs to be an entrypoint that specifies the code to run. In `scrape.py`, let's add this block at the bottom of the file:
 
 ```python
 if __name__ == '__main__':
@@ -128,7 +130,7 @@ if __name__ == '__main__':
 Now run the script!
 
 ```
-$ python3 main.py
+$ python3 scrape.py
 This is a script!
 ```
 
@@ -140,7 +142,7 @@ Now we can put it all together!
 
 To do this, there are a couple of important decisions we need to make: program input and program output.
 
-### Search URL input
+### How do we get the search URLs?
 
 We could just be lazy and hardcode URLs in. But it's nice to be able to edit code and the input URLs separately, especially if this is deployed to a service like AWS Lambda. You don't necessarily want to redeploy your Lambda every time you want to look for a new product. So, for now, we'll just put them in a file in the project root directory.
 
@@ -163,21 +165,31 @@ with open(filename, "r") as csvfile:
         urls.append({"label": row[0], "url": row[1]})
 ```
 
-And our CSV file:
+The output:
+```python
+>> urls
+[{'label': 'magma30regular', 'url': 'https://www.rei.com/used/shop/search?q=magma%2030%20sleeping%20bag&size=REGULAR%20-%20RIGHT%20ZIP'}, {'label': 'altras', 'url': 'https://www.rei.com/used/shop/womens-footwear?brand=Altra&size=6'}]
+```
+
+Our source CSV file:
 ```
 magma30regular,https://www.rei.com/used/shop/search?q=magma%2030%20sleeping%20bag&size=REGULAR%20-%20RIGHT%20ZIP
 altras,https://www.rei.com/used/shop/womens-footwear?brand=Altra&size=6
 ```
 
-### Results to output
+### What results should we output?
 
 We could just print the results of each search URL. That would be easy. But, from experience, I know that sometimes I want to know which products have been added instead of which products exist. 
 
-For example, perhaps I'm looking for a particular brand of shoe. I really like Altra shoes, for their zero drop and natural foot shape. There are a number of models I'd be interested in. I might do a search for them today, and not want any of the models currently available on the used gear site. In this case, I'll want my tool to tell me if a new model has been added, so I can check it out.
+For example, perhaps I'm looking for a particular brand of shoe. I really like Altra shoes, for their zero drop and natural foot shape. There are a number of models I'd be interested in, but not all. I might do a search for them today, and not want any of the models currently available on the used gear site. In that case, I'll want my tool to tell me if a new model has been added, so I can check it out.
 
 With this goal, we need to come up with a way to tell if a product has been added since we last ran this tool. To do that, we need to save results somewhere, so we can compare results from this run with the last run.
 
-Writing our results to a file is a simple way to do this. We'll timestamp each file, so we know which is most recent. (A naive way to do that would be to delete the old results file and write a new file. But there's a gotcha - this isn't robust to failure. If the program dies in between deleting the old results file and writing the new file - totally possible - we won't be able to rerun the program and make a comparison.) We'll also choose to write one file per product. It's an arbitrary choice. Here's the code for writing the results of one search.
+Writing our results to a file is a simple way to do this. There are a couple things to consider:
+* We'll need to timestamp each file, so we know which is most recent. (A naive way to do that would be to delete the old results file and write a new file. But there's a gotcha - this isn't robust to failure. If the program dies in between deleting the old results file and writing the new file - totally possible - we won't be able to rerun the program and make a comparison.)
+* We'll also choose to write one file per product, where files are labeled with the product label (that CSV with labels in it is sure handy!). That's an arbitrary choice. 
+
+Here's the code for writing the results of one search.
 
 ```python
 def save_products_list(results, label, target_dir):
@@ -190,20 +202,20 @@ def save_products_list(results, label, target_dir):
 Now that we have a list saved, let's run a comparison. This is a bit messy, but it'll do the job. It runs once per search URL.
 
 ```python
-def compare_to_previous_products(current_products, label, target_dir):
+def compare_to_previous_products(current_products_list, product_label, target_dir):
     # Get and sort all result files (so they're in order of timestamp)
     sorted_results_files = sorted(os.listdir(target_dir))
     # Pick out the result files corresponding to this particular search label
-    previous_files = [f for f in sorted_results_files if label in f]
+    previous_files = [f for f in sorted_results_files if product_label in f]
 
     with open(target_dir + previous_files[-1], 'r') as file:
-        previous_products = file.read().splitlines()
+        previous_products_list = file.read().splitlines()
 
-    if sorted(previous_products) != sorted(current_products):
+    if sorted(previous_products_list) != sorted(current_products_list):
         print("FOUND A DIFFERENCE FOR PRODUCT {} (from {})".format(
-            label, previous_files[-1]))
-        print("OLD: " + str(previous_products))
-        print("NEW: " + str(current_products))
+            product_label, previous_files[-1]))
+        print("OLD: " + str(previous_products_list))
+        print("NEW: " + str(current_products_list))
 ```
 
 Good enough!
@@ -227,7 +239,7 @@ It's also worth trying to make this a bit robust to changes on the REI website.
                   url, len(items, expected_count)))
 
   ```
-* What if the "x results" div ceases to exist, or its class name has changed so we can't find it? I'm going to be lazy and not solve this problem right now, but its worth noting.
+* What if the "x results" `count` div ceases to exist, or its class name has changed so we can't find it? That would be okay if the `TileItem`s are still around - the assertions we just wrote will fail. But what if the REI developers change both the `count` and `TileItem` class names? I'm going to be lazy and not solve this problem right now, but its worth noting.
 
 * What if there isn't a `<span>` containing the item's title? The code will blow up if that happens. Not elegantly, but we'll know. This line will happily throw an error.
   ```python
@@ -236,7 +248,7 @@ It's also worth trying to make this a bit robust to changes on the REI website.
 
 ---
 
-Besides that, there's not too much to think about. We can clean it up, handle some edge cases, etc. We'll also liberally sprinkle in print statements so it's clear what's happening when the code runs. 
+Besides that, there's not too much to think about. We can clean the code up, handle some edge cases, etc. We'll also liberally sprinkle in print statements so it's clear what's happening when the code runs. 
 
 ---
 

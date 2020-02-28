@@ -1,10 +1,9 @@
 /assets/images/botanical_gardens.jpg:
-    text: "Sara Brockmueller"
-    url: "https://self.brockmuellers.com/"
+    text: "Sara Brockmueller; Denver Botanic Gardens; Jun 2018"
 
 /assets/images/echo.jpg:
-    text: "Ross Paffett"
-    url: "https://rosspaffett.com/"
+    text: "Sara Brockmueller; Oct 2019"
+    url: "https://self.brockmuellers.com/"
 
 /assets/images/egret_orchid.jpg:
     text: "sunoochi"
@@ -18,8 +17,12 @@
     text: "Buenosia Carol"
     url: "https://www.pexels.com/photo/woman-touching-her-right-leg-1204473/"
 
+/assets/images/lost_coast_hikers.jpg:
+    text: "Sara Brockmueller; Lost Coast Trail, Jun 2018"
+    url: "https://self.brockmuellers.com/"
+
 /assets/images/kings_canyon_sunset.jpg:
-    text: "Sara Brockmueller"
+    text: "Sara Brockmueller; Kings Canyon National Park, Nov 2017"
     url: "https://self.brockmuellers.com/"
 
 /assets/images/orchid_species.jpg:

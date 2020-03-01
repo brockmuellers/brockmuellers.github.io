@@ -321,3 +321,7 @@ Hooray! The REI Magma 30 sleeping bag that I've been waiting for is finally avai
 Coming another day: running this automatically, probably via AWS Lambda.
 
 See the proof-of-concept code [here](https://github.com/brockmuellers/find-products/tree/303bc37141469ad2776830618ed1832f056808ae).
+
+---
+
+[Also published on medium.com](https://medium.com/@sara.brockmueller/web-scraper-to-find-new-products-1889726de573)

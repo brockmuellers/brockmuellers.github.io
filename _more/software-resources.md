@@ -13,10 +13,6 @@ Examples of existing systems
 * <https://redditblog.com/2017/1/17/caching-at-reddit/>
 * <https://medium.com/@narengowda/netflix-system-design-dbec30fede8d>
 
-## Branch prediction
-
-<https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array>
-
 ## Documentation
 
 <https://www.divio.com/blog/documentation/>
@@ -33,6 +29,10 @@ Whitepapers:
 * [Megastore (distributed database)]({{ site.baseurl }}/assets/papers/megastore.pdf)
 * [Raft (consensus algorithm)]({{ site.baseurl }}/assets/papers/raft.pdf)
 * [Spanner (distributed database)]({{ site.baseurl }}/assets/papers/spanner.pdf)
+
+## Branch prediction
+
+<https://stackoverflow.com/questions/11227809/why-is-processing-a-sorted-array-faster-than-processing-an-unsorted-array>
 
 ## Math for programmers
 

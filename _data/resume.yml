@@ -40,7 +40,7 @@ experience:
         - description: N-dimensional spatially-indexed database system and server, which handled 3+ petabytes of data.
           subitems:
             - Led feature development and maintenance for RPC-based data storage service, and the backing storage system on DynamoDB and S3. Built Java CLI tools for common data operations, improved useability of spatial abstractions for data indexing, made cost/performance optimizations, and managed deployments.
-            - Managed team responsible for data storage and access. Led redesign of an automated data export process, which reduced developer time spent per customer from several hours to ~30 minutes.
+            - Managed team responsible for data storage and access. Led redesign of an automated data export process, which reduced developer time spent per tissue sample from several hours to ~30 minutes.
             - Created a tool to run efficient batch delete operations, ultimately saving >$20K per month in AWS bills.
             - Transformed thick data client into a gRPC service, which allowed users to run thin clients with no knowledge of the backing data structure, and permitted database migrations. Built corresponding fakes for testing, reducing test suite runtime from 10 minutes to 2 minutes.
             - Wrote a data processing service that allowed clients to run custom analysis on gigabytes of data in near-real-time, by distributing work across a pool of gRPC servers and randomizing data selection. Reduced client request times from several minutes to several seconds.
@@ -59,8 +59,8 @@ experience:
             - Initiated development of code quality and reliability standards. Worked with team to develop style guides, identify ways to reduce technical debt, standardize logging and metric collection, integrate static analysis tools, and improve test coverage and reliability. Mentored junior engineers during pair programming and code reviews.
 
       simple-items:
-        - Led feature development and operations for the spatially-indexed data storage system, backed by AWS. Built Java CLI tools, made cost/performance optimizations, and managed deployments.
-        - Managed team responsible for data storage and access. Led redesign of an automated data export process, which reduced developer time spent per customer from several hours to ~30 minutes. Created a tool to run efficient batch delete operations, ultimately saving >$20K per month in AWS bills.
+        - Led feature development and operations for a spatially-indexed data storage system, backed by AWS. Built Java CLI tools, made cost/performance optimizations, and managed deployments.
+        - Managed team responsible for data storage and access. Led redesign of an automated data export process, which reduced developer time spent per tissue sample from several hours to ~30 minutes. Created a tool to run efficient batch delete operations, ultimately saving >$20K per month in AWS bills.
         - Transformed thick data client into a gRPC service, permitting database migrations. Built corresponding fakes for testing, reducing test suite runtime from 10 minutes to 2 minutes.
         - Wrote a distributed gRPC data processing service that allowed clients to run custom analysis on gigabytes of data in near-real-time. Reduced client request times from several minutes to several seconds.
         - Built Python prototype of distributed, event-driven data analysis system for multi-terabyte data sets. Set up AWS infrastructure to run it (SQS, ECS, DynamoDB) and onboarded analysis developers. Scaled the system to allow analysis algorithms to be run on ~$100x larger data sets.

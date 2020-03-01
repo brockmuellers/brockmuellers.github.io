@@ -2,8 +2,6 @@
 layout: page
 title:  "Projects"
 summary: "A small selection of non-tech projects I've done"
-
-wonder-woman: 
 ---
 
 ---
@@ -12,18 +10,18 @@ wonder-woman:
 
 My biggest recent project: Wonder Woman, cosplay-style. Materials used: EVA foam, Worbla, silicone caulk, acrylics. November 2019.
 
-| ![](/assets/images/projects/wonder_woman_final.jpg) | ![](/assets/images/projects/wonder_woman_halloween.jpg)
-Finished product | With Superman
-| ![](/assets/images/projects/wonder_woman_bracers.jpg) | ![](/assets/images/projects/wonder_woman_eagle_wip.jpg)
-Worbla bracers | Worbla eagle being painted
+| ![](/assets/images/projects/wonder_woman_final.jpg) | ![](/assets/images/projects/wonder_woman_bracers.jpg)
+| Finished product | Worbla bracers
+| ![](/assets/images/projects/wonder_woman_halloween.jpg) | ![](/assets/images/projects/wonder_woman_eagle_wip.jpg)
+| With Superman | Worbla eagle being painted
 | ![](/assets/images/projects/wonder_woman_bodice_wip.jpg) | ![](/assets/images/projects/wonder_woman_worbla_wip.jpg)
-Bodice after smoothing and texturing | Making foam base for Worbla pieces
+| Bodice after smoothing and texturing | Making foam base for Worbla pieces
 
 ---
 
 ### Moosehorn fern mount
 
-A moosehorn fern (*Platycerium superbum*) mounted on live-edge cedar. Required some minor woodworking. September 2019.
+A moosehorn fern (*Platycerium superbum*) mounted on live-edge cedar. 24"x24". Required some minor woodworking. September 2019.
 
 ![](/assets/images/projects/moosehorn_mount.jpg){:class="small-img"}
 

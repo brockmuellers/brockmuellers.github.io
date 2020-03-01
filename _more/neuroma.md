@@ -11,15 +11,15 @@ I'd like to avoid surgery for my Morton's neuroma (as well as other permanent op
 **Footwear**\
 These changes take pressure off metatarsals and encourage them to spread.
 * Correct Toes
-* Toe socks (Injinji)
-* Wide/high toe boxes (a tip - take out the insole, stand on it in bare feet, see if you hang over the edge)
-* Adapting shoes that are too tight: use a shoe stretcher; trim above tongue or beside toes to allow toes to spread; use thinner inserts
-* Thinner/looser socks
-* Skip bottom eyelets when lacing shoes
 * Metatarsal pads
 * Traditional orthotics (these can be a crutch, not a solution on their own)
-* Low heel! Even running shoes often have a high heel-to-toe drop.
+* Low heel! Even running shoes often have a high heel-to-toe drop
+* Toe socks (Injinji)
+* Wide/high toe boxes (a tip - take out the insole, stand on it in bare feet, see if you hang over the edge)
+* Thinner/looser socks
+* Skip bottom eyelets when lacing shoes
 * Well-fitted shoes (if they are too big, you slide around and that puts more pressure on it)
+* Adapt existing shoes: use a shoe stretcher; trim above tongue or beside toes to allow toes to spread; use thinner inserts
 
 **Functional correction**
 * Physical therapy (stretching, massage, toe strength, ankle strength, [some examples](https://www.sportsrec.com/424817-types-of-physical-therapy-for-mortons-neuroma.html))
@@ -32,12 +32,11 @@ These changes take pressure off metatarsals and encourage them to spread.
 ### Calming the nerve and surrounding tissues
 
 **Reducing inflammation/pain**
-* Ice
+* Ice, ice massage
 * Cortisone shots (they're not great for other tissues though)
 * Anti-inflammatories (NSAIDs, herbal)
 * Laser therapy (MLS), ultrasound?
 * Rest (but not too much)
-* Ice massage
 * Prescription meds for nerve pain
 
 **Reducing pressure on the nerve**
@@ -60,12 +59,13 @@ These changes take pressure off metatarsals and encourage them to spread.
 * Keep up activity as much as possible - drive, bike, use a cane, go slow
 * Meditation, therapy
 
-### Stuff random people mentioned
+### Ideas random people have mentioned
 
 * Muscle relaxer cream
 * CBD cream
 * Oral THCA for nerve pain
 * Acupuncture
+* Prolotherapy
 * Chiropractors (breaking up scar tissue)
 * Could be misdiagnosed as tarsal tunnel syndrome? 
 * Nerve pain: neuro-eze/neuro-one topicals, lidoderm patches
@@ -104,18 +104,13 @@ Taping strategies:
     * piece 1: cut strip to go mostly around ball of foot
     * stretch about 100% under ball of foot
     * anchor at sides and top
-    * tried this; worked great for right foot, okay for left
 
 What's in common between these strategies?
 * piece under ball of foot, between 10-100% stretch
 * piece that goes between toes
-* one guy put a second piece just behind the ball piece, only over top of the foot
 
-Why does taping work?
-
-(from comments on <https://www.youtube.com/watch?v=Db9qgYPrku4>)
->> Northern Soul 2 years ago\\
-Thanks for the question. I know where you are going with that logic, however that's not happening with this kinesiology taping because of the details. If you wrapped the tape completely around with consistent stretch all the way thru then yes, it would compress the tissue. That's why I incorporated anchor points on both ends with zero stretch, so the tape behaves as a cross fiber taping for increased circulation, which will create surface area by lifting the skin towards least resistance. away from the body. It counter intuitive at first, but that's how the tape behaves and you can see it in other well established and accepted taping styles. Please check out my 101 video on kinesio taping, it may provide some clarity and insight. I've used this taping myself many times in the past and it worked for me. I have no issues with my foot now. I just wanted to share it with others. I hope it helps!
+Why does taping work? (from comments on <https://www.youtube.com/watch?v=Db9qgYPrku4>)
+>> If you wrapped the tape completely around with consistent stretch all the way thru then yes, it would compress the tissue. That's why I incorporated anchor points on both ends with zero stretch, so the tape behaves as a cross fiber taping for increased circulation, which will create surface area by lifting the skin towards least resistance. away from the body.
 
 ---
 
@@ -132,6 +127,8 @@ I like [this article](http://foodsforlonglife.blogspot.com/2016/04/traditional-a
 [This guy](http://www.drblakeshealingsole.com/2015/01/mortons-neuroma-general-principles.html) has a lot of ideas and opinions; he says you should always address all three of mechanical, inflammatory, and neurological issues.
 
 A lot of alternative views [here](http://teamdoctorsblog.com/2012/12/24/mortons-neuroma-self-help-tips-treatment-and-prevention-from-the-barefoot-running-doctor-at-team-doctors/), with focus on massage/stretching.
+
+{% if jekyll.environment == "development" %}
 
 ---
 
@@ -194,6 +191,7 @@ My progress in 2020:
 * 2/02: 25116 steps (Week 5)
 * 2/09: 19068 steps (Week 2)
 * 2/16: 24894 steps (Week 5)
+* 2/23: 29605 steps (Week 7)
 
 ### History
 
@@ -216,6 +214,8 @@ My progress in 2020:
 * 14 months (Nov 19): get new orthotics #2, still uneven so end up wearing one new and one old; also manage to walk 17k steps in one day
 * 15 months (Dec 19): orthotics still not perfect, fit for new set #3; go on vacation and do too much beach walking
 * 16 months (Jan 20): increased pain after vacation; started newest orthotics #3
-* 17 months (Feb 20): orthotics fit correctly; Dr. Chou says it may take up to 6 months for full recovery (end of July); second opinion appointment with Dr. Co confirms treatment; start PT again
+* 17 months (Feb 20): orthotics fit correctly; Dr. Chou says it may take up to 6 months for full recovery (end of July); second opinion appointment with Dr. Co confirms treatment; start PT again; got Altras that fit orthotics
 * (18 months (Mar 20): will have followup with Dr. Chou)
 * (19 months (Apr 20): scheduled appointment with Dr. Blake)
+
+{% endif %}

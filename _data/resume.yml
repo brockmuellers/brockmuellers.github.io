@@ -2,7 +2,7 @@ name: Sara Brockmueller
 website: self.brockmuellers.com
 email: brockmuellers@gmail.com
 github: github.com/brockmuellers
-summary: Software engineer with 6+ years professional experience. Currently, most experienced with system design, building platforms/frameworks, and scaling systems (but always excited to learn new things!). Looking to work on hard problems, collaborate with smart and passionate people, and build important products.
+summary: Software engineer with 6+ years professional experience. Most experienced with system design, building platforms/frameworks, and scaling systems (but always excited to learn new things!). Looking to work on hard problems, collaborate with smart and passionate people, and build important products.
 code-priorities: Shipping features quickly and confidently via readable/maintainable code, solid unit tests, and generic libraries to increase developer velocity.
 culture-priorities: Respect, transparency, social responsibility, curiosity, and using failure for growth.
 
@@ -40,9 +40,9 @@ experience:
         - description: N-dimensional spatially-indexed database system and server, which handled 3+ petabytes of data.
           subitems:
             - Led feature development and maintenance for RPC-based data storage service, and the backing storage system on DynamoDB and S3. Built Java CLI tools for common data operations, improved useability of spatial abstractions for data indexing, made cost/performance optimizations, and managed deployments.
-            - Managed team responsible for data storage and access. Led redesign of an automated data export process, which reduced developer time spent per tissue sample from several hours to ~30 minutes.
+            - Managed a team responsible for data storage and access. Led redesign of an automated data export process, which reduced developer time spent per tissue sample from several hours to ~30 minutes.
             - Created a tool to run efficient batch delete operations, ultimately saving >$20K per month in AWS bills.
-            - Transformed thick data client into a gRPC service, which allowed users to run thin clients with no knowledge of the backing data structure, and permitted database migrations. Built corresponding fakes for testing, reducing test suite runtime from 10 minutes to 2 minutes.
+            - Transformed thick client for data access into a gRPC service, which allowed users to run thin clients with no knowledge of the backing data structure, and permitted database migrations. Built corresponding fakes for testing, reducing test suite runtime from 10 minutes to 2 minutes.
             - Wrote a data processing service that allowed clients to run custom analysis on gigabytes of data in near-real-time, by distributing work across a pool of gRPC servers and randomizing data selection. Reduced client request times from several minutes to several seconds.
             - Built a wrapper around an undocumented API for a biological annotation service, so data could easily be submitted for annotation, and results could be retrieved and serialized for future use.
 
@@ -53,17 +53,17 @@ experience:
 
         - description: Shared libraries and code quality.
           subitems:
-            - Built and maintained a runtime assertion library used by the entire software team, which enforced runtime expectations for images and domain-specific data structures. This made error handling and logging consistent across the codebase, and made distributed system failures easier to debug.
+            - Built and maintained a runtime assertion library used by the entire software team. This made error handling and logging consistent across the codebase, provided validation for domain-specific data structures, and made distributed system failures easier to debug.
             - Led development of serialization and test libraries, providing functionality specific to imagery and internal data structures.
             - Built tools for writing more robust AWS-based and gRPC-based services. Improved retry strategies, concurrency in network calls, and test reliability.
             - Initiated development of code quality and reliability standards. Worked with team to develop style guides, identify ways to reduce technical debt, standardize logging and metric collection, integrate static analysis tools, and improve test coverage and reliability. Mentored junior engineers during pair programming and code reviews.
 
       simple-items:
-        - Led feature development and operations for a spatially-indexed data storage system, backed by AWS. Built Java CLI tools, made cost/performance optimizations, and managed deployments.
-        - Managed team responsible for data storage and access. Led redesign of an automated data export process, which reduced developer time spent per tissue sample from several hours to ~30 minutes. Created a tool to run efficient batch delete operations, ultimately saving >$20K per month in AWS bills.
-        - Transformed thick data client into a gRPC service, permitting database migrations. Built corresponding fakes for testing, reducing test suite runtime from 10 minutes to 2 minutes.
+        - Led feature development and operations for a petabyte-scale spatially-indexed data storage system, backed by AWS. Built Java CLI tools, made cost/performance optimizations, ran deployments, and provided developer support.
+        - Managed a team responsible for data storage and access. Led redesign of an automated data export process, which reduced developer time spent per tissue sample from several hours to ~30 minutes. Created a tool to run efficient batch delete operations, ultimately saving >$20K per month in AWS bills.
+        - Transformed thick client for data access into a gRPC service, permitting database migrations. Built corresponding fakes for testing, reducing test suite runtime from 10 minutes to 2 minutes.
         - Wrote a distributed gRPC data processing service that allowed clients to run custom analysis on gigabytes of data in near-real-time. Reduced client request times from several minutes to several seconds.
-        - Built Python prototype of distributed, event-driven data analysis system for multi-terabyte data sets. Set up AWS infrastructure to run it (SQS, ECS, DynamoDB) and onboarded analysis developers. Scaled the system to allow analysis algorithms to be run on ~$100x larger data sets.
+        - Built Python prototype of distributed, event-driven data analysis system for multi-terabyte data sets. Set up AWS infrastructure to run it (SQS, ECS, DynamoDB) and onboarded analysis developers. Scaled the system to allow analysis algorithms to be run on ~100x larger data sets.
         - "Led development of core libraries: runtime assertions, serialization, and domain-specific test libraries."
         - Initiated development of code quality and reliability standards. Worked with team to develop style guides, improve test coverage and reliability, and standardize logging and metric collection.
 
@@ -75,12 +75,12 @@ experience:
       detailed-items:
         - description: Worked on the platform team to develop and maintain full-stack Ruby on Rails apps and RESTful API. These powered hundreds of mobile payments and loyalty apps in the food service industry, processing $20M from 600K users monthly. Improved scalability with async processing, caching, and moving to service-oriented architecture.
         - description: Collaborated with a small team to architect and build a web service to enable order fulfillment through external online ordering provider. This included menu modeling and updating, suggesting orders, and integrating with provider APIs to process orders.
-        - description: Created dashboard for a sandbox server, to extend functionality for external developers using our API.
+        - description: Created dashboard for a sandbox server to extend functionality for external developers using our API.
 
       simple-items:
         - Worked on the platform team to develop and maintain full-stack Ruby on Rails apps and RESTful API. These powered hundreds of mobile payments and loyalty apps in the food service industry, processing $20M from 600K users monthly. Improved scalability with async processing, caching, and moving to service-oriented architecture.
         - Collaborated with a small team to architect and build a web service to enable order fulfillment through external online ordering provider. This included menu modeling and updating, suggesting orders, and integrating with provider APIs to process orders.
-        - Created dashboard for a sandbox server, to extend functionality for external developers using our API.
+        - Created dashboard for a sandbox server to extend functionality for external developers using our API.
 
   internships:
 
@@ -99,7 +99,7 @@ experience:
       end: Dec 2011
       description: Designed and performed psychophysics and EEG experiments on the role of neural feedback mechanisms in human visual processing. Wrote MATLAB scripts for synthesis of image masks, running experiments, and data analysis.
 
-    - company: MIT Center for Brain and Computational Learning
+    - company: Sanford Research/University of South Dakota
       start: Jun 2010
       end: Aug 2010
       description: Researched pancreatic cell proliferation in Type I diabetes, using cryoslicing, fluorescent staining, microscopy, and photo-editing software.

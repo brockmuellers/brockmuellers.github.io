@@ -35,7 +35,7 @@ These changes take pressure off metatarsals and encourage them to spread.
 * Ice, ice massage
 * Cortisone shots (they're not great for other tissues though)
 * Anti-inflammatories (NSAIDs, herbal)
-* Laser therapy (MLS), ultrasound?
+* Ultrasound?
 * Rest (but not too much)
 * Prescription meds for nerve pain
 
@@ -51,6 +51,7 @@ These changes take pressure off metatarsals and encourage them to spread.
 * Taping with kinesio tape (more on that below)
 * [Topicals like menthol or capsaicin](https://naturalfootgear.com/blogs/education/17882504-foot-circulation-tips)
 * Massage of surrounding areas
+* Laser therapy (MLS)?
 
 ### Living with the pain
 
@@ -134,7 +135,30 @@ A lot of alternative views [here](http://teamdoctorsblog.com/2012/12/24/mortons-
 
 # My experience
 
+NEW LINKS:
+* <http://www.aapsm.org/> to find podiatrists specializing in sports medicine
+* <https://www.academyofclinicalmassage.com/putting-squeeze-mortons-neuroma/>
+
 ### My current strategy
+
+strength:
+ankle: band kicks (20x), alphabet (1x)
+foot: towel grab (20x), toe raises (20x)
+calf: sitting calf raises (20x)
+
+mobility:
+(heat)
+calf rolling, then *calf stretching*
+*foot rolling*, then foot stretching (*achilles*, plantar fascia, metatarsal mobilization)
+*nerve glides*
+
+*then ice*
+
+YOGA
+
+https://www.mortonsneuroma.com/blog/mortons-neuroma-foot-exercises/
+https://www.dynamicchiropractic.com/mpacms/dc/article.php?id=56083
+
 
 Strength/flexibility
 * Foot self-massage (ball roll)
@@ -184,6 +208,12 @@ Increase by ~10% every week.
 1. 70000 / 10000!!!
 
 My progress in 2020:
+* 11/24: 27582 (6)
+* 12/01: 24948 (5)
+* 12/08: 34541 (9)
+* 12/15: 31611 (8)
+* 12/22: 23579 (5)
+* 12/29: 23966 (5)
 * 1/05: 20945 steps (Week 3)
 * 1/12: 22455 steps (Week 4)
 * 1/19: 19519 steps (Week 3)
@@ -192,6 +222,8 @@ My progress in 2020:
 * 2/09: 19068 steps (Week 2)
 * 2/16: 24894 steps (Week 5)
 * 2/23: 29605 steps (Week 7)
+* 3/01: 21750 steps (Week 4)
+* (add 2252 to 3/10)
 
 ### History
 
@@ -215,7 +247,7 @@ My progress in 2020:
 * 15 months (Dec 19): orthotics still not perfect, fit for new set #3; go on vacation and do too much beach walking
 * 16 months (Jan 20): increased pain after vacation; started newest orthotics #3
 * 17 months (Feb 20): orthotics fit correctly; Dr. Chou says it may take up to 6 months for full recovery (end of July); second opinion appointment with Dr. Co confirms treatment; start PT again; got Altras that fit orthotics
-* (18 months (Mar 20): will have followup with Dr. Chou)
-* (19 months (Apr 20): scheduled appointment with Dr. Blake)
+* 18 months (Mar 20): followup with Dr. Chou, got more laser therapy and she suggested injections might be necessary in a month
+* (19 months (Apr 20): followup with Dr. Chou, scheduled appointment with Dr. Blake)
 
 {% endif %}

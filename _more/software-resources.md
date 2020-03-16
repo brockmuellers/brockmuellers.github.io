@@ -13,6 +13,8 @@ Examples of existing systems
 * <https://redditblog.com/2017/1/17/caching-at-reddit/>
 * <https://medium.com/@narengowda/netflix-system-design-dbec30fede8d>
 
+[Becoming a software architect](https://github.com/justinamiller/SoftwareArchitect)
+
 ## Documentation
 
 <https://www.divio.com/blog/documentation/>

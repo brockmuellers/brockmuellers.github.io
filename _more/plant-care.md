@@ -140,6 +140,10 @@ Fully dry: don't water unless the soil is completely dry. Especially in cooler c
 
 **Feeding**: wait this amount of time between feeding. Stop feeding in winter, unless the plant is actively growing.
 
+### Supplements and sprays
+
+* Iron chlorosis: Yellowing leaves may be a sign iron chlorosis. This can be caused by a deficiency of iron in the soil, but more often is due to the plant failing to take up enough iron. This can be due to problems with the root system (compacted old soil, root rot, etc), because the soil is too alkaline, or because the soil does not have enough organic material. Repotting will often solve the problem, but if that doesn't work or is not possible, one can acidify the soil or provide an iron supplement. To acidify the soil, water with a solution of 1 Tbs vinegar in 1 gal water (or 1/4 tsp vinegar in 1 1/3 cups water). Iron supplementation can be provided monthly with chelated liquid iron, as a foliar spray or soil supplement.
+
 ### Resources
 
 [Plant troubleshooting guide](http://greenhouse.kenyon.edu/troubleshooting.htm)
@@ -150,3 +154,4 @@ Fully dry: don't water unless the soil is completely dry. Especially in cooler c
 Icon sources\\
 <https://www.iconfinder.com/icons/183364/sun_icon>\\
 <https://www.iconfinder.com/icons/183365/sun_icon>
+0.003906

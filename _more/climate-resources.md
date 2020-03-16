@@ -94,3 +94,9 @@ Just a few options:
 ## Sort of related
 
 [The backend of America](https://aeon.co/essays/america-still-has-a-heartland-it-s-just-an-artificial-one)
+
+While [this article on facing extinction](https://www.catherineingram.com/facingextinction/) is immensely depressing and I don't entirely agree with its assumptions, I like this quote about blame and anger related to climate change:
+>> In a recent blog post, writer James Kunstler proposed a pithy theory of why humans chose each step of our path in history: “It just seemed a good idea at the time.”  We plunged forward with each new way of doing things, each new invention, because it made life easier at the time.  There was no intention to destroy ourselves.\
+...\
+As theoretical physicist Peter Russell mused in a podcast conversation with me in 2016, “What if we saw ourselves as a cosmic flame blooming in the universe and coming to its natural end?”\
+What if we forgave everybody everything?

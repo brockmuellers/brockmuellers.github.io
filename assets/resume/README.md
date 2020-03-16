@@ -15,4 +15,4 @@ tlmgr install titlesec --usermode
 
 There must be a `resume.json` file in this directory.
 
-To compile via line: `lualatex -synctex=1 -interaction=nonstopmode "resume_simple".tex`
+To compile via line: `lualatex -synctex=1 -interaction=nonstopmode "resume".tex`

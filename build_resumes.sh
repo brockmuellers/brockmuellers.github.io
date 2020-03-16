@@ -11,7 +11,7 @@ JSON_PATH=${RESUME_DIR}/${JSON_OUT_FILE}
 cat _data/resume.yml | python3 -c 'import sys, yaml, json; y=yaml.load(sys.stdin.read()); print(json.dumps(y))' > $JSON_PATH &&
 
 cd $RESUME_DIR &&
-lualatex -synctex=1 -interaction=nonstopmode "resume_simple".tex &&
+lualatex -synctex=1 -interaction=nonstopmode "resume".tex &&
 lualatex -synctex=1 -interaction=nonstopmode "resume_large".tex &&
 echo "Successfully generated resumes." &&
 
@@ -19,6 +19,6 @@ if [ "$DATE_FOR_BACKUP" != "" ]
 then
     BACKUP_DEST=${BACKUP_DIR}/${DATE_FOR_BACKUP} &&
     mkdir $BACKUP_DEST &&
-    cp ./{resume_large.tex,resume_simple.tex,resume_large.pdf,resume_simple.pdf,resume.json} $BACKUP_DEST/ &&
+    cp ./{resume_large.tex,resume.tex,resume_large.pdf,resume.pdf,resume.json} $BACKUP_DEST/ &&
     echo "Copied files to ${BACKUP_DEST}."
 fi

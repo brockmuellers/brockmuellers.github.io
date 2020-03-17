@@ -3,6 +3,10 @@ layout: page
 
 image: /assets/images/kings_canyon_sunset.jpg
 ---
+
+<!---An attempt at SEO-->
+<h1 hidden=true>Sara Brockmueller</h1>
+
 ### Hi! I'm Sara.
 
 I'm a software engineer based in San Francisco. I have 6+ years of experience in backend development, focused on building cloud-based platforms/frameworks and scaling systems.

@@ -6,94 +6,92 @@ summary:  >-
     understanding and combating climate change.
 ---
 
+I've spent several months trying to understand climate change and the current state of mitigation strategies. These are some resources that I've found helpful.
+
 ## Staying positive
 
-**[outrage and optimism podcast](http://globaloptimism.com/podcast/)**
+**[Outrage and Optimism podcast](http://globaloptimism.com/podcast/)**
 
-<http://brightyellow.co/hope>
+[Positive climate-related newsfeed](http://brightyellow.co/hope)
 
-<https://www.bbc.com/future/article/20191010-how-to-beat-anxiety-about-climate-change-and-eco-awareness>
+[How to beat climate anxiety](https://www.bbc.com/future/article/20191010-how-to-beat-anxiety-about-climate-change-and-eco-awareness)
 
 ## General climate change education
 
-**<https://www.drawdown.org/solutions-summary-by-rank>**
+**[Project Drawdown](https://www.drawdown.org/solutions-summary-by-rank)**
 
-<https://cmi.princeton.edu/wedges/intro>
+**[Intro to the concept of stabilization wedges](https://cmi.princeton.edu/wedges/intro)**
 
-<https://www.ipcc.ch/report/ar5/syr/>
+[IPCC](https://www.ipcc.ch/)
 
-<https://www.climaterealityproject.org/climate-change-basics>
+[Climate Crisis 101 ebook](https://www.climaterealityproject.org/climate-change-basics)
 
-<https://interactive.carbonbrief.org/impacts-climate-change-one-point-five-degrees-two-degrees/>
+[Interactive demonstration of how different levels of climate change can affect us](https://interactive.carbonbrief.org/impacts-climate-change-one-point-five-degrees-two-degrees/)
 
-<https://www.smartgrid.gov/the_smart_grid/smart_grid.html>
+[Making our electricity grid "smart"](https://www.smartgrid.gov/the_smart_grid/smart_grid.html)
 
-<https://www.tmrow.com/climatechange>
+[A straightforward overview](https://www.tmrow.com/climatechange)
 
-<https://www.withouthotair.com/>
+[Sustainable energy ebook](https://www.withouthotair.com/)
 
-<https://www.iea.org/weo2019/>
+[World energy outlook](https://www.iea.org/weo2019/)
 
-<https://climate.mit.edu/symposia>
+[Climate change symposia at MIT](https://climate.mit.edu/symposia)
 
-<https://www.carbonbrief.org/explainer-nine-tipping-points-that-could-be-triggered-by-climate-change>
+[Tipping points we may encounter](https://www.carbonbrief.org/explainer-nine-tipping-points-that-could-be-triggered-by-climate-change)
 
 
 ## Tech-specific resources
 
 **[ClimateAction.tech community](https://climateaction.tech/#join)**
 
-**<http://worrydream.com/ClimateChange/>**
+**[A fantastic overview of the ways people in tech can help](http://worrydream.com/ClimateChange/)**
 
-<https://www.goodtechlab.io/reports>
+**[A journey through the climate crisis, told through a diverse set of articles](https://www.notion.so/Near-tools-dc5421a5f4d84c40b846cf51a04bcd04)**
 
-<https://climateaction.tech/guide/>
+[Report on ways that technology can fight climate change](https://www.goodtechlab.io/reports)
 
-<https://www.notion.so/Near-tools-dc5421a5f4d84c40b846cf51a04bcd04>
+[A blog post about largely non-professional approaches to fighting climate change](https://codewithoutrules.com/2019/09/10/software-developers-climage-change/)
 
-<https://bdtechtalks.com/2018/10/18/reduce-energy-consumption-with-right-code/amp/>
+[Writing sustainable code](https://bdtechtalks.com/2018/10/18/reduce-energy-consumption-with-right-code/amp/)
 
-<https://codewithoutrules.com/2019/09/10/software-developers-climage-change/>
-
-<https://voice.ch.ckl.st/how-i-am-fighting-climate-change-as-a-software-developer/amp/>
-
-<http://carbon.ycombinator.com/>
+[Y Combinator's climate-specific page](http://carbon.ycombinator.com/>)
 
 ## Finding a job
 
-<https://medium.com/@leventov/how-to-find-a-job-in-a-tech-company-helping-to-combat-climate-change-practical-guide-e212e262a32>
+[A post on finding relevant companies](https://medium.com/@leventov/how-to-find-a-job-in-a-tech-company-helping-to-combat-climate-change-practical-guide-e212e262a32), and an associated open [database of organizations](https://climatescape.org/) fighting climate change
 
-<https://ch.ckl.st/share/5c9007a24c6f1b004a6098ae>
+[Step-by-step guide for the job search process](https://voice.ch.ckl.st/how-i-am-fighting-climate-change-as-a-software-developer/amp/)
 
-Places to look for jobs
+Places to look for jobs:
 * **<https://climate.careers/>**
 * <https://techjobsforgood.com/>
 * <https://www.splashwithdolphin.com/>
 * <https://www.cleanenergyjobslist.com/>
-* Startups; can filter by industry <https://angel.co/jobs>
+* [Startup jobs on AngelList](https://angel.co/jobs); can filter by industry
 * Look at the portfolios of VC firms that focus on social impact
     * <https://www.congruentvc.com/>
     * <https://www.fifty.vc/>
     * <http://www.dblpartners.vc/>
     * <https://obvious.com/>
 
-## Industries with most software jobs
-
-Tons of options:
-* Energy use optimization (for both businesses and consumers): smart buildings, smart motors, energy tracking tools
-* Renewable energy (mostly solar): installation design, management systems, financing/insurance
-* Food: reducing waste, robotic farming, ML for farm operations
-* Transportation: electric buses and fleet vehicles, charging infrastructure
-
-Just a few options:
-* Grid/microgrid optimization
-* Reforestation
-* Technology development (these tend to be less software-focused): battery development, engineering cleaner industrial materials, direct air capture
-* Female empowerment: microloans, improving birth control availability
+Industries with most software jobs:
+* Tons of options:
+    * Energy use optimization (for both businesses and consumers): smart buildings, smart motors, energy tracking tools
+    * Renewable energy (mostly solar): installation design, management systems, financing/insurance
+    * Food: reducing waste, robotic farming, ML for farm operations
+    * Transportation: electric buses and fleet vehicles, charging infrastructure
+* Just a few options:
+    * Grid/microgrid optimization
+    * Reforestation
+    * Technology development (these tend to be less software-focused): battery development, engineering cleaner industrial materials, direct air capture
+    * Female empowerment: microloans, improving birth control availability
 
 ## Sort of related
 
 [The backend of America](https://aeon.co/essays/america-still-has-a-heartland-it-s-just-an-artificial-one)
+
+[Should we use less violent language when talking about climate change?](https://grist.org/climate/the-war-on-climate-the-climate-fight-are-we-approaching-the-problem-all-wrong/)
 
 While [this article on facing extinction](https://www.catherineingram.com/facingextinction/) is immensely depressing and I don't entirely agree with its assumptions, I like this quote about blame and anger related to climate change:
 >> In a recent blog post, writer James Kunstler proposed a pithy theory of why humans chose each step of our path in history: “It just seemed a good idea at the time.”  We plunged forward with each new way of doing things, each new invention, because it made life easier at the time.  There was no intention to destroy ourselves.\

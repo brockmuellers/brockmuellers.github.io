@@ -24,6 +24,6 @@ I grew up on a farm in South Dakota, with a few years in rural Cambodia. Then I 
 
 I love hiking in the mountains or finding dark skies to look at the stars - there's nothing better to remind me that my problems are tiny and the universe is vast and beautiful. My apartment has been described as a jungle: ~40 species of mostly-tropical plants, two geckos, and the occasional tropical cockroach. I spend a lot of time hanging out with my cat, since she's the best cat. Occasionally I'll have a flash of inspiration and dive into a project that I know nothing about (recently, thermoplastics for cosplay). My favorite kind of project is one that leads me into brand new territory.
 
-Currently, I'm taking some time off to read, write, create, and figure out what I want to work on next.
+I've recently been taking a few months off to read, write, create, code silly little projects, and figure out what I want to work on next. It's been an immensely fulfilling time and I've learned a lot (especially about climate change), but I'm starting to get the itch to write software professionally again!
 
 {% include sourced_image.html image=page.cat_image image_class="large-img"%}

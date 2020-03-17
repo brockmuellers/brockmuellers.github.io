@@ -3,11 +3,17 @@ layout: page
 
 image: /assets/images/kings_canyon_sunset.jpg
 ---
-#### Hi! I'm Sara. Welcome to my personal site.
+### Hi! I'm Sara.
+
+I'm a software engineer based in San Francisco. I have 6+ years of experience in backend development, focused on building cloud-based platforms/frameworks and scaling systems.
+
+I'm currently looking for a new role, specifically at companies working on climate change and sustainability (renewable energy, conservation agriculture, environmental projects, etc). If you work in that space, I'd love to talk!
 
 ---
 
-Some quick links:
+### A few quick links:
+
+Professional stuff:
 
 * [About me]({% link about.md %})
 
@@ -15,11 +21,13 @@ Some quick links:
 
 * [My github](https://github.com/{{ site.github_username }})
 
+* [LinkedIn](https://www.linkedin.com/in/{{ site.linkedin_username }})
+
+Hobbies and passions:
+
 * [Resources for learning about climate change]({% link _more/climate-resources.md %})
 
-* [My plant roster]({% link _more/plant-care.md %})
-
-* [Non-tech projects]({% link _more/projects.md %})
+* [Plant roster]({% link _more/plant-care.md %})
 
 * A silly tool I wrote about: [tutorial]({% post_url 2020-02-26-web-scraper-to-find-new-products %}) and [code](https://github.com/brockmuellers/watch-products)
 

@@ -4,7 +4,7 @@ title: Resume
 permalink: /resume/
 ---
 
-([Link to PDF (more concise)]({{ site.baseurl }}/assets/resume/resume.pdf))
+([Link to PDF]({{ site.baseurl }}/assets/resume/resume.pdf))
 
 ---
 

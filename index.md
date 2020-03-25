@@ -1,6 +1,6 @@
 ---
 layout: default
-
+title: Welcome
 image: /assets/images/kings_canyon_sunset.jpg
 ---
 

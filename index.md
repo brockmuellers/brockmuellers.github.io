@@ -1,10 +1,10 @@
 ---
-layout: page
+layout: default
 
 image: /assets/images/kings_canyon_sunset.jpg
 ---
 
-<h1>Hi! I'm Sara Brockmueller.</h1>
+<header><h1 class="page-heading">Hi! I'm Sara Brockmueller.</h1></header>
 
 I'm a software engineer based in San Francisco. I have 6+ years of experience in backend development, focused on building cloud-based platforms/frameworks and scaling systems.
 
@@ -12,7 +12,7 @@ I'm currently looking for a new role, specifically at companies working on clima
 
 ---
 
-# A few quick links:
+## A few quick links:
 
 Professional stuff:
 

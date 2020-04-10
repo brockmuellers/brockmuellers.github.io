@@ -2,7 +2,7 @@ genus,species,variety,grex,cultivar,water,humidity,light,temp,feed,notes,links,c
 Adenium,obesum,,,Red Picotee,fully dry,,full,>60,1 mo,Keep dry and cool if dormant. Prone to iron chlorosis.,,1,
 Aglaonema,,,,Sparkling Sarah,partly dry,preferred,indirect,>65,1 mo,,,2,
 Alluaudia,procera,,,,fully dry,,full,>40,2 mo,,,1,
-Alocasia,,,,Boa,surface dry,required,full;part,>60,2 mo,Susceptible to spider mites.,,1,
+Alocasia,,,,Boa,surface dry,required,full;part,>60,2 mo,Susceptible to spider mites.,,0,cold
 Alocasia,,,,Morocco,surface dry,required,indirect,>60,2 mo,Susceptible to spider mites.,,0,low humidity
 Alocasia,micholitziana,,,Variegated Frydek,surface dry,required,indirect,>65,2 wk,Susceptible to spider mites.,,1,
 Alocasia,,,,Stingray,surface dry,required,full;part,>60,2 mo,Susceptible to spider mites.,,0,trauma from gecko

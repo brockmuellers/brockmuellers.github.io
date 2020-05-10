@@ -1,6 +1,7 @@
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
+*.~lock*
 _drafts/*
 _site
 assets/resume/json.lua

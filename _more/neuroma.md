@@ -129,6 +129,28 @@ I like [this article](http://foodsforlonglife.blogspot.com/2016/04/traditional-a
 
 A lot of alternative views [here](http://teamdoctorsblog.com/2012/12/24/mortons-neuroma-self-help-tips-treatment-and-prevention-from-the-barefoot-running-doctor-at-team-doctors/), with focus on massage/stretching.
 
+### My current strategy
+* Strength
+  * Ankle: band kicks (20x), alphabet (1x)
+  * Foot: towel grab (20x), toe raises (10x)
+  * Calf: sitting calf raises (20x)
+* Mobility
+  * Calf stretching (3x30s, 3x per day)
+  * Foot rolling (3x per day)
+  * Metatarsal mobilization
+  * Nerve glides (10x, 3x per day)
+* Inflammation
+  * Vitamins/supplements
+  * L-arginine cream
+  * (Ice and/or KT tape when painful)
+* Footwear
+  * Metatarsal pads in house shoes
+  * Orthotics + Altras outside
+* General fitness
+  * Yoga
+  * Pilates, body weight workouts
+  * Daily walking
+
 {% if jekyll.environment == "development" %}
 
 ---
@@ -191,21 +213,21 @@ Increase by ~10% every week.
 
 16 week step goal program: (weekly / daily)
 1. 17000 / 2450
-1. 18500 / 2650
-1. 20500 / 2900
-1. 22500 / 3200
-1. 24500 / 3500
-1. 27000 / 3850
-1. 29500 / 4250
-1. 32500 / 4650
-1. 36000 / 5150
-1. 39500 / 5650
-1. 43500 / 6200
-1. 48000 / 6850
-1. 52500 / 7500
-1. 58000 / 8250
-1. 63500 / 9100
-1. 70000 / 10000!!!
+2. 18500 / 2650
+3. 20500 / 2900
+4. 22500 / 3200
+5. 24500 / 3500
+6. 27000 / 3850
+7. 29500 / 4250
+8. 32500 / 4650
+9. 36000 / 5150
+10. 39500 / 5650
+11. 43500 / 6200
+12. 48000 / 6850
+13. 52500 / 7500
+14. 58000 / 8250
+15. 63500 / 9100
+16. 70000 / 10000!!!
 
 My progress in 2020:
 * 11/24: 27582 (6)
@@ -223,7 +245,15 @@ My progress in 2020:
 * 2/16: 24894 steps (Week 5)
 * 2/23: 29605 steps (Week 7)
 * 3/01: 21750 steps (Week 4)
-* (add 2252 to 3/10)
+* 3/08: 16324 steps (Week 1) (added 2252 to 3/10?)
+* 3/15: 19164 steps (Week 2)
+* 3/22: 22363 steps (Week 4)
+* 3/29: 12974 steps (Week -)
+* 4/05: 15925 steps (Week -)
+* 4/12: 20258 steps (Week 3)
+* 4/19: 24218 steps (Week 5)
+* 4/26: 18778 steps (Week 2)
+* 5/03: 22486 steps (Week 4)
 
 ### History
 

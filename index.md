@@ -7,8 +7,7 @@ image: /assets/images/kings_canyon_sunset.jpg
 <header><h1 class="page-heading">Hi! I'm Sara Brockmueller.</h1></header>
 
 I'm a software engineer based in San Francisco. I have 6+ years of experience in backend development, focused on building cloud-based platforms/frameworks and scaling systems.
-
-I'm currently looking for a new role, specifically at companies working on climate change and sustainability (renewable energy, conservation agriculture, environmental projects, etc). If you work in that space, I'd love to talk!
+I'm passionate about climate change and sustainability, as well as music, plants, hiking, and trying new things.
 
 ---
 

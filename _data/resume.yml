@@ -15,7 +15,7 @@ education:
 skills:
 
   - name: Languages/Frameworks
-    value: Proficient in Java, Python, and gRPC. Significant experience in Ruby on Rails. Some prior experience in Django, Meteor, and MATLAB.
+    value: Proficient in Java, Python, Go, and gRPC. Significant experience in Ruby on Rails. Some prior experience in Django, Meteor, and MATLAB.
 
   - name: Databases
     value: DynamoDB, PostgreSQL, some experience in MongoDB.
@@ -24,11 +24,23 @@ skills:
     value: Proficient with AWS services for compute (EC2, ECS, Batch, Lambda), storage (S3, DynamoDB), integration (SQS, SNS). Some experience with metrics/monitoring (Prometheus/Grafana, AWS CloudWatch), infrastructure as code (Terraform).
 
   - name: Architecture
-    value: Distributed and concurrent systems, MapReduce, cloud-based services, microservices (both REST APIs and RPC), database design.
+    value: Distributed and concurrent systems, MapReduce, cloud-based services, microservices (both REST APIs and RPC), web development, atabase design.
 
 experience:
 
   jobs:
+
+    - company: Silo
+      role: Software Engineer
+      start: Apr 2020
+      end: present
+
+      detailed-items:
+        - description: Developing backend of a perishable foods marketplace - automating workflows and improving efficiency for wholesale distributers.
+
+      simple-items:
+        - Developing backend of a perishable foods marketplace - automating workflows and improving efficiency for wholesale distributers.
+
 
     - company: 3Scan
       role: Software Engineer

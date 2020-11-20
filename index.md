@@ -20,8 +20,7 @@ I'm passionate about climate change and sustainability, as well as music, plants
 * [My github](https://github.com/{{ site.github_username }})
 
 * [LinkedIn](https://www.linkedin.com/in/{{ site.linkedin_username }})
----
 
-Also, here are some pretty mountains in Kings Canyon:
+---
 
 {% include sourced_image.html image=page.image image_class="large-img"%}

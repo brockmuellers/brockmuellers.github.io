@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Plant care
-summary: Cheatsheet for plant care instructions.
+title: Plants
+permalink: /plants/
 
 image: /assets/images/botanical_gardens.jpg
 

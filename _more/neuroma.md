@@ -8,7 +8,7 @@ I'd like to avoid surgery for my Morton's neuroma (as well as other permanent op
 
 ### Mechanical
 
-**Footwear**\
+**Footwear**
 These changes take pressure off metatarsals and encourage them to spread.
 * Correct Toes
 * Metatarsal pads

@@ -1,7 +1,7 @@
 genus,species,variety,grex,cultivar,water,humidity,light,temp,feed,count,cause_of_death,notes,links
 Adenium,obesum,,,Red Picotee,fully dry,,full,>60,1 mo,1,,Keep dry and cool if dormant. Prone to iron chlorosis.,
 Adenium,obesum,,,Star Cluster,fully dry,,full,>60,1 mo,1,,Keep dry and cool if dormant. Prone to iron chlorosis.,
-Aglaia,odorata,,,,fully dry,,full;part;indirect;shade,>35,1 wk,1,,Some direct sunlight is beneficial. Requires periodic pruning. ,
+Aglaia,odorata,,,,fully dry,,full;part;indirect;shade,>35,1 wk,1,,Some direct sunlight is beneficial. Requires periodic pruning.,
 Aglaonema,,,,Sparkling Sarah,partly dry,preferred,indirect,>65,1 mo,1,,,
 Alluaudia,procera,,,,fully dry,,full,>40,2 mo,2,,,
 Alocasia,micholitziana,,,Variegated Frydek,surface dry,required,part;indirect,>65,2 wk,2,,Susceptible to spider mites. Prefers bright and consistent light; may drop leaves when turned.,
@@ -49,7 +49,7 @@ Nephrolepsis,exaltata,whitmanii,,,surface dry,required,indirect;shade,>50,1 mo,2
 Oncidium,,,Moon Shadow,Tiger Tail,surface dry,required,indirect,>55-65,1 wk,1,,Winter rest period: allow plant to just dry out between waterings. Give warm showers while growing.,https://travaldo.blogspot.com/2017/12/grow-and-care-oncidium-varicosum-orchid.html;https://travaldo.blogspot.com/2017/12/grow-and-care-oncidium-flexuosum-orchid.html
 Passiflora,edulus,,,Possum Purple,surface dry,preferred,full,>60-65,1 mo,0,pests,,
 Passiflora,x decaisnenana,,,Purple Tiger,surface dry,preferred,full;part,>45-60,1 mo,1,,Blooms in spring and fall. Requires sturdy trellis.,
-Persea ,americana,,,,surface dry,preferred,full;part,>35,1 wk,0,abandoned in move,,
+Persea,americana,,,,surface dry,preferred,full;part,>35,1 wk,0,abandoned in move,,
 Phalaenopsis,sp.,,,,mostly dry,required,indirect,>50,1 mo,2,underwatering,,
 Philodendron,melanochrysum,,,,surface dry,required,indirect;shade,>60,2 mo,1,,Thrives when allowed to climb.,
 Philodendron,micans,,,,surface dry,required,indirect;shade,>45,2 mo,1,,,

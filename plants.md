@@ -87,6 +87,8 @@ show_dead_plants: false
 
                     <td>{% if plant.temp %}{{plant.temp}}°{% endif %}</td>
 
+                    <td>{{plant.water}}</td>
+
                     <td>{{plant.humidity}}</td>
 
                     <td>

@@ -31,6 +31,7 @@ show_dead_plants: false
             <th>Name</th>
             <th>Light</th>
             <th>Temp</th>
+            <th>Water</th>
             <th>Humidity</th>
             <th>Feeding</th>
             <th>Notes</th>

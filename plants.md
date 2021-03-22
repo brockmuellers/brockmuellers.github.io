@@ -88,7 +88,17 @@ show_dead_plants: false
 
                     <td>{% if plant.temp %}{{plant.temp}}°{% endif %}</td>
 
-                    <td>{{plant.water}}</td>
+                    <td>
+                        <!-- include hidden span with vals for column sorting -->
+                        <span hidden>
+                            {% if plant.water == "evenly moist" %}0{% endif %}
+                            {% if plant.water == "surface dry" %}1{% endif %}
+                            {% if plant.water == "partly dry" %}2{% endif %}
+                            {% if plant.water == "mostly dry" %}3{% endif %}
+                            {% if plant.water == "fully dry" %}4{% endif %}
+                        </span>
+                        {{plant.water}}
+                    </td>
 
                     <td>{{plant.humidity}}</td>
 
@@ -145,10 +155,11 @@ Current specimen count: {{specimen_count}}
 ![shade]({{page.shade_image}}){:class="icon"} Shade
 
 **Water**\\
+Evenly moist: do not allow the soil to dry.\\
 Surface dry: water when top 1/4-1/2" of soil is dry.\\
 Partly dry: water when at least the top 1" of soil is dry.\\
 Mostly dry: water when more than half of the soil is dry; should not be bone dry.\\
-Fully dry: don't water unless the soil is completely dry. Especially in cooler conditions, these can wait several weeks between watering.
+Fully dry: don't water unless the soil is completely dry. To avoid root rot in cooler conditions, these can wait several weeks between watering.
 
 **Temperatures**: if a ">" range is given, it specifies the minimum temperature the plant can survive at, as well as the minimum preferred temperature.
 

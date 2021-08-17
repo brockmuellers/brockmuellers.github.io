@@ -98,3 +98,27 @@ While [this article on facing extinction](https://www.catherineingram.com/facing
 ...\
 As theoretical physicist Peter Russell mused in a podcast conversation with me in 2016, “What if we saw ourselves as a cosmic flame blooming in the universe and coming to its natural end?”\
 What if we forgave everybody everything?
+
+
+{% if jekyll.environment == "development" %}
+
+---
+
+Some additional resources on trying to hold hope:
+
+* https://medium.com/@matthewianhale/living-in-an-unstable-world-existential-climate-risk-and-the-dangers-of-climate-nihilism-bcd6653b603e
+* https://medium.com/@maryheglar/home-is-always-worth-it-d2821634dcd9
+* https://www.vice.com/en/article/j5w374/climate-despair-is-making-people-give-up-on-life
+* https://www.theguardian.com/commentisfree/2021/mar/24/scientists-facts-feelings-climate-crisis-sadness
+* https://behavioralscientist.org/urgency-and-agency-michael-mann-on-conquering-climate-despair/
+* https://www.washingtonpost.com/magazine/2021/04/12/climate-news-is-relentlessly-objectively-grim-should-we-ever-allow-ourselves-feel-optimism/
+* https://www.forbes.com/sites/davidcarlin/2021/04/21/fighting-back-against-the-3-ds-of-climate-inaction/?sh=41eca24f18ae
+* https://www.vox.com/22595896/climate-change-fire-heat-wave-anxiety
+* https://www.washingtonpost.com/climate-solutions/2021/08/09/change-ipcc-report/
+* https://www.cnn.com/2021/08/10/opinions/frightening-climate-change-report-fred-krupp/index.html
+
+An frequently cited example of climate nihilism that's generally denounced by scientists:
+
+https://www.newyorker.com/culture/cultural-comment/what-if-we-stopped-pretending
+
+{% endif %}

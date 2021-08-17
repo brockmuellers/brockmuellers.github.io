@@ -129,6 +129,16 @@ I like [this article](http://foodsforlonglife.blogspot.com/2016/04/traditional-a
 
 A lot of alternative views [here](http://teamdoctorsblog.com/2012/12/24/mortons-neuroma-self-help-tips-treatment-and-prevention-from-the-barefoot-running-doctor-at-team-doctors/), with focus on massage/stretching.
 
+{% if jekyll.environment == "development" %}
+
+---
+
+# My experience
+
+NEW LINKS:
+* <http://www.aapsm.org/> to find podiatrists specializing in sports medicine
+* <https://www.academyofclinicalmassage.com/putting-squeeze-mortons-neuroma/>
+
 ### My current strategy
 * Strength
   * Ankle: band kicks (20x), alphabet (1x)
@@ -150,16 +160,6 @@ A lot of alternative views [here](http://teamdoctorsblog.com/2012/12/24/mortons-
   * Yoga
   * Pilates, body weight workouts
   * Daily walking
-
-{% if jekyll.environment == "development" %}
-
----
-
-# My experience
-
-NEW LINKS:
-* <http://www.aapsm.org/> to find podiatrists specializing in sports medicine
-* <https://www.academyofclinicalmassage.com/putting-squeeze-mortons-neuroma/>
 
 ### My current strategy
 

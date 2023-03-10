@@ -149,10 +149,12 @@ Current specimen count: {{specimen_count}}
 ### Key
 
 **Light**\\
-![full]({{page.full_sun_image}}){:class="icon"} Full sun\\
-![part]({{page.part_sun_image}}){:class="icon"} Partial sun\\
-![indirect]({{page.indirect_sun_image}}){:class="icon"} Indirect sun\\
-![shade]({{page.shade_image}}){:class="icon"} Shade
+![full]({{page.full_sun_image}}){:class="icon"} Full sun (S window; prefer 50000+ lux)\\
+![part]({{page.part_sun_image}}){:class="icon"} Partial sun (direct morning/afternoon sun in E/W window; prefer 20000-50000 lux, can survive at 4000 lux)\\
+![indirect]({{page.indirect_sun_image}}){:class="icon"} Indirect sun (near a S/E/W window; prefer 10000-20000 lux, can survive at 2000 lux)\\
+![shade]({{page.shade_image}}){:class="icon"} Shade (N window or interior; prefer <10000 lux, can survive at 1000 lux)\\
+Listed lux values are very rough estimations.\\
+Most plants can tolerate 2-3 hours of indoor direct sun per day, if properly acclimatized.
 
 **Water**\\
 Evenly moist: do not allow the soil to dry.\\
@@ -175,6 +177,10 @@ Fully dry: don't water unless the soil is completely dry. To avoid root rot in c
 
 [How to write botanical names](http://libanswers.nybg.org/faq/223266)\\
 (Additional note: "sp." is unspecified species, "spp." is several species.)
+
+[Light requirements ranges](https://smartgardenguide.com/light-requirements-for-indoor-plants/)\\
+
+[Specific light requirements for common indoor plants](https://www.houseplantjournal.com/bright-indirect-light-requirements-by-plant/)
 
 Icon sources\\
 <https://www.iconfinder.com/icons/183364/sun_icon>\\

@@ -1,91 +1,59 @@
-genus,species,variety,grex,cultivar,common,water,humidity,light,temp,feed,count,notes,links,source,potting,fed,todo,cause_of_death
-Adenium,obesum,,,Red Picotee,desert rose,fully dry,,full,>40-60,1 mo,1,Keep dry and cool if dormant. Prone to iron chlorosis.,,logees,???,x,repot when it has decided if it wants to flower or not,
-Adenium,obesum,,,Star Cluster,desert rose,fully dry,,full,>40-60,1 mo,1,Keep dry and cool if dormant. Prone to iron chlorosis.,,logees,???,x,repot when it has decided if it wants to flower or not,
-Aglaia,odorata,,,,Chinese perfume plant,fully dry,,full;part;indirect;shade,>35,1 wk,1,Some direct sunlight is beneficial. Requires periodic pruning.,,logees,repot 3/23,x,,
-Aglaonema,,,,Sparkling Sarah,,partly dry,preferred,indirect;shade,>65,1 mo,2,Avoid direct sunlight.,,logees,potted cutting 3/23,x,,
-Alluaudia,procera,,,,,fully dry,,full,>40,2 mo,2,,,3scan,repot 3/23 x2,,,
-Alocasia,micholitziana,,,Variegated Frydek,,surface dry,required,part;indirect,>60-65,2 mo,1,Susceptible to spider mites.,,,potted tubers 3/23,,,
-Alocasia,,,,Boa,,surface dry,required,full;part,>60,2 mo,0,Susceptible to spider mites.,,,,,,cold
-Alocasia,,,,Morocco,,surface dry,required,indirect,>60,2 mo,0,Susceptible to spider mites.,,,,,,low humidity
-Alocasia,,,,Regal Shield,,surface dry,required,part;indirect,>60-65,2 mo,1,Susceptible to spider mites.,,flora grubb,repot 4/23,,,
-Alocasia,,,,Stingray,,surface dry,required,full;part,>60,2 mo,0,Susceptible to spider mites.,,,,,,trauma from gecko
-Alocasia,,,,Sumo,,surface dry,required,part;indirect,>60-65,2 wk,1,Susceptible to spider mites. Prefers bright and consistent light; may drop leaves when turned.,,logees,top off soil 4/23,x,,
-Anoectochilus,chapaensis,,,,,partly dry,required,indirect;shade,>60,1 mo,0,Grow in spaghnum moss. Susceptible to root rot.,,,,,,cold?
-Araucaria,heterophylla,,,,Norfolk Island pine,surface dry,required,part;indirect,>50-65,1 mo,1,Fragile roots. Prefers bright light.,,silo,repot 3/23,,,abandoned in move
-Asplenium,bulbiferum,,,,,surface dry,required,indirect;shade,>55,2 mo,0,,,,,,,underwatering?
-Beaucarnea,recurvata,,,,,fully dry,,full;part;indirect,>50-60,1 wk,1,Prefers to be rootbound.,,,repot 3/23,,,cold?
-Begonia,maculata,variegata,,Wightii,,surface dry,preferred,part;indirect,>60,1 wk,0,,,,,,,low humidity
-Chamaedorea,elegans,,,,,partly dry,preferred,indirect;shade,>50-60,1 mo,0,Susceptible to spider mites.,,,,,,unknown
-Chlorophytum,comosum,,,,spider plant,partly dry,,part;indirect;shade,>50,2 mo,1,Prefers to be rootbound.,,,repot 3/23,,,
-Cissus,amazonica,,,,,surface dry,preferred,part;indirect;shade,>60,1 mo,0,,,,,,,trauma from gecko
-Citrus,x paradisi,,,,,surface dry,preferred,full,>40,2 wk,0,,,,,,,abandoned in move
-Coffea,arabica,,,,,surface dry,preferred,full;part,>60,2 wk,0,,,,,,,underwatering
-Cordyline,terminalis,,,Octane,,surface dry,preferred,part;indirect,>50,1 mo,0,,,,,,,unknown
-Crassula,ovata,,,Gollum,,fully dry,,full;part;indirect,>50,2 mo,0,,,,,,,unknown
-Crassula,ovata,,,,jade plant,fully dry,,full;part;indirect,>50,2 mo,1,,,rob,repot 3/23,,,
-Crassula,rupestris?,,,,,fully dry,,full;part;indirect,>50,2 mo,0,,,,,,,unknown
-Cryptanthus,sp.,,,Elaine,bromeliad,evenly moist,required,indirect,>60,1 wk,1,Water directly into central foliage cup. Can handle colder temps if roots stay warm.,https://www.bromeliads.info/cryptanthus-earth-stars/,flora grubb,,,,
-Dendrobium,loddigesii,,,,,surface dry,required,indirect,>50-65,1 wk,1,Winter rest period: allow plant to dry completely; cold (~50-60°).,https://travaldo.blogspot.com/2018/01/dendrobium-loddigesii-care-and-culture.html,,,,,
-Dendrobium,,,Frieda Bratanata,,,surface dry,required,full,>65,1 wk,1,Winter rest period: allow plant to just dry out between waterings.,https://travaldo.blogspot.com/2018/01/dendrobium-bigibbum-care-and-culture.html;https://travaldo.blogspot.com/2019/07/dendrobium-macrophyllum-care-and-culture.html,,repot 3/23,,,
-Dichorisandra,thyrsiflora,,,,blue ginger,partly dry,required,full;part,>50-60,2 wk,2,,,ili/ryder,repot 3/23 x2,x,,
-Dinema,polybulbon,,,,,surface dry,required,indirect,>50-60,1 wk,0,,https://travaldo.blogspot.com/2018/01/encyclia-polybulbon-care-and-culture.html,,,,,overwatering
-Dracaena,fragrans?,,,,,partly dry,preferred,part;indirect;shade,>55,2 mo,0,,,,,,,cold?
-Dieffenbachia,amoena,,,Tropic Snow,,surface dry,required,part;indirect,>50-60,2 wk,1,,,flora grubb,,,,
-Dracaena,marginata,,,Sun Ray,,partly dry,preferred,part;indirect;shade,>55,2 mo,1,,,,repot 3/23,,,
-Dracaena,marginata,,,,,partly dry,preferred,part;indirect;shade,>65,2 mo,0,,,,,,,unknown
-Edithcolea,grandis,,,,,partly dry,,full;part,>40,2 mo,0,Water very rarely in winter. Susceptible to root rot in cool conditions.,,,,,,root rot
-Epipremnum,aureum,,,Marble Queen,pothos,partly dry,preferred,indirect;shade,>55-70,2 mo,2,,,,repot large 4/23,,,
-Epipremnum,aureum,,,Njoy,pothos,partly dry,preferred,indirect;shade,>55-70,2 mo,1,,,castro,,x,,
-Epipremnum,aureum,,,Snow Queen,pothos,partly dry,preferred,indirect;shade,>55-70,2 mo,1,,,,potted cutting 3/23,,,
-Ficus,lyrata,,,,,surface dry,preferred,full;part;indirect,>45,1 wk,1,Prefers bright light.,,rob,repot 4/23,,,
-Ficus,lyrata,,,Bambino,,surface dry,preferred,full;part;indirect,>45,1 wk,1,Prefers bright light.,,,,,,
-Ficus,microcarpa?,,,,,surface dry,preferred,full;part;indirect,>45,2 wk,1,Prefers bright light.,,marianne,???,,,
-Haworthia,cymbiformis,,,,,mostly dry,,part;indirect,>50,2 mo,6,Enjoys some direct sunlight.,,half moon bay,repot 3/23,,,
-Haworthia,fasciata,,,,,mostly dry,,part;indirect,>50,2 mo,4,Enjoys some direct sunlight.,,,repot 3/23,,,
-Haworthia,wandera,,,Miami,,mostly dry,,part;indirect,>50,2 mo,1,Enjoys some direct sunlight.,,,repot 3/23,,,
-Hoya,pubicalyx?,,,,,partly dry,,indirect;shade,>55,1 mo,1,,,marianne,repot 3/23,,,
-Hylocereus,undatus,,,Zamorano,dragon fruit,partly dry,,full;part,>40-60,2 wk,1,Keep fairly dry when cool. Susceptible to mealy bugs.,,,repot 4/23,,,
-Jasminium,sambac,,,Belle of India,,surface dry,preferred,full,>60,1 wk,0,,,,,,,underwatering
-Hypoestes,phyllostachya,,,White Splash,polka dot plant,surface dry,required,part;indirect,>50-70,1 mo,1,"Prune regularly. Will get leggy with age, or in low light, so propagate via cuttings. Excess or inadequate light will cause foliage to fade.",,flora grubb,slightly potted up 3/23,,,
-Kalanchoe,fedtschenkoi?,,,,,partly dry,,full;part,>35-50,2 wk,4,,,marianne,potted cuttings x3 3/23,x,,
-Macodes,sanderiana,,,,jewel orchid,evenly moist,required,shade,>65,1 wk,1,Prefers higher daytime temperatures (80-85 degrees). Slightly reduce watering in winter rest period.,https://travaldo.blogspot.com/2018/04/macodes-petola-care-and-culture.html?m=1,orchid show,,,,
-Maranta,leuconeura,erythroneura,,,,partly dry,required,indirect,>60,1 mo,0,,,,,,,unknown
-Monstera,deliciosa,,,,,partly dry,required,part;indirect;shade,>55-65,2 wk,1,Susceptible to spider mites; keep dust off of leaves.,,,repot 4/23,,,
-Monstera,friedrichsthalii,,,,,partly dry,required,part;indirect;shade,>55-65,2 wk,1,,,logees,,x,,
-Musa,acuminata,,,Dwarf Cavendish,,surface dry,preferred,full,>40-60,1 wk,0,Susceptible to spider mites.,,,,,,cat urine
-Nematanthus,,,,Black Gold,goldfish plant,surface dry,preferred,part;indirect;shade,>60-65,1 mo,1,Grow in open potting mix; roots should dry quickly.,,logees,repot 3/23,,,
-Neoregelia,schultsiana,,,,,partly dry,preferred,part;indirect,>50,6 mo,0,,,,,,,crown rot
-Nepenthes,alata,,,,,surface dry,required,full;part,>50-60,6 mo,0,Prefers distilled water.,,,,,,low humidity
-Nepenthes,x,,,Miranda?,pitcher plant,evenly moist,required,full;part,>55,12 mo,1,Prefers distilled water. Only fertilize by repotting or feeding pitchers.,,marianne,,,,
-Nephrolepsis,exaltata,,,,Boston fern,surface dry,required,indirect;shade,>50,1 mo,8,Susceptible to spider mites.,,"marianne, lowes",???,,,
-Nephrolepsis,exaltata,whitmanii,,,Boston fern,surface dry,required,indirect;shade,>50,1 mo,3,Susceptible to spider mites.,,mom,repot smaller two 3/23,,,
-Oncidium,,,Moon Shadow,Tiger Tail,,surface dry,required,indirect,>55-65,1 wk,0,Winter rest period: allow plant to just dry out between waterings. Give warm showers while growing.,https://travaldo.blogspot.com/2017/12/grow-and-care-oncidium-varicosum-orchid.html;https://travaldo.blogspot.com/2017/12/grow-and-care-oncidium-flexuosum-orchid.html,,,,,unknown
-Passiflora,edulus,,,Possum Purple,,surface dry,preferred,full,>60-65,1 mo,0,,,,,,,pests
-Passiflora,x decaisnenana,,,Purple Tiger,passion flower,surface dry,preferred,full;part,>45-60,1 mo,3,Blooms in spring and fall. Requires sturdy trellis.,,logees,potted cuttings 3/23,,,
-Persea,americana,,,,,surface dry,preferred,full;part,>35,1 wk,0,,,,,,,abandoned in move
-Paphiopedilum,,,,Eye Spy,,partly dry,preferred,indirect,>40-60,1 wk,1,"Cross of ""Jenna Marie"" x ""Eyecatcher"". Avoid direct sun. Blooms in winter. Reduce water and temperatures slightly for winter rest period.",https://travaldo.blogspot.com/2017/12/grow-and-care-paphiopedilum-insigne-orchid.html;https://travaldo.blogspot.com/2018/10/paphiopedilum-spicerianum-orchid-plant-care-and-culture.html;https://travaldo.blogspot.com/2018/10/paphiopedilum-villosum-orchid-plant-care-and-culture.html,orchid show,,,,
-Phalaenopsis,sp.,,,,,mostly dry,required,indirect;shade,>50-60,1 mo,2,Cool nighttime temperatures trigger flowering. No winter rest required. Can tolerate low light but will not thrive.,https://travaldo.blogspot.com/2017/11/grow-and-care-phalaenopsis-orchid-moth-orchid.html,"trader joes, other",,,,underwatering
-Philodendron,melanochrysum,,,,,surface dry,required,indirect;shade,>60,2 mo,0,Thrives when allowed to climb.,,,,,,unknown
-Philodendron,micans,,,,velvet leaf,surface dry,required,indirect;shade,>45,2 mo,1,,,,repot 3/23,,,
-Philodendron,scandens,,,,heartleaf,partly dry,preferred,indirect;shade,>50,2 mo,1,,,,repot 3/23,,,
-Philodendron,x,,,Prince of Orange,,surface dry,preferred,indirect;shade,>60,1 mo,0,,,,,,,abandoned in move
-Pilea,glauca?,,,,,surface dry,preferred,indirect,>40-60,1 mo,1,,,marianne,repot 3/23,,,
-Platycerium,bifurcatum,,,,elkhorn fern,fully dry,preferred,indirect;shade,>35-50,1 mo,2,,,,,,,
-Platycerium,superbum,,,,staghorn fern,fully dry,preferred,indirect;shade,>35-50,1 mo,1,,,,,,,root rot?
-Polyscias,fruticosa,,,,,partly dry,required,indirect,>60,2 mo,0,,,,,,,cold
-Sansevieria,trifasciata,hahni,,,,fully dry,,part;indirect;shade,>40,2 mo,3,,,mom,repot 3/23,,,
-Sansevieria,trifasciata,,,Bantel's Sensation,,fully dry,,part;indirect;shade,>40,2 mo,1,,,,repot 3/23,,,
-Sansevieria,trifasciata,,,,,fully dry,,part;indirect;shade,>40,2 mo,1,,,,repot 3/23,,,
-Sansevieria,zeylanica,,,,,fully dry,,part;indirect;shade,>40,2 mo,1,,,flora grubb,repot 3/23,,,
-Schlumbergera,,,,Thor Ritt,Christmas cactus,surface dry,,part;indirect,>35,2 wk,2,Cold induces flowering,,mom,repot older 3/23,x,,
-Scindapsus,pictus,,,Argyraeus,satin pothos,partly dry,preferred,indirect;shade,>60,2 mo,2,,,,repot smaller 3/23,,,
-Scindapsus,pictus,,,Exotica?,satin pothos,partly dry,preferred,indirect;shade,>60,2 mo,1,,,flora grubb,repot 3/23,,,
-Selaginella,sp.,,,Frosty,"club moss, spike moss",evenly moist,required,indirect;shade,>40,6 mo,4,Keep in terrarium. Can survive drying.,,,repot + cuttings 3/23,,,unknown
-Strelitzia,nicolii,,,,giant bird of paradise,surface dry,,full;part,>40,1 wk,2,Susceptible to spider mites.,,flora grubb,repot 3/23,,,
-Strobilanthes,dyerianus,,,,Persian shield plant,surface dry,preferred,full;part,>35-55,1 wk,1,,,,repot 3/23,,,underwatering
-Syngonium,podophyllum,,,,arrowhead plant,surface dry,required,part;indirect;shade,>50-60,2 wk,2,,,ili/ryder,,,,
-Tradescantia,,,,Pink Panther,,partly dry,,part;indirect,>50-60,1 mo,2,,,flora grubb,cuttings 3/23,,,
-Tillandsia,paucifolia,,,,,fully dry,required,indirect,>50,1 mo,0,,,,,,,rot
-Tillandsia,spp.,,,,"air plant, bromeliad",fully dry,required,part;indirect,>50,1 mo,4,Varieties with silvery foliage tolerate bright sun and drought better.,,,,,,
-Vriesea,Gigantea,,,Nova,bromeliad,evenly moist,required,indirect;shade,>45-60,2 wk,1,Water directly into central foliage cup. Flush cup weekly.,https://www.bromeliads.info/bromeliad-vriesea/,flora grubb,,,,
-Zamioculcas,zamiifolia,,,,,mostly dry,,indirect,>40,1 mo,1,Drought tolerant. Allow to dry completely in winter. Prefers to be rootbound.,,,topped off soil 3/23,,,
+genus,species,variety,grex,cultivar,common,water,humidity,light,temp,feed,count,notes,links,source,potting,infections,todo,cause_of_death,
+Adiantum,raddianum,,,Fragrans,maidenhair fern,evenly moist,required,indirect;shade,>50,1 mo,1,Prefers lower temperatures in winter.,,gardenworks,,,,,advanced
+Aglaonema,,,,Sparkling Sarah,,partly dry,preferred,indirect;shade,>60-75,1 mo,1,Avoid direct sunlight.,,logees,,,,,easy
+Alocasia,infernalis,,,,jewel alocasia,surface dry,required,indirect,>60-70,2 wk,1,Excess light leads to pale leaves. Susceptible to spider mites.,,gardenworks,,,sold as 'Black Magic' but that's a colocasia with matte leaves,,advanced
+Anthurium,AOS x crystallinum,,,,,surface dry,required,indirect,>65-75,1 mo,1,Tolerant of some humidity swings. Use a chunky potting mix.,,peruvian guy marketplace,,,,,advanced
+Callisia,repens,,,Pink Panther,,partly dry,preferred,part;indirect,>50-70,1 mo,1,,,flora grubb,,,used to be classed as tradescantia,,
+Coffea,arabica,,,,coffee plant,surface dry,preferred,full;part,>60-70,2 wk,1,Susceptible to mealy bugs and scale.,,blumen,,,,,advanced
+Curio,rowleyanus,,,,"senecio, string of pearls",fully dry,,full;part;indirect,>50,2 mo,1,Ensure that crown gets some light. Allow a very slight wilt before watering to avoid root rot. Enjoys a cool winter.,,mom,,,,,advanced
+Dracaena,trifasciata,,,Black Gold?,"sansevieria, snake plant",fully dry,,part;indirect;shade,>40-70,2 mo,1,Tolerates low light.,,gardenworks,,,,,easy
+Dracaena,trifasciata,hahni,,,"sansevieria, snake plant",fully dry,,part;indirect;shade,>40-70,2 mo,1,Tolerates low light.,,mom,,,,,easy
+Epipremnum,aureum,,,Njoy,pothos,partly dry,preferred,indirect;shade,>50-75,2 mo,1,Prefers a cooler winter.,,castro,,,,,easy
+Euphorbia,pulcherrima,,,,poinsettia,partly dry,,full;part,>55-70,1 mo,3,"To rebloom, provide 14 hours of darkness and cool temps starting in October.",,various,,,,,advanced
+Haworthia,cymbiformis,,,,,mostly dry,,part;indirect,>50,2 mo,2,Enjoys some direct sunlight. Prefers a cool and dry winter for compact growth.,,half moon bay,,,,,moderate
+Hoya,pubicalyx?,,,,,partly dry,preferred,part;indirect;shade,>55-70,1 mo,1,"A cool, dry period in early spring can trigger flowering. Use a chunky potting mix. Susceptible to mealybugs. Do not trim flower stalks.",,marianne,,,,,easy
+Maranta,leuconeura,erythroneura,,,prayer plant,surface dry,required,indirect;shade,>60-70,1 mo,1,Sensitive to drafts. Sensitive to some tap water. Loses variegation in low light.,,mom,,,,,moderate
+Monstera,,,,Burle Marx Flame,,partly dry,required,part;indirect,>65-75,1 mo,1,Requires humidity for new leaves. Use a moss pole. Sensitive to some tap water.,,gardenworks,,,,,advanced
+Monstera,adansonii,laniata,,,,surface dry,preferred,part;indirect;shade,>55-70,2 wk,1,Grows larger leaves when climbing.,,logees,,,sold as Friedrichsthalii but that name may be outdated ,,moderate
+Monstera,deliciosa,,,Thai Constellation,,partly dry,required,part;indirect,>60-70,1 mo,1,Not tolerant of low light due to variegation. Prone to root rot. Prefers consistent conditions.,,peruvian guy marketplace,,,consider silica if white parts melt ,,advanced
+Nematanthus,,,,Black Gold,goldfish plant,surface dry,preferred,part;indirect;shade,>50-70,1 mo,1,Grow in open potting mix; roots should dry quickly. Cool winter rest encourages flowering.,,logees (cuttings),,,,,advanced
+Nephrolepis,exaltata,,,,Boston fern,surface dry,required,indirect;shade,>50,1 mo,1,Susceptible to spider mites.,,peruvian guy marketplace,,,,,moderate
+Pellaea,rotundifolia,,,,button fern,surface dry,required,part;indirect,>50,1 mo,1,,,gardenworks,,,,,advanced
+Peperomia,orba,,,Princess Astrid,,partly dry,,indirect;shade,>55-70,2 mo,1,,,gardenworks,,,,,moderate
+Platycerium,bifurcatum,,,,staghorn fern,mostly dry,preferred,part;indirect;shade,>35,1 mo,1,Water when just dry. Mount in spaghnum or keep in orchid mix.,,peruvian guy marketplace,,,,,easy
+Pteris,cretica,,,Roeweri?,Cretan brake,evenly moist,required,part;indirect,>50,1 mo,1,,,gardenworks,,,guessed on the cultivar,,advanced
+Schlumbergera,truncata,,,,Christmas cactus (red),surface dry,,part;indirect;shade,>35-70,2 wk,1,Cold induces flowering. Use a chunky potting mix.,,gardenworks,,,might prefer an epiphytic soil (bromeliad?),,easy
+Schlumbergera,truncata,,,Thor Ritt,Christmas cactus,surface dry,,part;indirect;shade,>35-70,2 wk,1,Cold induces flowering. Use a chunky potting mix.,,mom,,,might prefer an epiphytic soil (bromeliad?),,easy
+Scindapsus,pictus,,,Argyraeus,satin pothos,partly dry,preferred,indirect;shade,>55-70,2 mo,1,,,amazon in sf,,,,,easy
+Scindapsus,pictus,,,Exotica?,satin pothos,partly dry,preferred,indirect;shade,>55-70,2 mo,1,,,flora grubb,,,,,easy
+Selaginella,martensii,,,Frosty,"club moss, spike moss",evenly moist,required,indirect;shade,>55-75,6 mo,1,Best in terrarium. Can survive drying. Use spaghnum or peat moss.,,home depot,,,,,advanced
+Syngonium,podophyllum,,,Pink Arrow,arrowhead plant,surface dry,preferred,part;indirect;shade,>50-75,2 wk,1,Survives shade but prefers higher light due to variegation.,,gardenworks,,major aphids straight from nursery 1/26,,,easy
+Alocasia,,,,Boa,,surface dry,required,full;part,>60,2 mo,0,Susceptible to spider mites.,,,,,,cold,
+Alocasia,,,,Morocco,,surface dry,required,indirect,>60,2 mo,0,Susceptible to spider mites.,,,,,,low humidity,
+Alocasia,,,,Stingray,,surface dry,required,full;part,>60,2 mo,0,Susceptible to spider mites.,,,,,,trauma from gecko,
+Anoectochilus,chapaensis,,,,,partly dry,required,indirect;shade,>60,1 mo,0,Grow in spaghnum moss. Susceptible to root rot.,,,,,,cold?,
+Asplenium,bulbiferum,,,,,surface dry,required,indirect;shade,>55,2 mo,0,,,,,,,underwatering?,
+Begonia,maculata,variegata,,Wightii,,surface dry,preferred,part;indirect,>60,1 wk,0,,,,,,,low humidity,
+Chamaedorea,elegans,,,,,partly dry,preferred,indirect;shade,>50-60,1 mo,0,Susceptible to spider mites.,,,,,,unknown,
+Cissus,amazonica,,,,,surface dry,preferred,part;indirect;shade,>60,1 mo,0,,,,,,,trauma from gecko,
+Citrus,x paradisi,,,,,surface dry,preferred,full,>40,2 wk,0,,,,,,,abandoned in move,
+Coffea,arabica,,,,,surface dry,preferred,full;part,>60,2 wk,0,,,,,,,underwatering,
+Cordyline,terminalis,,,Octane,,surface dry,preferred,part;indirect,>50,1 mo,0,,,,,,,unknown,
+Crassula,ovata,,,Gollum,,fully dry,,full;part;indirect,>50,2 mo,0,,,,,,,unknown,
+Crassula,rupestris?,,,,,fully dry,,full;part;indirect,>50,2 mo,0,,,,,,,unknown,
+Dinema,polybulbon,,,,,surface dry,required,indirect,>50-60,1 wk,0,,https://travaldo.blogspot.com/2018/01/encyclia-polybulbon-care-and-culture.html,,,,,overwatering,
+Dracaena,fragrans?,,,,,partly dry,preferred,part;indirect;shade,>55,2 mo,0,,,,,,,cold?,
+Dracaena,marginata,,,,,partly dry,preferred,part;indirect;shade,>65,2 mo,0,,,,,,,unknown,
+Edithcolea,grandis,,,,,partly dry,,full;part,>40,2 mo,0,Water very rarely in winter. Susceptible to root rot in cool conditions.,,,,,,root rot,
+Jasminium,sambac,,,Belle of India,,surface dry,preferred,full,>60,1 wk,0,,,,,,,underwatering,
+Maranta,leuconeura,erythroneura,,,,partly dry,required,indirect,>60,1 mo,0,,,,,,,unknown,
+Musa,acuminata,,,Dwarf Cavendish,,surface dry,preferred,full,>40-60,1 wk,0,Susceptible to spider mites.,,,,,,cat urine,
+Neoregelia,schultsiana,,,,,partly dry,preferred,part;indirect,>50,6 mo,0,,,,,,,crown rot,
+Nepenthes,alata,,,,,surface dry,required,full;part,>50-60,6 mo,0,Prefers distilled water.,,,,,,low humidity,
+Oncidium,,,Moon Shadow,Tiger Tail,,surface dry,required,indirect,>55-65,1 wk,0,Winter rest period: allow plant to just dry out between waterings. Give warm showers while growing.,https://travaldo.blogspot.com/2017/12/grow-and-care-oncidium-varicosum-orchid.html;https://travaldo.blogspot.com/2017/12/grow-and-care-oncidium-flexuosum-orchid.html,,,,,unknown,
+Passiflora,edulus,,,Possum Purple,,surface dry,preferred,full,>60-65,1 mo,0,,,,,,,pests,
+Persea,americana,,,,,surface dry,preferred,full;part,>35,1 wk,0,,,,,,,abandoned in move,
+Philodendron,melanochrysum,,,,,surface dry,required,indirect;shade,>60,2 mo,0,Thrives when allowed to climb.,,,,,,unknown,
+Philodendron,x,,,Prince of Orange,,surface dry,preferred,indirect;shade,>60,1 mo,0,,,,,,,abandoned in move,
+Polyscias,fruticosa,,,,,partly dry,required,indirect,>60,2 mo,0,,,,,,,cold,
+Tillandsia,paucifolia,,,,,fully dry,required,indirect,>50,1 mo,0,,,,,,,rot,

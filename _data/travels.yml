@@ -1,8 +1,19 @@
 # List of GPX filenames in assets/gpx/. Tab names are derived from the filename
 # (e.g. west-coast.gpx → "West Coast"). Add or remove entries as needed.
-- sample.gpx
-- west-coast.gpx
-- east-coast.gpx
-- southeast-asia.gpx
-- trans-canada.gpx
-- south-america.gpx
+# Dates are used to filter observations by date range. Adding an extra day on either
+# side for now to get around time zone issues.
+- file: west-coast.gpx
+  start: "2024-07-27"
+  end: "2024-08-21"
+- file: east-coast.gpx
+  start: "2024-10-17"
+  end: "2024-11-13"
+- file: southeast-asia.gpx
+  start: "2024-11-21"
+  end: "2025-06-03"
+- file: trans-canada.gpx
+  start: "2025-07-05"
+  end: "2025-08-12"
+- file: south-america.gpx
+  start: "2025-08-14"
+  end: "2025-11-06"

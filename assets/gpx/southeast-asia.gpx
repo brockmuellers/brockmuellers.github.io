@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1" creator="FindPenguins" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version='1.0' encoding='UTF-8'?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="FindPenguins">
 	<metadata>
 		<name>Southeast Asia</name>
-		<desc></desc>
+		<desc />
 		<author>
 			<name>Sara Brockmueller</name>
 		</author>
@@ -144,7 +144,7 @@
 		<time>2025-02-08T15:59:59+00:00</time>
 	</wpt>
 	<wpt lat="3.711483" lon="101.737361">
-		<name>Fraser&#039;s Hill</name>
+		<name>Fraser's Hill</name>
 		<time>2025-02-10T15:59:59+00:00</time>
 	</wpt>
 	<wpt lat="4.18665" lon="102.058815">

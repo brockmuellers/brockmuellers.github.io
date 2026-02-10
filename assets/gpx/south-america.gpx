@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1" creator="FindPenguins" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version='1.0' encoding='UTF-8'?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="FindPenguins">
 	<metadata>
 		<name>South America</name>
-		<desc></desc>
+		<desc />
 		<author>
 			<name>Sara Brockmueller</name>
 		</author>

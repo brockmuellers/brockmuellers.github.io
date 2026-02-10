@@ -2,27 +2,79 @@
 layout: page
 title: Travels
 permalink: /travels/
-gpx_url: /assets/gpx/sample.gpx
+# Tabs are defined in _data/travels.yml
 ---
 
 <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
 
-<div id="map" style="width: 100%; height: 500px; margin: 1em 0; background-color: #f0f0f0;"></div>
+{% assign gpx_base = site.baseurl | append: '/assets/gpx/' %}
+
+<style>
+  /* Added wrap for mobile screens */
+  .travel-tabs { display: flex; flex-wrap: wrap; gap: 0; margin-bottom: 0; border-bottom: 1px solid #ccc; }
+  .travel-tabs button {
+    padding: 0.5em 1em;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background: #f5f5f5;
+    cursor: pointer;
+    font-size: 1em;
+    flex-grow: 1; /* Tabs fill space evenly */
+    text-align: center;
+  }
+  .travel-tabs button:hover { background: #eee; }
+  .travel-tabs button.active { background: #fff; margin-bottom: -1px; padding-bottom: calc(0.5em + 1px); font-weight: bold; }
+
+  #map-container { position: relative; width: 100%; height: 500px; margin: 0 0 1em 0; background-color: #f0f0f0; }
+  #map { width: 100%; height: 100%; }
+
+  /* Loading overlay */
+  #loader {
+    display: none;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255,255,255,0.7);
+    align-items: center; justify-content: center;
+    z-index: 10; font-weight: bold; color: #555;
+  }
+</style>
+
+<div class="travel-tabs" role="tablist">
+{% for f in site.data.travels %}
+  {% assign name_parts = f | replace: '.gpx', '' | replace: '-', ' ' | split: ' ' %}
+  {% capture tab_label %}{% for p in name_parts %}{{ p | capitalize }} {% endfor %}{% endcapture %}
+
+  <button type="button" role="tab"
+          data-gpx="{{ gpx_base }}{{ f }}"
+          aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+          class="{% if forloop.first %}active{% endif %}">
+      {{ tab_label | strip }}
+  </button>
+{% endfor %}
+</div>
+
+<div id="map-container">
+  <div id="loader">Loading Track...</div>
+  <div id="map"></div>
+</div>
 
 <script>
 (function() {
-  const gpxUrl = '{{ page.gpx_url | prepend: site.baseurl }}';
+  const gpxCache = {}; // Cache to store parsed coordinates
+  let map;
+  const loader = document.getElementById('loader');
+
+  // Helper to toggle loading spinner
+  const setLoading = (isLoading) => {
+    loader.style.display = isLoading ? 'flex' : 'none';
+  };
 
   function parseGPX(xmlText) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlText, 'text/xml');
-    
-    // We will build a MultiLineString (Array of Arrays of coords)
-    // allowing for gaps in the track (segments)
     const lines = [];
-    
-    // 1. Look for Tracks and Segments
+
+    // Priority 1: Track Segments
     const segments = doc.querySelectorAll('trkseg');
     if (segments.length > 0) {
       segments.forEach(seg => {
@@ -35,7 +87,7 @@ gpx_url: /assets/gpx/sample.gpx
         if (line.length > 1) lines.push(line);
       });
     } else {
-      // 2. Fallback for Routes (rte) or flat tracks
+      // Priority 2: Routes or flat tracks
       const pts = doc.querySelectorAll('rtept, trkpt');
       const line = [];
       pts.forEach(pt => {
@@ -45,90 +97,132 @@ gpx_url: /assets/gpx/sample.gpx
       });
       if (line.length > 1) lines.push(line);
     }
-    
-    return lines; // Returns [[x,y], [x,y]], [[x,y], [x,y]]...
+    return lines;
   }
 
-  // Rewrite bounds to avoid stack overflow on large arrays
   function getBounds(multiLine) {
     const bounds = new maplibregl.LngLatBounds();
     multiLine.forEach(line => {
-      line.forEach(coord => {
-        bounds.extend(coord);
-      });
+      line.forEach(coord => bounds.extend(coord));
     });
     return bounds;
   }
 
-  fetch(gpxUrl)
-    .then(r => r.text())
-    .then(gpxText => {
-      const multiLineString = parseGPX(gpxText);
-      
-      if (multiLineString.length === 0) {
-        document.getElementById('map').innerText = 'No track points found.';
-        return;
-      }
+  // Load GPX with caching
+  function loadGPX(url) {
+    if (gpxCache[url]) {
+      return Promise.resolve(gpxCache[url]);
+    }
+    setLoading(true);
+    return fetch(url)
+      .then(r => {
+        if (!r.ok) throw new Error("Network response was not ok");
+        return r.text();
+      })
+      .then(text => {
+        const data = parseGPX(text);
+        gpxCache[url] = data; // Save to cache
+        return data;
+      })
+      .finally(() => setLoading(false));
+  }
 
-      const bounds = getBounds(multiLineString);
-
-      const map = new maplibregl.Map({
-        container: 'map',
-        // We define the style locally using standard OSM raster tiles
-        style: {
-            'version': 8,
-            'sources': {
-                'raster-tiles': {
-                    'type': 'raster',
-                    'tiles': [
-                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-                    ],
-                    'tileSize': 256,
-                    'attribution': '&copy; OpenStreetMap Contributors'
-                }
-            },
-            'layers': [{
-                'id': 'simple-tiles',
-                'type': 'raster',
-                'source': 'raster-tiles',
-                'minzoom': 0,
-                'maxzoom': 19
-            }]
+  function initMap(multiLineString) {
+    const bounds = getBounds(multiLineString);
+    map = new maplibregl.Map({
+      container: 'map',
+      style: {
+        version: 8,
+        sources: {
+          'raster-tiles': {
+            type: 'raster',
+            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+            tileSize: 256,
+            attribution: '&copy; OpenStreetMap Contributors'
+          }
         },
-        bounds: bounds,
-        zoom: 12
-      });
-
-      map.on('load', function() {
-        map.addSource('gpx-track', {
-          type: 'geojson',
-          data: {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'MultiLineString', // Changed from LineString
-              coordinates: multiLineString
-            }
-          }
-        });
-
-        map.addLayer({
-          id: 'gpx-line',
-          type: 'line',
-          source: 'gpx-track',
-          layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: {
-            'line-color': '#3388ff',
-            'line-width': 4
-          }
-        });
-      });
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById('map').innerText = 'Error loading map.';
+        layers: [{ id: 'simple-tiles', type: 'raster', source: 'raster-tiles', minzoom: 0, maxzoom: 19 }]
+      },
+      bounds: bounds,
+      fitBoundsOptions: { padding: 40 }
     });
+
+    map.on('load', function() {
+      // Add source/layer once map is fully loaded
+      map.addSource('gpx-track', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'MultiLineString', coordinates: multiLineString }
+        }
+      });
+      map.addLayer({
+        id: 'gpx-line',
+        type: 'line',
+        source: 'gpx-track',
+        layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: { 'line-color': '#d9534f', 'line-width': 4 } // Changed color to a nice red
+      });
+    });
+  }
+
+  function updateMap(multiLineString) {
+    // If map exists but isn't loaded yet (rare race condition), wait for it
+    if (!map.loaded() || !map.getSource('gpx-track')) {
+       map.once('load', () => updateMap(multiLineString));
+       return;
+    }
+
+    map.getSource('gpx-track').setData({
+      type: 'Feature',
+      properties: {},
+      geometry: { type: 'MultiLineString', coordinates: multiLineString }
+    });
+
+    const bounds = getBounds(multiLineString);
+    // Ensure bounds are valid before fitting
+    if (!bounds.isEmpty()) {
+      map.fitBounds(bounds, { padding: 40 });
+    }
+  }
+
+  // Tab Click Event Listeners
+  const buttons = document.querySelectorAll('.travel-tabs button');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      // UI Updates
+      buttons.forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      this.classList.add('active');
+      this.setAttribute('aria-selected', 'true');
+
+      // Logic Updates
+      const url = this.getAttribute('data-gpx');
+      loadGPX(url).then(multiLine => {
+        if (multiLine.length === 0) return; // Handle empty GPX gracefully
+
+        if (!map) initMap(multiLine);
+        else updateMap(multiLine);
+      }).catch(err => console.error("Error processing GPX:", err));
+    });
+  });
+
+  // Initialize First Tab
+  const firstTab = document.querySelector('.travel-tabs button.active');
+  if (firstTab) {
+    // Trigger a click on the first tab to reuse logic,
+    // or manually load if you prefer not to dispatch events.
+    loadGPX(firstTab.getAttribute('data-gpx')).then(multiLine => {
+       if (multiLine.length > 0) initMap(multiLine);
+    });
+  } else {
+     document.getElementById('map').innerHTML = '<p style="padding:20px; text-align:center;">No travels found.</p>';
+  }
+
 })();
 </script>
 
-<p>This map loads and displays the GPX file at <code>{{ page.gpx_url }}</code>. Replace <code>gpx_url</code> in the page front matter to show a different track.</p>
+<p>A rough-and-ready view of my travels over an 18 month sabbatical. </p>

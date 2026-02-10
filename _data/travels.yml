@@ -1,0 +1,8 @@
+# List of GPX filenames in assets/gpx/. Tab names are derived from the filename
+# (e.g. west-coast.gpx → "West Coast"). Add or remove entries as needed.
+- sample.gpx
+- west-coast.gpx
+- east-coast.gpx
+- southeast-asia.gpx
+- trans-canada.gpx
+- south-america.gpx

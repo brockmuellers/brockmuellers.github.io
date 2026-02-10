@@ -63,7 +63,8 @@ permalink: /travels/
   const gpxCache = {}; // Cache to store parsed coordinates
   let map;
   const loader = document.getElementById('loader');
-
+  let currentRequestId = 0; // Track the latest tab request
+  let mapReady = false;     // Becomes true after the map 'load' event fires
   // Helper to toggle loading spinner
   const setLoading = (isLoading) => {
     loader.style.display = isLoading ? 'flex' : 'none';
@@ -148,6 +149,7 @@ permalink: /travels/
     });
 
     map.on('load', function() {
+      mapReady = true;
       // Add source/layer once map is fully loaded
       map.addSource('gpx-track', {
         type: 'geojson',
@@ -168,13 +170,24 @@ permalink: /travels/
   }
 
   function updateMap(multiLineString) {
-    // If map exists but isn't loaded yet (rare race condition), wait for it
-    if (!map.loaded() || !map.getSource('gpx-track')) {
-       map.once('load', () => updateMap(multiLineString));
-       return;
+    // If the map isn't ready yet, wait for the first (and only) 'load' event,
+    // but still respect whichever tab was most recently clicked.
+    if (!mapReady) {
+      const scheduledRequestId = currentRequestId;
+      map.once('load', () => {
+        if (scheduledRequestId !== currentRequestId) return;
+        updateMap(multiLineString);
+      });
+      return;
     }
 
-    map.getSource('gpx-track').setData({
+    const source = map.getSource('gpx-track');
+    if (!source) {
+      console.error("GPX source 'gpx-track' is missing.");
+      return;
+    }
+
+    source.setData({
       type: 'Feature',
       properties: {},
       geometry: { type: 'MultiLineString', coordinates: multiLineString }
@@ -191,6 +204,9 @@ permalink: /travels/
   const buttons = document.querySelectorAll('.travel-tabs button');
   buttons.forEach(btn => {
     btn.addEventListener('click', function() {
+      const url = this.getAttribute('data-gpx');
+      const requestId = ++currentRequestId;
+
       // UI Updates
       buttons.forEach(b => {
         b.classList.remove('active');
@@ -200,8 +216,9 @@ permalink: /travels/
       this.setAttribute('aria-selected', 'true');
 
       // Logic Updates
-      const url = this.getAttribute('data-gpx');
       loadGPX(url).then(multiLine => {
+        // Ignore if a newer tab has been clicked since this request started
+        if (requestId !== currentRequestId) return;
         if (multiLine.length === 0) return; // Handle empty GPX gracefully
 
         if (!map) initMap(multiLine);
@@ -213,9 +230,10 @@ permalink: /travels/
   // Initialize First Tab
   const firstTab = document.querySelector('.travel-tabs button.active');
   if (firstTab) {
-    // Trigger a click on the first tab to reuse logic,
-    // or manually load if you prefer not to dispatch events.
-    loadGPX(firstTab.getAttribute('data-gpx')).then(multiLine => {
+    const initialUrl = firstTab.getAttribute('data-gpx');
+    const initialRequestId = ++currentRequestId;
+    loadGPX(initialUrl).then(multiLine => {
+       if (initialRequestId !== currentRequestId) return;
        if (multiLine.length > 0) initMap(multiLine);
     });
   } else {

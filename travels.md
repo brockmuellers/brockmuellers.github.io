@@ -300,6 +300,29 @@ permalink: /travels/
           .setHTML(popupContent)
           .addTo(map);
       });
+
+      // --- Right Click (Context Menu) for Coordinates ---
+
+      // 1. Prevent the default browser menu from appearing
+      map.getCanvas().addEventListener('contextmenu', (e) => e.preventDefault());
+
+      // 2. Show coordinates on right-click
+      map.on('contextmenu', (e) => {
+        const lat = e.lngLat.lat.toFixed(5);
+        const lon = e.lngLat.lng.toFixed(5);
+
+        new maplibregl.Popup({ closeButton: false }) // Hide the "x" since clicking elsewhere closes it
+          .setLngLat(e.lngLat)
+          .setHTML(`
+            <div style="text-align:center; font-size: 0.9em; padding: 5px;">
+              <strong>${lat}, ${lon}</strong><br>
+              <button onclick="navigator.clipboard.writeText('${lat}, ${lon}')" style="margin-top:5px; cursor:pointer;">
+                Copy to Clipboard
+              </button>
+            </div>
+          `)
+          .addTo(map);
+      });
     });
   }
 

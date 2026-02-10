@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Map
-permalink: /map/
+title: Travels
+permalink: /travels/
 gpx_url: /assets/gpx/sample.gpx
 ---
 

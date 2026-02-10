@@ -7,7 +7,7 @@
 			<name>Sara Brockmueller</name>
 		</author>
 	</metadata>
-	<wpt lat="37.779259" lon="-122.41933">
+	<wpt lat="37.761877" lon="-122.413479">
 		<name>San Francisco</name>
 		<time>2024-08-04T06:59:59+00:00</time>
 	</wpt>
@@ -27,7 +27,7 @@
 		<name>Medicine Bow-Routt National Forest</name>
 		<time>2024-08-11T05:59:59+00:00</time>
 	</wpt>
-	<wpt lat="43.22541324458811" lon="-97.3062129650037">
+	<wpt lat="43.225413" lon="-97.306213">
 		<name>Freeman</name>
 		<time>2024-08-12T04:59:59+00:00</time>
 	</wpt>
@@ -35,7 +35,7 @@
 		<name>Pawnee National Grassland</name>
 		<time>2024-08-16T05:59:59+00:00</time>
 	</wpt>
-	<wpt lat="39.9960381321239" lon="-105.10166378495343">
+	<wpt lat="39.996038" lon="-105.101664">
 		<name>Denver</name>
 		<time>2024-08-17T05:59:59+00:00</time>
 	</wpt>
@@ -43,14 +43,13 @@
 		<name>Buena Vista, CO</name>
 		<time>2024-08-20T05:59:59+00:00</time>
 	</wpt>
-	<wpt lat="43.22539424459545" lon="-97.30608898069532">
+	<wpt lat="43.225394" lon="-97.306089">
 		<name>Freeman</name>
 		<time>2024-08-22T04:59:59+00:00</time>
 	</wpt>
 	<trk>
 		<trkseg>
-			<trkpt lat="37.779259" lon="-122.41933"><time>2024-08-04T06:59:59+00:00</time></trkpt>
-			<trkpt lat="37.7781" lon="-122.40115"><time>2024-08-04T06:59:59+00:00</time></trkpt>
+			<trkpt lat="37.761877" lon="-122.413479"><time>2024-08-04T06:59:59+00:00</time></trkpt>
 			<trkpt lat="37.80806" lon="-122.36726"><time>2024-08-04T06:59:59+00:00</time></trkpt>
 			<trkpt lat="37.81772" lon="-122.35367"><time>2024-08-04T06:59:59+00:00</time></trkpt>
 			<trkpt lat="37.82118" lon="-122.3336"><time>2024-08-04T06:59:59+00:00</time></trkpt>
@@ -2327,7 +2326,7 @@
 			<trkpt lat="43.32826" lon="-97.42056"><time>2024-08-11T05:59:59+00:00</time></trkpt>
 			<trkpt lat="43.3125" lon="-97.42054"><time>2024-08-11T05:59:59+00:00</time></trkpt>
 			<trkpt lat="43.29515" lon="-97.42027"><time>2024-08-11T05:59:59+00:00</time></trkpt>
-			<trkpt lat="43.22541324458811" lon="-97.3062129650037"><time>2024-08-12T04:59:59+00:00</time></trkpt>
+			<trkpt lat="43.225413" lon="-97.306213"><time>2024-08-12T04:59:59+00:00</time></trkpt>
 			<trkpt lat="43.29954" lon="-97.42033"><time>2024-08-12T04:59:59+00:00</time></trkpt>
 			<trkpt lat="43.3125" lon="-97.42054"><time>2024-08-12T04:59:59+00:00</time></trkpt>
 			<trkpt lat="43.32108" lon="-97.42056"><time>2024-08-12T04:59:59+00:00</time></trkpt>
@@ -3172,7 +3171,7 @@
 			<trkpt lat="40.03106" lon="-105.13101"><time>2024-08-17T05:59:59+00:00</time></trkpt>
 			<trkpt lat="40.02376" lon="-105.13103"><time>2024-08-17T05:59:59+00:00</time></trkpt>
 			<trkpt lat="40.0164" lon="-105.13112"><time>2024-08-17T05:59:59+00:00</time></trkpt>
-			<trkpt lat="39.9960381321239" lon="-105.10166378495343"><time>2024-08-17T05:59:59+00:00</time></trkpt>
+			<trkpt lat="39.996038" lon="-105.101664"><time>2024-08-17T05:59:59+00:00</time></trkpt>
 			<trkpt lat="39.92301" lon="-105.10879"><time>2024-08-17T05:59:59+00:00</time></trkpt>
 			<trkpt lat="39.91518" lon="-105.09259"><time>2024-08-17T05:59:59+00:00</time></trkpt>
 			<trkpt lat="39.90227" lon="-105.08221"><time>2024-08-17T05:59:59+00:00</time></trkpt>
@@ -4385,7 +4384,7 @@
 			<trkpt lat="43.21269" lon="-97.41921"><time>2024-08-20T05:59:59+00:00</time></trkpt>
 			<trkpt lat="43.22714" lon="-97.41928"><time>2024-08-20T05:59:59+00:00</time></trkpt>
 			<trkpt lat="43.23395" lon="-97.41926"><time>2024-08-20T05:59:59+00:00</time></trkpt>
-			<trkpt lat="43.22539424459545" lon="-97.30608898069532"><time>2024-08-22T04:59:59+00:00</time></trkpt>
+			<trkpt lat="43.225394" lon="-97.306089"><time>2024-08-22T04:59:59+00:00</time></trkpt>
 		</trkseg>
 	</trk>
 </gpx>

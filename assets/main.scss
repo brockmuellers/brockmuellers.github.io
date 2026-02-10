@@ -2,6 +2,7 @@
 ---
 // Note to self: defaults can be found here:
 // https://github.com/jekyll/minima/tree/v2.5.1/_sass
+// Division uses / for compatibility with GitHub Pages (Jekyll 3.10 uses LibSass, which doesn't support math.div).
 
 $content-width:    1000px !default;
 $on-palm:          800px !default;

@@ -3,10 +3,11 @@ layout: page
 title: Travels
 permalink: /travels/
 # Tabs are defined in _data/travels.yml
+# This is proudly cowritten by copilot and gemini pro
 ---
 
-<link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
-<script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 
 {% assign gpx_base = site.baseurl | append: '/assets/gpx/' %}
 

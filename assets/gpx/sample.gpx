@@ -6,13 +6,13 @@
       <trkpt lat="37.7749" lon="-122.4194">
         <ele>10</ele>
       </trkpt>
-      <trkpt lat="37.7849" lon="-122.4094">
+      <trkpt lat="37.7849" lon="-122.4004">
         <ele>12</ele>
       </trkpt>
-      <trkpt lat="37.7949" lon="-122.3994">
+      <trkpt lat="37.7949" lon="-122.3950">
         <ele>15</ele>
       </trkpt>
-      <trkpt lat="37.8049" lon="-122.3894">
+      <trkpt lat="37.8049" lon="-122.3694">
         <ele>18</ele>
       </trkpt>
     </trkseg>

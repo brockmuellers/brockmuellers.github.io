@@ -2,6 +2,10 @@
 # (e.g. west-coast.gpx → "West Coast"). Add or remove entries as needed.
 # Dates are used to filter observations by date range. Adding an extra day on either
 # side for now to get around time zone issues.
+# Starting with a mock entry to show all gpx tracks
+- file: WORLD
+  start: "2024-07-27"
+  end: "2026-12-01"
 - file: west-coast.gpx
   start: "2024-07-27"
   end: "2024-08-21"

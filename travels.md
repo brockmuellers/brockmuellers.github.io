@@ -94,6 +94,15 @@ permalink: /travels/
   const gpxCache = {}; // Cache to store parsed coordinates
   const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
 
+  // Logic for WORLD placeholder: Create a list of all real GPX files
+  const ALL_TRACKS = [
+    {% for item in site.data.travels %}
+      {% unless item.file == 'WORLD' %}
+        "{{ gpx_base }}{{ item.file }}",
+      {% endunless %}
+    {% endfor %}
+  ];
+
   let map;
   const loader = document.getElementById('loader');
   let currentRequestId = 0; // Track the latest tab request
@@ -393,11 +402,20 @@ permalink: /travels/
       this.classList.add('active');
       this.setAttribute('aria-selected', 'true');
 
-      // Logic Updates
-      loadGPX(url).then(multiLine => {
+      // Check if this is the "World View" tab
+      if (url.includes('WORLD')) {
+        // Load ALL tracks and combine them into one flat array
+        trackPromise = Promise.all(ALL_TRACKS.map(u => loadGPX(u)))
+                              .then(results => results.flat());
+      } else {
+        // Load just the single track
+        trackPromise = loadGPX(url);
+      }
+
+      trackPromise.then(multiLine => {
         // Ignore if a newer tab has been clicked since this request started
         if (requestId !== currentRequestId) return;
-        if (multiLine.length === 0) return; // Handle empty GPX gracefully
+        if (multiLine.length === 0) return;
 
         if (!map) initMap(multiLine, start, end);
         else updateMap(multiLine, start, end);
@@ -412,12 +430,23 @@ permalink: /travels/
     const start = firstTab.getAttribute('data-start');
     const end = firstTab.getAttribute('data-end');
     const initialRequestId = ++currentRequestId;
-    loadGPX(initialUrl).then(multiLine => {
+
+    let trackPromise;
+    if (initialUrl.includes('WORLD')) {
+      // If the first tab is World, load ALL tracks
+      trackPromise = Promise.all(ALL_TRACKS.map(u => loadGPX(u)))
+                            .then(results => results.flat());
+    } else {
+      // Otherwise, load the single file
+      trackPromise = loadGPX(initialUrl);
+    }
+
+    trackPromise.then(multiLine => {
        if (initialRequestId !== currentRequestId) return;
        // We allow map init even if multiline is empty, provided we have dates?
        // For now, assume we need a track to start the map.
        if (multiLine.length > 0) initMap(multiLine, start, end);
-    });
+    }).catch(err => console.error("Error loading initial tab:", err));
   } else {
      document.getElementById('map').innerHTML = '<p style="padding:20px; text-align:center;">No travels found.</p>';
   }

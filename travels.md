@@ -235,7 +235,7 @@ permalink: /travels/
 
       /**
        * Add a circle layer for the observations.
-       * We create a white circle with a green border (iNaturalist colors).
+       * We create a circle with a green border (iNaturalist colors).
        * Filter observations by date to match the tab's date.
        */
       map.addLayer({
@@ -243,12 +243,29 @@ permalink: /travels/
         type: 'circle',
         source: 'inat-obs',
         paint: {
-          'circle-radius': 6,
-          'circle-color': '#ffffff',
-          'circle-stroke-color': '#74ac00', // iNat Green
-          'circle-stroke-width': 2
+          'circle-radius': 5,
+          'circle-stroke-color': '#74ac00', // iNat Green border
+          'circle-stroke-width': 3,
+
+          // LOGIC: Color based on "counts" property; black for rarest sightings -> red -> white
+          'circle-color': [
+            'step',
+            ['to-number', ['get', 'global_count']],
+
+            '#000000',
+            5, '#4a0404',
+            20, '#7f0000',
+            75, '#b30000',
+            250, '#d73027',
+            1000, '#f46d43',
+            3500, '#fdae61',
+            10000, '#fee090',
+            25000, '#ffffbf',
+            50000, '#ffffff'
+          ]
         }
       });
+
       applyDateFilter(startDate, endDate);
 
       // --- 3. INTERACTION LOGIC ---
@@ -287,12 +304,14 @@ permalink: /travels/
 
         const titleHtml = props.title || 'Observation';
         const linkUrl = props.obs_url || '#';
+        const obsCount = props.global_count || '[Unknown]';
 
         const popupContent = `
           <a href="${linkUrl}" target="_blank" class="obs-popup-link">
             ${imgHtml}
             ${titleHtml}
           </a>
+          ${obsCount} global observations
         `;
 
         new maplibregl.Popup()

@@ -26,7 +26,7 @@ https://kramdown.gettalong.org/quickref.html
 
 #### Building locally
 
-`bundle exec jekyll serve --trace --drafts` 
+`bundle exec jekyll serve --trace --drafts`
 (at localhost:4000)
 
 #### Other

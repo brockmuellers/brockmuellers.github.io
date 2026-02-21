@@ -62,6 +62,52 @@ permalink: /travels/
     font-size: 0.9em;
   }
   .obs-popup-link:hover { text-decoration: underline; color: #74ac00; /* iNat Green */ }
+
+  /* Waypoint search */
+  .waypoint-search { margin: 1em 0; }
+  .waypoint-search label { display: block; font-weight: 600; margin-bottom: 0.35em; }
+  .waypoint-search input[type="text"] {
+    padding: 0.5em 0.75em;
+    width: 100%;
+    max-width: 320px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .waypoint-search input[type="text"]:focus {
+    outline: none;
+    border-color: #74ac00;
+    box-shadow: 0 0 0 2px rgba(116, 172, 0, 0.2);
+  }
+  .waypoint-search button {
+    margin-top: 0.5em;
+    padding: 0.5em 1em;
+    background: #74ac00;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+  }
+  .waypoint-search button:hover { background: #5d8a00; }
+  .waypoint-search button:disabled { opacity: 0.6; cursor: not-allowed; }
+  #waypoint-search-results {
+    margin-top: 1em;
+    padding: 0;
+    list-style: none;
+  }
+  #waypoint-search-results .waypoint-item {
+    padding: 1em;
+    margin-bottom: 0.75em;
+    background: #f9f9f9;
+    border-left: 4px solid #74ac00;
+    border-radius: 0 4px 4px 0;
+  }
+  #waypoint-search-results .waypoint-item h4 { margin: 0 0 0.35em 0; font-size: 1.1em; }
+  #waypoint-search-results .waypoint-item .waypoint-meta { font-size: 0.85em; color: #666; margin-bottom: 0.5em; }
+  #waypoint-search-results .waypoint-item p { margin: 0; line-height: 1.5; }
+  #waypoint-search-results .search-error { color: #c00; padding: 0.75em; }
+  #waypoint-search-results .search-empty { color: #666; font-style: italic; padding: 0.75em; }
 </style>
 
 <div class="travel-tabs" role="tablist">
@@ -89,10 +135,19 @@ permalink: /travels/
   <div id="map"></div>
 </div>
 
+<div class="waypoint-search">
+  <label for="waypoint-query">Search waypoints</label>
+  <input type="text" id="waypoint-query" placeholder="e.g. ancient temples" aria-label="Search waypoints by keyword" />
+  <button type="button" id="waypoint-search-btn">Search</button>
+  <div id="waypoint-search-results" aria-live="polite"></div>
+</div>
+
 <script>
 (function() {
   const gpxCache = {}; // Cache to store parsed coordinates
   const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
+  const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
+  const WAYPOINT_SEARCH_API = "{{ site.travel_log_waypoint_search_api }}";
 
   // Logic for WORLD placeholder: Create a list of all real GPX files
   const ALL_TRACKS = [
@@ -449,6 +504,65 @@ permalink: /travels/
     }).catch(err => console.error("Error loading initial tab:", err));
   } else {
      document.getElementById('map').innerHTML = '<p style="padding:20px; text-align:center;">No travels found.</p>';
+  }
+
+  // --- Waypoint search ---
+  const waypointQuery = document.getElementById('waypoint-query');
+  const waypointSearchBtn = document.getElementById('waypoint-search-btn');
+  const waypointResults = document.getElementById('waypoint-search-results');
+
+  function renderWaypointResults(data) {
+    if (!Array.isArray(data) || data.length === 0) {
+      waypointResults.innerHTML = '<p class="search-empty">No waypoints found. Try another search.</p>';
+      return;
+    }
+    waypointResults.innerHTML = data.map(function(item) {
+      const score = typeof item.score === 'number' ? item.score.toFixed(1) : item.score;
+      const dist = typeof item.distance === 'number' ? item.distance.toFixed(3) : item.distance;
+      return (
+        '<li class="waypoint-item">' +
+          '<h4>' + (item.name || 'Unnamed') + '</h4>' +
+          '<div class="waypoint-meta">Score: ' + score + (item.distance != null ? ' &middot; Distance: ' + dist : '') + '</div>' +
+          (item.description ? '<p>' + item.description + '</p>' : '') +
+        '</li>'
+      );
+    }).join('');
+  }
+
+  function doWaypointSearch() {
+    const q = (waypointQuery.value || '').trim();
+    if (!q) {
+      waypointResults.innerHTML = '<p class="search-empty">Enter a search term (e.g. ancient temples).</p>';
+      return;
+    }
+    waypointResults.innerHTML = '<p class="search-empty">Searching…</p>';
+    waypointSearchBtn.disabled = true;
+
+    const url = WAYPOINT_SEARCH_API + '?q=' + encodeURIComponent(q);
+    const headers = { 'Accept': 'application/json' };
+    if (TRAVEL_LOG_SITE_TOKEN) headers['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
+
+    fetch(url, { headers: headers })
+      .then(function(r) {
+        if (!r.ok) throw new Error(r.status === 401 ? 'Invalid or missing site token. Set travel_log_site_token in _config.yml.' : 'Search failed: ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        renderWaypointResults(data);
+      })
+      .catch(function(err) {
+        waypointResults.innerHTML = '<p class="search-error">' + (err.message || 'Search failed.') + '</p>';
+      })
+      .finally(function() {
+        waypointSearchBtn.disabled = false;
+      });
+  }
+
+  if (waypointSearchBtn && waypointQuery) {
+    waypointSearchBtn.addEventListener('click', doWaypointSearch);
+    waypointQuery.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); doWaypointSearch(); }
+    });
   }
 
 })();

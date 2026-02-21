@@ -30,6 +30,11 @@ url: "/" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: brockmuellers
 linkedin_username:  sarabrockmueller
 
+# Waypoint search API
+travel_log_waypoint_search_api: "https://api.travel-log.brockmuellers.com/waypoints/search"
+# Site token for waypoint search (override with TRAVEL_LOG_SITE_TOKEN in dev or set in CI)
+travel_log_site_token: "agp984nt2900"
+
 # Build settings
 theme: minima
 plugins:

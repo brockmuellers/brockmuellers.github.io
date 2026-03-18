@@ -79,6 +79,12 @@ permalink: /travels/
     border-color: #74ac00;
     box-shadow: 0 0 0 2px rgba(116, 172, 0, 0.2);
   }
+  .waypoint-search input[type="text"]:disabled {
+    background: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
+    border-color: #ddd;
+  }
   .waypoint-search button {
     margin-top: 0.5em;
     padding: 0.5em 1em;
@@ -91,6 +97,7 @@ permalink: /travels/
   }
   .waypoint-search button:hover { background: #5d8a00; }
   .waypoint-search button:disabled { opacity: 0.6; cursor: not-allowed; }
+  #waypoint-api-status { margin-left: 0.5em; font-size: 0.85em; color: #c00; }
   #waypoint-search-results {
     margin-top: 1em;
     padding: 0;
@@ -139,6 +146,7 @@ permalink: /travels/
   <label for="waypoint-query">Search waypoints</label>
   <input type="text" id="waypoint-query" placeholder="e.g. ancient temples" aria-label="Search waypoints by keyword" />
   <button type="button" id="waypoint-search-btn">Search</button>
+  <span id="waypoint-api-status"></span>
   <div id="waypoint-search-results" aria-live="polite"></div>
 </div>
 
@@ -563,6 +571,19 @@ permalink: /travels/
     waypointQuery.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') { e.preventDefault(); doWaypointSearch(); }
     });
+
+    // Health check on page load — disable search if API is unreachable
+    var healthHeaders = { 'Accept': 'application/json' };
+    if (TRAVEL_LOG_SITE_TOKEN) healthHeaders['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
+    fetch(new URL('/health', WAYPOINT_SEARCH_API).href, { headers: healthHeaders })
+      .then(function(r) {
+        if (!r.ok) throw new Error('API returned ' + r.status);
+      })
+      .catch(function() {
+        waypointQuery.disabled = true;
+        waypointSearchBtn.disabled = true;
+        document.getElementById('waypoint-api-status').textContent = 'Search unavailable (API offline)';
+      });
   }
 
 })();

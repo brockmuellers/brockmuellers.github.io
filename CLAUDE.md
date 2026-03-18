@@ -11,6 +11,8 @@ This is a low-traffic personal website. Prioritize code simplicity and developer
 ```bash
 # Local development server (localhost:4000)
 bundle exec jekyll serve --trace --drafts
+# With local config overrides (e.g. local API endpoints); _config.local.yml is gitignored
+bundle exec jekyll serve --trace --drafts --config _config.yml,_config.local.yml
 
 # Generate resume PDF from _data/resume.yml
 ./build_resumes.sh [DATE_FOR_BACKUP]

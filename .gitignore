@@ -13,3 +13,4 @@ assets/resume/*.synctex.gz
 Gemfile.lock
 TODO.txt
 vendor
+_config.local.yml

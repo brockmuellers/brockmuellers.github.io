@@ -29,6 +29,10 @@ https://kramdown.gettalong.org/quickref.html
 `bundle exec jekyll serve --trace --drafts`
 (at localhost:4000)
 
+For local dev with local API overrides, create `_config.local.yml` (gitignored) and run:
+
+`bundle exec jekyll serve --trace --drafts --config _config.yml,_config.local.yml`
+
 #### Other
 
 Image sources can be recorded and loaded from `_data/image_source.yml`.

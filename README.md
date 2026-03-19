@@ -33,6 +33,17 @@ For local dev with local API overrides, create `_config.local.yml` (gitignored) 
 
 `bundle exec jekyll serve --trace --drafts --config _config.yml,_config.local.yml`
 
+To enable waypoint photo thumbnails locally, serve your photos directory and set `travel_log_photos_base_url` in `_config.local.yml`:
+
+```bash
+python3 -m http.server 8082 --directory /path/to/photos
+```
+
+```yaml
+# _config.local.yml
+travel_log_photos_base_url: "http://localhost:8082"
+```
+
 #### Other
 
 Image sources can be recorded and loaded from `_data/image_source.yml`.

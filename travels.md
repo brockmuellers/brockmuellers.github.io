@@ -113,6 +113,8 @@ permalink: /travels/
   #waypoint-search-results .waypoint-item h4 { margin: 0 0 0.35em 0; font-size: 1.1em; }
   #waypoint-search-results .waypoint-item .waypoint-meta { font-size: 0.85em; color: #666; margin-bottom: 0.5em; }
   #waypoint-search-results .waypoint-item p { margin: 0; line-height: 1.5; }
+  #waypoint-search-results .waypoint-item .waypoint-photos { display: flex; gap: 0.4em; margin-top: 0.6em; flex-wrap: wrap; }
+  #waypoint-search-results .waypoint-item .waypoint-photos img { width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: default; }
   #waypoint-search-results .search-error { color: #c00; padding: 0.75em; }
   #waypoint-search-results .search-empty { color: #666; font-style: italic; padding: 0.75em; }
 </style>
@@ -156,6 +158,7 @@ permalink: /travels/
   const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
   const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
   const WAYPOINT_SEARCH_API = "{{ site.travel_log_waypoint_search_api }}";
+  const WAYPOINT_PHOTOS_BASE_URL = "{{ site.travel_log_photos_base_url | default: '' }}";
 
   // Logic for WORLD placeholder: Create a list of all real GPX files
   const ALL_TRACKS = [
@@ -527,11 +530,23 @@ permalink: /travels/
     waypointResults.innerHTML = data.map(function(item) {
       const score = typeof item.score === 'number' ? item.score.toFixed(1) : item.score;
       const dist = typeof item.distance === 'number' ? item.distance.toFixed(3) : item.distance;
+      const photos = Array.isArray(item.photos) ? item.photos.slice(0, 5) : [];
+      const photosHtml = photos.length === 0 ? '' :
+        '<div class="waypoint-photos">' +
+          photos.map(function(photo) {
+            const src = WAYPOINT_PHOTOS_BASE_URL
+              ? WAYPOINT_PHOTOS_BASE_URL + '/' + encodeURIComponent(photo.filename)
+              : encodeURIComponent(photo.filename);
+            const caption = (photo.caption || '').replace(/"/g, '&quot;');
+            return '<img src="' + src + '" title="' + caption + '" alt="' + caption + '" />';
+          }).join('') +
+        '</div>';
       return (
         '<li class="waypoint-item">' +
           '<h4>' + (item.name || 'Unnamed') + '</h4>' +
           '<div class="waypoint-meta">Score: ' + score + (item.distance != null ? ' &middot; Distance: ' + dist : '') + '</div>' +
           (item.description ? '<p>' + item.description + '</p>' : '') +
+          photosHtml +
         '</li>'
       );
     }).join('');

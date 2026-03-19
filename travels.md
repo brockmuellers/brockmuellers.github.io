@@ -113,8 +113,8 @@ permalink: /travels/
   #waypoint-search-results .waypoint-item h4 { margin: 0 0 0.35em 0; font-size: 1.1em; }
   #waypoint-search-results .waypoint-item .waypoint-meta { font-size: 0.85em; color: #666; margin-bottom: 0.5em; }
   #waypoint-search-results .waypoint-item p { margin: 0; line-height: 1.5; }
-  #waypoint-search-results .waypoint-item .waypoint-photos { display: flex; gap: 0.4em; margin-top: 0.6em; flex-wrap: wrap; }
-  #waypoint-search-results .waypoint-item .waypoint-photos img { width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: default; }
+  #waypoint-search-results .waypoint-item .waypoint-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.4em; margin-top: 0.6em; }
+  #waypoint-search-results .waypoint-item .waypoint-photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 3px; cursor: default; }
   #waypoint-search-results .search-error { color: #c00; padding: 0.75em; }
   #waypoint-search-results .search-empty { color: #666; font-style: italic; padding: 0.75em; }
 </style>
@@ -544,7 +544,10 @@ permalink: /travels/
       return (
         '<li class="waypoint-item">' +
           '<h4>' + (item.name || 'Unnamed') + '</h4>' +
-          '<div class="waypoint-meta">Score: ' + score + (item.distance != null ? ' &middot; Distance: ' + dist : '') + '</div>' +
+          '<div class="waypoint-meta">Score: ' + score + (item.distance != null ? ' &middot; Distance: ' + dist : '') +
+            (item.description_distance != null ? ' &middot; Desc: ' + item.description_distance.toFixed(3) : '') +
+            (item.photo_distance != null ? ' &middot; Photo: ' + item.photo_distance.toFixed(3) : '') +
+          '</div>' +
           (item.description ? '<p>' + item.description + '</p>' : '') +
           photosHtml +
         '</li>'

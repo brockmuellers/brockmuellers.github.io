@@ -160,7 +160,6 @@ permalink: /travels/
   const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
   const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
   const WAYPOINT_SEARCH_API = "{{ site.travel_log_waypoint_search_api }}";
-  const WAYPOINT_PHOTOS_BASE_URL = "{{ site.travel_log_photos_base_url | default: '' }}";
 
   // Logic for WORLD placeholder: Create a list of all real GPX files
   const ALL_TRACKS = [
@@ -536,9 +535,7 @@ permalink: /travels/
       const photosHtml = photos.length === 0 ? '' :
         '<div class="waypoint-photos">' +
           photos.map(function(photo) {
-            const src = WAYPOINT_PHOTOS_BASE_URL
-              ? WAYPOINT_PHOTOS_BASE_URL + '/' + encodeURIComponent(photo.filename)
-              : encodeURIComponent(photo.filename);
+            const src = photo.url || '';
             const caption = (photo.caption || '').replace(/"/g, '&quot;');
             return '<img src="' + src + '" title="' + caption + '" alt="' + caption + '" />';
           }).join('') +

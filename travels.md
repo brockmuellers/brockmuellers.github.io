@@ -111,6 +111,8 @@ permalink: /travels/
     border-radius: 0 4px 4px 0;
   }
   #waypoint-search-results .waypoint-item h4 { margin: 0 0 0.35em 0; font-size: 1.1em; }
+  #waypoint-search-results .waypoint-item h4 button { background: none; border: none; padding: 0; font: inherit; font-weight: bold; color: inherit; cursor: pointer; text-decoration: underline dotted; }
+  #waypoint-search-results .waypoint-item h4 button:hover { color: #74ac00; }
   #waypoint-search-results .waypoint-item .waypoint-meta { font-size: 0.85em; color: #666; margin-bottom: 0.5em; }
   #waypoint-search-results .waypoint-item p { margin: 0; line-height: 1.5; }
   #waypoint-search-results .waypoint-item .waypoint-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.4em; margin-top: 0.6em; }
@@ -543,7 +545,7 @@ permalink: /travels/
         '</div>';
       return (
         '<li class="waypoint-item">' +
-          '<h4>' + (item.name || 'Unnamed') + '</h4>' +
+          '<h4>' + (item.coordinates ? '<button data-coordinates="' + item.coordinates + '">' + (item.name || 'Unnamed') + '</button>' : (item.name || 'Unnamed')) + '</h4>' +
           '<div class="waypoint-meta">Score: ' + score + (item.distance != null ? ' &middot; Distance: ' + dist : '') +
             (item.description_distance != null ? ' &middot; Desc: ' + item.description_distance.toFixed(3) : '') +
             (item.photo_distance != null ? ' &middot; Photo: ' + item.photo_distance.toFixed(3) : '') +
@@ -588,6 +590,13 @@ permalink: /travels/
     waypointSearchBtn.addEventListener('click', doWaypointSearch);
     waypointQuery.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') { e.preventDefault(); doWaypointSearch(); }
+    });
+
+    waypointResults.addEventListener('click', function(e) {
+      var btn = e.target.closest('button[data-coordinates]');
+      if (!btn || !map) return;
+      var coords = btn.getAttribute('data-coordinates').split(',').map(Number);
+      map.flyTo({ center: coords, zoom: 13 });
     });
 
     // Health check on page load — disable search if API is unreachable

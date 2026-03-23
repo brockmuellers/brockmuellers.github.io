@@ -179,60 +179,27 @@ permalink: /travels/
     loader.style.display = isLoading ? 'flex' : 'none';
   };
 
-  function parseGPX(xmlText) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlText, 'text/xml');
-    const lines = [];
-
-    // Priority 1: Track Segments
-    const segments = doc.querySelectorAll('trkseg');
-    if (segments.length > 0) {
-      segments.forEach(seg => {
-        const line = [];
-        seg.querySelectorAll('trkpt').forEach(pt => {
-          const lat = parseFloat(pt.getAttribute('lat'));
-          const lon = parseFloat(pt.getAttribute('lon'));
-          if (!isNaN(lat) && !isNaN(lon)) line.push([lon, lat]);
-        });
-        if (line.length > 1) lines.push(line);
-      });
-    } else {
-      // Priority 2: Routes or flat tracks
-      const pts = doc.querySelectorAll('rtept, trkpt');
-      const line = [];
-      pts.forEach(pt => {
-        const lat = parseFloat(pt.getAttribute('lat'));
-        const lon = parseFloat(pt.getAttribute('lon'));
-        if (!isNaN(lat) && !isNaN(lon)) line.push([lon, lat]);
-      });
-      if (line.length > 1) lines.push(line);
-    }
-    return lines;
-  }
-
-  function getBounds(multiLine) {
+  function getBounds(features) {
     const bounds = new maplibregl.LngLatBounds();
-    multiLine.forEach(line => {
-      line.forEach(coord => bounds.extend(coord));
-    });
+    features.forEach(f => f.geometry.coordinates.forEach(coord => bounds.extend(coord)));
     return bounds;
   }
 
-  // Load GPX with caching
+  // Load pre-generated GeoJSON (derived from GPX) with caching
   function loadGPX(url) {
-    if (gpxCache[url]) {
-      return Promise.resolve(gpxCache[url]);
+    const geojsonUrl = url.replace('.gpx', '.geojson');
+    if (gpxCache[geojsonUrl]) {
+      return Promise.resolve(gpxCache[geojsonUrl]);
     }
     setLoading(true);
-    return fetch(url)
+    return fetch(geojsonUrl)
       .then(r => {
         if (!r.ok) throw new Error("Network response was not ok");
-        return r.text();
+        return r.json();
       })
-      .then(text => {
-        const data = parseGPX(text);
-        gpxCache[url] = data; // Save to cache
-        return data;
+      .then(fc => {
+        gpxCache[geojsonUrl] = fc.features;
+        return fc.features;
       })
       .finally(() => setLoading(false));
   }
@@ -284,18 +251,41 @@ permalink: /travels/
       // --- 1. SETUP GPX TRACK LAYER ---
       map.addSource('gpx-track', {
         type: 'geojson',
-        data: {
-          type: 'Feature',
-          properties: {},
-          geometry: { type: 'MultiLineString', coordinates: multiLineString }
-        }
+        data: { type: 'FeatureCollection', features: multiLineString }
       });
+      const transportColor = ['match', ['get', 'transport'],
+        /* air */
+        'flight',    '#9333ea',
+        /* water */
+        'ferry',     '#06b6d4',
+        'motorboat', '#0284c7',
+        /* rail */
+        'train',     '#eab308',
+        /* road */
+        'bus',       '#f97316',
+        'car',       '#ef4444',
+        '4x4',       '#b45309',
+        'motorbike', '#f43f5e',
+        /* foot */
+        'walking',   '#22c55e',
+        'hiking',    '#15803d',
+        /* default */ '#d9534f'
+      ];
       map.addLayer({
         id: 'gpx-line',
         type: 'line',
         source: 'gpx-track',
+        filter: ['!=', ['get', 'transport'], 'flight'],
         layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: { 'line-color': '#d9534f', 'line-width': 4 } // Changed color to a nice red
+        paint: { 'line-width': 4, 'line-color': transportColor }
+      });
+      map.addLayer({
+        id: 'gpx-line-flight',
+        type: 'line',
+        source: 'gpx-track',
+        filter: ['==', ['get', 'transport'], 'flight'],
+        layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: { 'line-width': 2, 'line-color': transportColor, 'line-dasharray': [4, 4] }
       });
 
       // --- 2. SETUP OBSERVATIONS LAYER ---
@@ -436,11 +426,7 @@ permalink: /travels/
     const source = map.getSource('gpx-track');
     if (!source) return;
 
-    source.setData({
-      type: 'Feature',
-      properties: {},
-      geometry: { type: 'MultiLineString', coordinates: multiLineString }
-    });
+    source.setData({ type: 'FeatureCollection', features: multiLineString });
 
     // Update Observation Filter
     applyDateFilter(startDate, endDate);

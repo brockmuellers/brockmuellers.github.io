@@ -119,6 +119,26 @@ permalink: /travels/
   #waypoint-search-results .waypoint-item .waypoint-photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 3px; cursor: default; }
   #waypoint-search-results .search-error { color: #c00; padding: 0.75em; }
   #waypoint-search-results .search-empty { color: #666; font-style: italic; padding: 0.75em; }
+
+  #map-legend {
+    position: absolute;
+    bottom: 30px;
+    left: 10px;
+    background: rgba(255,255,255,0.85);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    line-height: 1.8;
+    z-index: 1;
+  }
+  #map-legend summary { cursor: pointer; color: #555; }
+  .legend-item { display: flex; align-items: center; gap: 7px; margin-top: 4px; }
+  .legend-swatch { display: inline-block; width: 20px; border-bottom: 3px solid; }
+  .legend-swatch.dashed { border-bottom-style: dashed; border-bottom-width: 2px; }
+  .legend-divider { margin: 6px 0; border: none; border-top: 1px solid #ccc; }
+  .legend-section-label { font-weight: bold; margin-bottom: 2px; }
+  .legend-gradient-row { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
+.legend-gradient-bar { width: 60px; height: 8px; border-radius: 3px; border: 1px solid #ccc; background: linear-gradient(to right, #000000, #4a0404, #7f0000, #b30000, #d73027, #f46d43, #fdae61, #fee090, #ffffbf, #ffffff); }
 </style>
 
 <div class="travel-tabs" role="tablist">
@@ -144,6 +164,27 @@ permalink: /travels/
 <div id="map-container">
   <div id="loader">Loading Track...</div>
   <div id="map"></div>
+  <details id="map-legend">
+    <summary>legend</summary>
+    <div class="legend-section-label">transport mode</div>
+    <div class="legend-item"><span class="legend-swatch dashed" style="border-color:#9333ea"></span>flight</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#06b6d4"></span>ferry</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#0284c7"></span>motorboat</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#eab308"></span>train</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#f97316"></span>bus</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#ef4444"></span>car</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#b45309"></span>4x4</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#f43f5e"></span>motorbike</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#22c55e"></span>walking</div>
+    <div class="legend-item"><span class="legend-swatch" style="border-color:#15803d"></span>hiking</div>
+    <hr class="legend-divider">
+    <div class="legend-section-label">observations</div>
+    <div class="legend-gradient-row">
+      <span>rare</span>
+      <span class="legend-gradient-bar"></span>
+      <span>common</span>
+    </div>
+  </details>
 </div>
 
 <div class="waypoint-search">

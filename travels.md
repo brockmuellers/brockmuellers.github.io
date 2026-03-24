@@ -340,22 +340,42 @@ permalink: /travels/
         paint: { 'line-width': 2, 'line-color': transportColor, 'line-dasharray': [4, 4] }
       });
 
-      // --- 2. SETUP OBSERVATIONS LAYER ---
-      /**
-       * We load the GeoJSON file directly into a MapLibre source.
-       * `cluster: true` is optional but nice if you have thousands of points.
-       * For simplicity, we are turning clustering OFF here.
-       */
+      // --- 2. SETUP WAYPOINTS LAYER (added before observations so obs render on top) ---
+      const diamondSize = 16;
+      const diamondCanvas = document.createElement('canvas');
+      diamondCanvas.width = diamondSize;
+      diamondCanvas.height = diamondSize;
+      const dctx = diamondCanvas.getContext('2d');
+      const h = diamondSize / 2;
+      dctx.beginPath();
+      dctx.moveTo(h, 0); dctx.lineTo(diamondSize, h); dctx.lineTo(h, diamondSize); dctx.lineTo(0, h);
+      dctx.closePath();
+      dctx.fillStyle = '#e2e8f0';
+      dctx.fill();
+      dctx.strokeStyle = '#64748b';
+      dctx.lineWidth = 2;
+      dctx.stroke();
+      const diamondData = dctx.getImageData(0, 0, diamondSize, diamondSize);
+      map.addImage('waypoint-diamond', { width: diamondSize, height: diamondSize, data: diamondData.data });
+
+      map.addSource('waypoints', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      map.addLayer({
+        id: 'waypoints',
+        type: 'symbol',
+        source: 'waypoints',
+        layout: {
+          'icon-image': 'waypoint-diamond',
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 0, 0.5, 8, 0.83],
+          'icon-allow-overlap': true
+        }
+      });
+
+      // --- 3. SETUP OBSERVATIONS LAYER ---
       map.addSource('inat-obs', {
         type: 'geojson',
         data: OBS_GEOJSON_URL
       });
 
-      /**
-       * Add a circle layer for the observations.
-       * We create a circle with a green border (iNaturalist colors).
-       * Filter observations by date to match the tab's date.
-       */
       map.addLayer({
         id: 'inat-points',
         type: 'circle',
@@ -386,36 +406,6 @@ permalink: /travels/
 
       applyDateFilter(startDate, endDate);
 
-      // --- Waypoints layer ---
-      const diamondSize = 12;
-      const diamondCanvas = document.createElement('canvas');
-      diamondCanvas.width = diamondSize;
-      diamondCanvas.height = diamondSize;
-      const dctx = diamondCanvas.getContext('2d');
-      const h = diamondSize / 2;
-      dctx.beginPath();
-      dctx.moveTo(h, 0); dctx.lineTo(diamondSize, h); dctx.lineTo(h, diamondSize); dctx.lineTo(0, h);
-      dctx.closePath();
-      dctx.fillStyle = '#e2e8f0';
-      dctx.fill();
-      dctx.strokeStyle = '#64748b';
-      dctx.lineWidth = 2;
-      dctx.stroke();
-      const diamondData = dctx.getImageData(0, 0, diamondSize, diamondSize);
-      map.addImage('waypoint-diamond', { width: diamondSize, height: diamondSize, data: diamondData.data });
-
-      map.addSource('waypoints', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-      map.addLayer({
-        id: 'waypoints',
-        type: 'symbol',
-        source: 'waypoints',
-        layout: {
-          'icon-image': 'waypoint-diamond',
-          'icon-size': ['interpolate', ['linear'], ['zoom'], 0, 0.5, 8, 0.83],
-          'icon-allow-overlap': true
-        }
-      });
-
       const waypointHeaders = { 'Accept': 'application/json' };
       if (TRAVEL_LOG_SITE_TOKEN) waypointHeaders['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
       fetch(TRAVEL_LOG_API + '/waypoints', { headers: waypointHeaders })
@@ -433,7 +423,7 @@ permalink: /travels/
         })
         .catch(() => {}); // API down → map works normally with no waypoints shown
 
-      // --- 3. INTERACTION LOGIC ---
+      // --- 4. INTERACTION LOGIC ---
 
       /**
        * Change cursor to pointer when hovering over a point

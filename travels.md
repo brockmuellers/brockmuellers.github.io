@@ -200,7 +200,7 @@ permalink: /travels/
   const gpxCache = {}; // Cache to store parsed coordinates
   const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
   const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
-  const WAYPOINT_SEARCH_API = "{{ site.travel_log_waypoint_search_api }}";
+  const TRAVEL_LOG_API = "{{ site.travel_log_api }}";
 
   // Logic for WORLD placeholder: Create a list of all real GPX files
   const ALL_TRACKS = [
@@ -350,9 +350,9 @@ permalink: /travels/
         type: 'circle',
         source: 'inat-obs',
         paint: {
-          'circle-radius': 5,
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 8, 5],
           'circle-stroke-color': '#74ac00', // iNat Green border
-          'circle-stroke-width': 3,
+          'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 0, 1, 8, 3],
 
           // LOGIC: Color based on "counts" property; black for rarest sightings -> red -> white
           'circle-color': [
@@ -375,6 +375,52 @@ permalink: /travels/
 
       applyDateFilter(startDate, endDate);
 
+      // --- Waypoints layer ---
+      const diamondSize = 12;
+      const diamondCanvas = document.createElement('canvas');
+      diamondCanvas.width = diamondSize;
+      diamondCanvas.height = diamondSize;
+      const dctx = diamondCanvas.getContext('2d');
+      const h = diamondSize / 2;
+      dctx.beginPath();
+      dctx.moveTo(h, 0); dctx.lineTo(diamondSize, h); dctx.lineTo(h, diamondSize); dctx.lineTo(0, h);
+      dctx.closePath();
+      dctx.fillStyle = '#e2e8f0';
+      dctx.fill();
+      dctx.strokeStyle = '#64748b';
+      dctx.lineWidth = 2;
+      dctx.stroke();
+      const diamondData = dctx.getImageData(0, 0, diamondSize, diamondSize);
+      map.addImage('waypoint-diamond', { width: diamondSize, height: diamondSize, data: diamondData.data });
+
+      map.addSource('waypoints', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      map.addLayer({
+        id: 'waypoints',
+        type: 'symbol',
+        source: 'waypoints',
+        layout: {
+          'icon-image': 'waypoint-diamond',
+          'icon-size': ['interpolate', ['linear'], ['zoom'], 0, 0.5, 8, 0.83],
+          'icon-allow-overlap': true
+        }
+      });
+
+      const waypointHeaders = { 'Accept': 'application/json' };
+      if (TRAVEL_LOG_SITE_TOKEN) waypointHeaders['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
+      fetch(TRAVEL_LOG_API + '/waypoints', { headers: waypointHeaders })
+        .then(r => r.json())
+        .then(waypoints => {
+          const features = waypoints
+            .filter(w => w.coordinates)
+            .map(w => ({
+              type: 'Feature',
+              geometry: { type: 'Point', coordinates: w.coordinates },
+              properties: { id: w.id, name: w.name, description: w.description, photo_url: w.photo_url || null }
+            }));
+          map.getSource('waypoints').setData({ type: 'FeatureCollection', features });
+        })
+        .catch(() => {}); // API down → map works normally with no waypoints shown
+
       // --- 3. INTERACTION LOGIC ---
 
       /**
@@ -393,6 +439,7 @@ permalink: /travels/
        * Creates a popup containing the image and title, hyperlinked to the URL.
        */
       map.on('click', 'inat-points', (e) => {
+        if (map.queryRenderedFeatures(e.point, { layers: ['waypoints'] }).length > 0) return;
         // MapLibre returns features under the click. We take the first one.
         // Note: Properties in GeoJSON are sometimes treated as strings, but usually preserved.
         const coordinates = e.features[0].geometry.coordinates.slice();
@@ -424,6 +471,17 @@ permalink: /travels/
         new maplibregl.Popup()
           .setLngLat(coordinates)
           .setHTML(popupContent)
+          .addTo(map);
+      });
+
+      map.on('mouseenter', 'waypoints', () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'waypoints', () => { map.getCanvas().style.cursor = ''; });
+      map.on('click', 'waypoints', (e) => {
+        const props = e.features[0].properties;
+        const coords = e.features[0].geometry.coordinates.slice();
+        new maplibregl.Popup()
+          .setLngLat(coords)
+          .setHTML(`<strong>${props.name}</strong>${props.photo_url ? `<img src="${props.photo_url}" class="obs-popup-img" alt="${props.name}" />` : ''}`)
           .addTo(map);
       });
 
@@ -590,7 +648,7 @@ permalink: /travels/
     waypointResults.innerHTML = '<p class="search-empty">Searching…</p>';
     waypointSearchBtn.disabled = true;
 
-    const url = WAYPOINT_SEARCH_API + '?q=' + encodeURIComponent(q);
+    const url = TRAVEL_LOG_API + '/waypoints/search?q=' + encodeURIComponent(q);
     const headers = { 'Accept': 'application/json' };
     if (TRAVEL_LOG_SITE_TOKEN) headers['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
 
@@ -626,7 +684,7 @@ permalink: /travels/
     // Health check on page load — disable search if API is unreachable
     var healthHeaders = { 'Accept': 'application/json' };
     if (TRAVEL_LOG_SITE_TOKEN) healthHeaders['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
-    fetch(new URL('/health', WAYPOINT_SEARCH_API).href, { headers: healthHeaders })
+    fetch(TRAVEL_LOG_API + '/health', { headers: healthHeaders })
       .then(function(r) {
         if (!r.ok) throw new Error('API returned ' + r.status);
       })

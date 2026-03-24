@@ -648,7 +648,13 @@ permalink: /travels/
     waypointResults.innerHTML = '<p class="search-empty">Searching…</p>';
     waypointSearchBtn.disabled = true;
 
-    const url = TRAVEL_LOG_API + '/waypoints/search?q=' + encodeURIComponent(q);
+    const activeTab = document.querySelector('.travel-tabs button.active');
+    const activeGpx = activeTab ? activeTab.getAttribute('data-gpx') : '';
+    const isWorld = activeGpx.includes('WORLD');
+    // Strip path prefix and .gpx extension from data-gpx, e.g. "/assets/gpx/west-coast.gpx" → "west-coast"
+    const tripSlug = isWorld ? null : activeGpx.replace(/^.*\//, '').replace('.gpx', '');
+    const url = TRAVEL_LOG_API + '/waypoints/search?q=' + encodeURIComponent(q) +
+      (tripSlug ? '&trip=' + encodeURIComponent(tripSlug) : '');
     const headers = { 'Accept': 'application/json' };
     if (TRAVEL_LOG_SITE_TOKEN) headers['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
 

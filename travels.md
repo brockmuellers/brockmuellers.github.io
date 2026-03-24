@@ -265,7 +265,17 @@ permalink: /travels/
     }
   }
 
-  function initMap(multiLineString, startDate, endDate) {
+  // tripSlug is null for the World tab (show all), otherwise e.g. "west-coast"
+  function applyWaypointFilter(tripSlug) {
+    if (!map || !map.getLayer('waypoints')) return;
+    if (tripSlug) {
+      map.setFilter('waypoints', ['==', ['get', 'trip'], tripSlug]);
+    } else {
+      map.setFilter('waypoints', null);
+    }
+  }
+
+  function initMap(multiLineString, startDate, endDate, tripSlug) {
     const bounds = getBounds(multiLineString);
     map = new maplibregl.Map({
       container: 'map',
@@ -415,9 +425,10 @@ permalink: /travels/
             .map(w => ({
               type: 'Feature',
               geometry: { type: 'Point', coordinates: w.coordinates },
-              properties: { id: w.id, name: w.name, description: w.description, photo_url: w.photo_url || null }
+              properties: { id: w.id, name: w.name, description: w.description, photo_url: w.photo_url || null, trip: w.trip || null }
             }));
           map.getSource('waypoints').setData({ type: 'FeatureCollection', features });
+          applyWaypointFilter(tripSlug);
         })
         .catch(() => {}); // API down → map works normally with no waypoints shown
 
@@ -510,14 +521,14 @@ permalink: /travels/
     });
   }
 
-  function updateMap(multiLineString, startDate, endDate) {
+  function updateMap(multiLineString, startDate, endDate, tripSlug) {
     // If the map isn't ready yet, wait for the first (and only) 'load' event,
     // but still respect whichever tab was most recently clicked.
     if (!mapReady) {
       const scheduledRequestId = currentRequestId;
       map.once('load', () => {
         if (scheduledRequestId !== currentRequestId) return;
-        updateMap(multiLineString, start, end);
+        updateMap(multiLineString, startDate, endDate, tripSlug);
       });
       return;
     }
@@ -527,8 +538,8 @@ permalink: /travels/
 
     source.setData({ type: 'FeatureCollection', features: multiLineString });
 
-    // Update Observation Filter
     applyDateFilter(startDate, endDate);
+    applyWaypointFilter(tripSlug);
 
     const bounds = getBounds(multiLineString);
     // Ensure bounds are valid before fitting
@@ -544,6 +555,8 @@ permalink: /travels/
       const url = this.getAttribute('data-gpx');
       const start = this.getAttribute('data-start');
       const end = this.getAttribute('data-end');
+      // Strip path prefix and .gpx extension, e.g. "/assets/gpx/west-coast.gpx" → "west-coast"
+      const tripSlug = url.includes('WORLD') ? null : url.replace(/^.*\//, '').replace('.gpx', '');
       const requestId = ++currentRequestId;
 
       // UI Updates
@@ -569,8 +582,8 @@ permalink: /travels/
         if (requestId !== currentRequestId) return;
         if (multiLine.length === 0) return;
 
-        if (!map) initMap(multiLine, start, end);
-        else updateMap(multiLine, start, end);
+        if (!map) initMap(multiLine, start, end, tripSlug);
+        else updateMap(multiLine, start, end, tripSlug);
       }).catch(err => console.error("Error processing GPX:", err));
     });
   });
@@ -581,6 +594,7 @@ permalink: /travels/
     const initialUrl = firstTab.getAttribute('data-gpx');
     const start = firstTab.getAttribute('data-start');
     const end = firstTab.getAttribute('data-end');
+    const tripSlug = initialUrl.includes('WORLD') ? null : initialUrl.replace(/^.*\//, '').replace('.gpx', '');
     const initialRequestId = ++currentRequestId;
 
     let trackPromise;
@@ -597,7 +611,7 @@ permalink: /travels/
        if (initialRequestId !== currentRequestId) return;
        // We allow map init even if multiline is empty, provided we have dates?
        // For now, assume we need a track to start the map.
-       if (multiLine.length > 0) initMap(multiLine, start, end);
+       if (multiLine.length > 0) initMap(multiLine, start, end, tripSlug);
     }).catch(err => console.error("Error loading initial tab:", err));
   } else {
      document.getElementById('map').innerHTML = '<p style="padding:20px; text-align:center;">No travels found.</p>';

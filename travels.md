@@ -115,7 +115,7 @@ permalink: /travels/
   #waypoint-search-results .waypoint-item h4 button:hover { color: #74ac00; }
   #waypoint-search-results .waypoint-item .waypoint-meta { font-size: 0.85em; color: #666; margin-bottom: 0.5em; }
   #waypoint-search-results .waypoint-item p { margin: 0; line-height: 1.5; }
-  #waypoint-search-results .waypoint-item .waypoint-photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.4em; margin-top: 0.6em; }
+  #waypoint-search-results .waypoint-item .waypoint-photos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4em; margin-top: 0.6em; }
   #waypoint-search-results .waypoint-item .waypoint-photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 3px; cursor: default; }
   #waypoint-search-results .search-error { color: #c00; padding: 0.75em; }
   #waypoint-search-results .search-empty { color: #666; font-style: italic; padding: 0.75em; }

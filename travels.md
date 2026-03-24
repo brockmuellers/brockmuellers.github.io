@@ -212,6 +212,7 @@ permalink: /travels/
   ];
 
   let map;
+  let currentPopup = null;
   const loader = document.getElementById('loader');
   let currentRequestId = 0; // Track the latest tab request
   let mapReady = false;     // Becomes true after the map 'load' event fires
@@ -479,10 +480,11 @@ permalink: /travels/
           ${obsCount} global observations
         `;
 
-        new maplibregl.Popup()
+        currentPopup = new maplibregl.Popup()
           .setLngLat(coordinates)
           .setHTML(popupContent)
           .addTo(map);
+        currentPopup.on('close', () => { currentPopup = null; });
       });
 
       map.on('mouseenter', 'waypoints', () => { map.getCanvas().style.cursor = 'pointer'; });
@@ -490,10 +492,11 @@ permalink: /travels/
       map.on('click', 'waypoints', (e) => {
         const props = e.features[0].properties;
         const coords = e.features[0].geometry.coordinates.slice();
-        new maplibregl.Popup()
+        currentPopup = new maplibregl.Popup()
           .setLngLat(coords)
           .setHTML(`<strong>${props.name}</strong>${props.photo_url ? `<img src="${props.photo_url}" class="obs-popup-img" alt="${props.name}" />` : ''}`)
           .addTo(map);
+        currentPopup.on('close', () => { currentPopup = null; });
       });
 
       // --- Right Click (Context Menu) for Coordinates ---
@@ -506,7 +509,7 @@ permalink: /travels/
         const lat = e.lngLat.lat.toFixed(5);
         const lon = e.lngLat.lng.toFixed(5);
 
-        new maplibregl.Popup({ closeButton: false }) // Hide the "x" since clicking elsewhere closes it
+        currentPopup = new maplibregl.Popup({ closeButton: false }) // Hide the "x" since clicking elsewhere closes it
           .setLngLat(e.lngLat)
           .setHTML(`
             <div style="text-align:center; font-size: 0.9em; padding: 5px;">
@@ -517,6 +520,7 @@ permalink: /travels/
             </div>
           `)
           .addTo(map);
+        currentPopup.on('close', () => { currentPopup = null; });
       });
     });
   }
@@ -558,6 +562,8 @@ permalink: /travels/
       // Strip path prefix and .gpx extension, e.g. "/assets/gpx/west-coast.gpx" → "west-coast"
       const tripSlug = url.includes('WORLD') ? null : url.replace(/^.*\//, '').replace('.gpx', '');
       const requestId = ++currentRequestId;
+
+      if (currentPopup) { currentPopup.remove(); currentPopup = null; }
 
       // UI Updates
       buttons.forEach(b => {

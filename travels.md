@@ -65,11 +65,14 @@ permalink: /travels/
   .obs-popup-link:hover { text-decoration: underline; color: #74ac00; /* iNat Green */ }
 
   /* eBird popup */
-  .ebird-popup-title { display: block; font-weight: bold; font-size: 0.9em; color: #333; text-decoration: none; }
+  .ebird-popup-title { display: block; font-weight: bold; font-size: 1em; color: #333; text-decoration: none; }
   .ebird-popup-title:hover { text-decoration: underline; color: #7c3aed; }
-  .ebird-popup-meta { font-size: 0.8em; color: #555; margin: 3px 0; }
-  .ebird-popup-checklists { font-size: 0.8em; margin-top: 4px; }
-  .ebird-popup-checklists a { color: #7c3aed; margin-right: 4px; }
+  .ebird-popup-meta { font-size: 0.9em; color: #555; margin: 3px 0; }
+  .ebird-popup-checklists { font-size: 0.9em; margin-top: 6px; border-top: 1px solid #eee; padding-top: 4px; }
+  .ebird-checklist-row { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; }
+  .ebird-checklist-row a { color: #7c3aed; text-decoration: none; flex-shrink: 0; }
+  .ebird-checklist-row a:hover { text-decoration: underline; }
+  .ebird-checklist-detail { color: #666; }
 
   /* Waypoint search */
   .waypoint-search { margin: 1em 0; }
@@ -144,7 +147,8 @@ permalink: /travels/
   .legend-swatch { display: inline-block; width: 20px; border-bottom: 3px solid; }
   .legend-swatch.dashed { border-bottom-style: dashed; border-bottom-width: 2px; }
   .legend-divider { margin: 6px 0; border: none; border-top: 1px solid #ccc; }
-  .legend-section-label { font-weight: bold; margin-bottom: 2px; }
+  .legend-section-label { font-weight: bold; margin-bottom: 2px; display: flex; align-items: center; gap: 5px; }
+  .legend-toggle { cursor: pointer; margin: 0; accent-color: #555; }
   .legend-gradient-row { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
 .legend-gradient-bar { width: 60px; height: 8px; border-radius: 3px; border: 1px solid #ccc; background: linear-gradient(to right, #000000, #4a0404, #7f0000, #b30000, #d73027, #f46d43, #fdae61, #fee090, #ffffbf, #ffffff); }
 .legend-gradient-bar.ebird { background: linear-gradient(to right, #ffffff, #d946ef); border-color: #74ac00; }
@@ -175,7 +179,7 @@ permalink: /travels/
   <div id="map"></div>
   <details id="map-legend">
     <summary>legend</summary>
-    <div class="legend-section-label">transport mode</div>
+    <div class="legend-section-label"><input type="checkbox" id="toggle-gpx" class="legend-toggle" checked> transport mode</div>
     <div class="legend-item"><span class="legend-swatch dashed" style="border-color:#9333ea"></span>flight</div>
     <div class="legend-item"><span class="legend-swatch" style="border-color:#06b6d4"></span>ferry</div>
     <div class="legend-item"><span class="legend-swatch" style="border-color:#0284c7"></span>motorboat</div>
@@ -187,14 +191,16 @@ permalink: /travels/
     <div class="legend-item"><span class="legend-swatch" style="border-color:#22c55e"></span>walking</div>
     <div class="legend-item"><span class="legend-swatch" style="border-color:#15803d"></span>hiking</div>
     <hr class="legend-divider">
-    <div class="legend-section-label">iNaturalist</div>
+    <div class="legend-section-label"><input type="checkbox" id="toggle-waypoints" class="legend-toggle" checked> waypoints</div>
+    <hr class="legend-divider">
+    <div class="legend-section-label"><input type="checkbox" id="toggle-inat" class="legend-toggle" checked> iNaturalist</div>
     <div class="legend-gradient-row">
       <span>rare</span>
       <span class="legend-gradient-bar"></span>
       <span>common</span>
     </div>
     <hr class="legend-divider">
-    <div class="legend-section-label">eBird species</div>
+    <div class="legend-section-label"><input type="checkbox" id="toggle-ebird" class="legend-toggle" checked> eBird hotspots</div>
     <div class="legend-gradient-row">
       <span>few</span>
       <span class="legend-gradient-bar ebird"></span>
@@ -514,7 +520,25 @@ permalink: /travels/
         })
         .catch(() => {}); // API down → map works normally with no waypoints shown
 
-      // --- 5. INTERACTION LOGIC ---
+      // --- 5. LAYER TOGGLES ---
+      function setLayerGroupVisibility(layers, visible) {
+        const v = visible ? 'visible' : 'none';
+        layers.forEach(id => map.setLayoutProperty(id, 'visibility', v));
+      }
+      document.getElementById('toggle-gpx').addEventListener('change', e => {
+        setLayerGroupVisibility(['gpx-line', 'gpx-line-flight'], e.target.checked);
+      });
+      document.getElementById('toggle-waypoints').addEventListener('change', e => {
+        setLayerGroupVisibility(['waypoints'], e.target.checked);
+      });
+      document.getElementById('toggle-inat').addEventListener('change', e => {
+        setLayerGroupVisibility(['inat-points'], e.target.checked);
+      });
+      document.getElementById('toggle-ebird').addEventListener('change', e => {
+        setLayerGroupVisibility(['ebird-points-fill', 'ebird-points-border'], e.target.checked);
+      });
+
+      // --- 6. INTERACTION LOGIC ---
 
       /**
        * Change cursor to pointer when hovering over a point
@@ -577,18 +601,21 @@ permalink: /travels/
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
-        const ids = JSON.parse(props.checklist_ids || '[]');
-        const urls = JSON.parse(props.checklist_urls || '[]');
-        const dates = JSON.parse(props.dates || '[]');
-        const checklists = ids.map((id, i) => ({ id, url: urls[i] })).sort((a, b) => a.id.localeCompare(b.id));
-        const linksHtml = checklists.map(c => `<a href="${c.url}" target="_blank">${c.id}</a>`).join(' ');
-        const datesStr = dates.length > 1 ? `${dates[0]} – ${dates[dates.length - 1]}` : (dates[0] || '');
+        const checklists = JSON.parse(props.checklists || '[]').sort((a, b) => a.date.localeCompare(b.date) || a.start_time.localeCompare(b.start_time));
+        const datesStr = props.min_date === props.max_date ? props.min_date : `${props.min_date} – ${props.max_date}`;
+        const checklistRowsHtml = checklists.map(c => {
+          const durationStr = c.duration_min ? ` · ${c.duration_min} min` : '';
+          return `<div class="ebird-checklist-row">
+            <a href="${c.url}" target="_blank">${c.date} ${c.start_time}</a>
+            <span class="ebird-checklist-detail">${c.species_count} sp${durationStr}</span>
+          </div>`;
+        }).join('');
         currentPopup = new maplibregl.Popup()
           .setLngLat(coordinates)
           .setHTML(`
             <a href="${props.hotspot_url}" target="_blank" class="ebird-popup-title">${props.title}</a>
             <div class="ebird-popup-meta">${props.species_count} species · ${datesStr}</div>
-            <div class="ebird-popup-checklists">Checklists: ${linksHtml}</div>
+            <div class="ebird-popup-checklists">${checklistRowsHtml}</div>
           `)
           .addTo(map);
         currentPopup.on('close', () => { currentPopup = null; });

@@ -613,6 +613,7 @@ permalink: /travels/
 
       // 2. Show coordinates on right-click
       map.on('contextmenu', (e) => {
+        if (currentPopup) { currentPopup.remove(); currentPopup = null; }
         const lat = e.lngLat.lat.toFixed(5);
         const lon = e.lngLat.lng.toFixed(5);
 

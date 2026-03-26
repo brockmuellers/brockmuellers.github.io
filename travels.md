@@ -11,6 +11,7 @@ permalink: /travels/
 
 {% assign gpx_base = site.baseurl | append: '/assets/gpx/' %}
 {% assign obs_file = site.baseurl | append: '/assets/observations/inaturalist.geojson' %}
+{% assign ebird_file = site.baseurl | append: '/assets/observations/ebird.geojson' %}
 
 <style>
   /* Added wrap for mobile screens */
@@ -62,6 +63,13 @@ permalink: /travels/
     font-size: 0.9em;
   }
   .obs-popup-link:hover { text-decoration: underline; color: #74ac00; /* iNat Green */ }
+
+  /* eBird popup */
+  .ebird-popup-title { display: block; font-weight: bold; font-size: 0.9em; color: #333; text-decoration: none; }
+  .ebird-popup-title:hover { text-decoration: underline; color: #7c3aed; }
+  .ebird-popup-meta { font-size: 0.8em; color: #555; margin: 3px 0; }
+  .ebird-popup-checklists { font-size: 0.8em; margin-top: 4px; }
+  .ebird-popup-checklists a { color: #7c3aed; margin-right: 4px; }
 
   /* Waypoint search */
   .waypoint-search { margin: 1em 0; }
@@ -139,6 +147,7 @@ permalink: /travels/
   .legend-section-label { font-weight: bold; margin-bottom: 2px; }
   .legend-gradient-row { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
 .legend-gradient-bar { width: 60px; height: 8px; border-radius: 3px; border: 1px solid #ccc; background: linear-gradient(to right, #000000, #4a0404, #7f0000, #b30000, #d73027, #f46d43, #fdae61, #fee090, #ffffbf, #ffffff); }
+.legend-gradient-bar.ebird { background: linear-gradient(to right, #ffffff, #d946ef); border-color: #74ac00; }
 </style>
 
 <div class="travel-tabs" role="tablist">
@@ -178,11 +187,18 @@ permalink: /travels/
     <div class="legend-item"><span class="legend-swatch" style="border-color:#22c55e"></span>walking</div>
     <div class="legend-item"><span class="legend-swatch" style="border-color:#15803d"></span>hiking</div>
     <hr class="legend-divider">
-    <div class="legend-section-label">observations</div>
+    <div class="legend-section-label">iNaturalist</div>
     <div class="legend-gradient-row">
       <span>rare</span>
       <span class="legend-gradient-bar"></span>
       <span>common</span>
+    </div>
+    <hr class="legend-divider">
+    <div class="legend-section-label">eBird species</div>
+    <div class="legend-gradient-row">
+      <span>few</span>
+      <span class="legend-gradient-bar ebird"></span>
+      <span>many</span>
     </div>
   </details>
 </div>
@@ -199,6 +215,8 @@ permalink: /travels/
 (function() {
   const gpxCache = {}; // Cache to store parsed coordinates
   const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
+  const EBIRD_GEOJSON_URL = "{{ ebird_file }}";
+  let ebirdFeatures = null; // Cached after first fetch
   const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
   const TRAVEL_LOG_API = "{{ site.travel_log_api }}";
 
@@ -246,8 +264,33 @@ permalink: /travels/
       .finally(() => setLoading(false));
   }
 
-  // Filter inaturalist observations by date to match the dates for this tab
-  function applyDateFilter(start, end) {
+  // Filter eBird checklists by date range using min_date/max_date properties.
+  // Logs any locations that straddle the trip boundary (only one date boundary within range).
+  function applyEbirdDateFilter(start, end) {
+    if (!map || !map.getLayer('ebird-points-border')) return;
+    if (start && end) {
+      const filter = ['all', ['<=', ['get', 'min_date'], end], ['>=', ['get', 'max_date'], start]];
+      map.setFilter('ebird-points-fill', filter);
+      map.setFilter('ebird-points-border', filter);
+      if (ebirdFeatures) {
+        ebirdFeatures.forEach(f => {
+          const minD = f.properties.min_date;
+          const maxD = f.properties.max_date;
+          const minInRange = minD >= start && minD <= end;
+          const maxInRange = maxD >= start && maxD <= end;
+          if (minInRange !== maxInRange) {
+            console.log('[eBird] Straddling location:', f.properties.title, { min_date: minD, max_date: maxD, start, end });
+          }
+        });
+      }
+    } else {
+      map.setFilter('ebird-points-fill', ['==', '1', '0']);
+      map.setFilter('ebird-points-border', ['==', '1', '0']);
+    }
+  }
+
+  // Filter iNaturalist observations by date to match the dates for this tab
+  function applyInatDateFilter(start, end) {
     if (!map || !map.getLayer('inat-points')) return;
 
     // MapLibre Filter Expression:
@@ -370,7 +413,55 @@ permalink: /travels/
         }
       });
 
-      // --- 3. SETUP OBSERVATIONS LAYER ---
+      // --- 3. SETUP EBIRD LAYER ---
+      // Two canvas images, same pattern as waypoint diamond:
+      // - fill: solid fuchsia square, icon-opacity driven by species count
+      // - border: green outline with transparent center, always opaque
+      const squareSize = 12;
+
+      const fillCanvas = document.createElement('canvas');
+      fillCanvas.width = squareSize; fillCanvas.height = squareSize;
+      const fctx = fillCanvas.getContext('2d');
+      fctx.fillStyle = '#ffffff';
+      fctx.fillRect(0, 0, squareSize, squareSize);
+      const fillData = fctx.getImageData(0, 0, squareSize, squareSize);
+      map.addImage('ebird-square-fill', { width: squareSize, height: squareSize, data: fillData.data }, { sdf: true });
+
+      const borderCanvas = document.createElement('canvas');
+      borderCanvas.width = squareSize; borderCanvas.height = squareSize;
+      const bctx = borderCanvas.getContext('2d');
+      bctx.strokeStyle = '#74ac00';
+      bctx.lineWidth = 2;
+      bctx.strokeRect(1, 1, squareSize - 2, squareSize - 2);
+      const borderData = bctx.getImageData(0, 0, squareSize, squareSize);
+      map.addImage('ebird-square-border', { width: squareSize, height: squareSize, data: borderData.data });
+
+      map.addSource('ebird-obs', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      const ebirdLayout = { 'icon-allow-overlap': true, 'icon-size': ['interpolate', ['linear'], ['zoom'], 0, 0.8, 8, 1.2] };
+      map.addLayer({
+        id: 'ebird-points-fill',
+        type: 'symbol',
+        source: 'ebird-obs',
+        layout: { ...ebirdLayout, 'icon-image': 'ebird-square-fill' },
+        paint: { 'icon-color': ['interpolate', ['linear'], ['get', 'species_count'], 0, '#ffffff', 50, '#d946ef'] }
+      });
+      map.addLayer({
+        id: 'ebird-points-border',
+        type: 'symbol',
+        source: 'ebird-obs',
+        layout: { ...ebirdLayout, 'icon-image': 'ebird-square-border' }
+      });
+
+      fetch(EBIRD_GEOJSON_URL)
+        .then(r => r.json())
+        .then(fc => {
+          ebirdFeatures = fc.features;
+          map.getSource('ebird-obs').setData(fc);
+          applyEbirdDateFilter(startDate, endDate);
+        })
+        .catch(() => {}); // Missing file → layer stays empty
+
+      // --- 4. SETUP INATURALIST OBSERVATIONS LAYER ---
       map.addSource('inat-obs', {
         type: 'geojson',
         data: OBS_GEOJSON_URL
@@ -404,7 +495,7 @@ permalink: /travels/
         }
       });
 
-      applyDateFilter(startDate, endDate);
+      applyInatDateFilter(startDate, endDate);
 
       const waypointHeaders = { 'Accept': 'application/json' };
       if (TRAVEL_LOG_SITE_TOKEN) waypointHeaders['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
@@ -423,7 +514,7 @@ permalink: /travels/
         })
         .catch(() => {}); // API down → map works normally with no waypoints shown
 
-      // --- 4. INTERACTION LOGIC ---
+      // --- 5. INTERACTION LOGIC ---
 
       /**
        * Change cursor to pointer when hovering over a point
@@ -473,6 +564,32 @@ permalink: /travels/
         currentPopup = new maplibregl.Popup()
           .setLngLat(coordinates)
           .setHTML(popupContent)
+          .addTo(map);
+        currentPopup.on('close', () => { currentPopup = null; });
+      });
+
+      map.on('mouseenter', 'ebird-points-border', () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'ebird-points-border', () => { map.getCanvas().style.cursor = ''; });
+      map.on('click', 'ebird-points-border', (e) => {
+        if (map.queryRenderedFeatures(e.point, { layers: ['waypoints'] }).length > 0) return;
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const props = e.features[0].properties;
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        const ids = JSON.parse(props.checklist_ids || '[]');
+        const urls = JSON.parse(props.checklist_urls || '[]');
+        const dates = JSON.parse(props.dates || '[]');
+        const checklists = ids.map((id, i) => ({ id, url: urls[i] })).sort((a, b) => a.id.localeCompare(b.id));
+        const linksHtml = checklists.map(c => `<a href="${c.url}" target="_blank">${c.id}</a>`).join(' ');
+        const datesStr = dates.length > 1 ? `${dates[0]} – ${dates[dates.length - 1]}` : (dates[0] || '');
+        currentPopup = new maplibregl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(`
+            <a href="${props.hotspot_url}" target="_blank" class="ebird-popup-title">${props.title}</a>
+            <div class="ebird-popup-meta">${props.species_count} species · ${datesStr}</div>
+            <div class="ebird-popup-checklists">Checklists: ${linksHtml}</div>
+          `)
           .addTo(map);
         currentPopup.on('close', () => { currentPopup = null; });
       });
@@ -532,7 +649,8 @@ permalink: /travels/
 
     source.setData({ type: 'FeatureCollection', features: multiLineString });
 
-    applyDateFilter(startDate, endDate);
+    applyInatDateFilter(startDate, endDate);
+    applyEbirdDateFilter(startDate, endDate);
     applyWaypointFilter(tripSlug);
 
     const bounds = getBounds(multiLineString);

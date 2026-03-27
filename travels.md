@@ -465,6 +465,13 @@ permalink: /travels/
       fetch(EBIRD_GEOJSON_URL)
         .then(r => r.json())
         .then(fc => {
+          fc.features.forEach(f => {
+            const checklists = f.properties.checklists;
+            const totalMin = checklists.reduce((sum, c) => sum + (c.duration_min || 0), 0);
+            const totalIndividuals = checklists.reduce((sum, c) => sum + (c.individual_count || 0), 0);
+            f.properties.total_minutes = totalMin;
+            f.properties.total_individuals = totalIndividuals;
+          });
           ebirdFeatures = fc.features;
           map.getSource('ebird-obs').setData(fc);
           applyEbirdDateFilter(startDate, endDate);
@@ -593,7 +600,7 @@ permalink: /travels/
             </div>`;
           }).join('');
           html = `<a href="${props.hotspot_url}" target="_blank" class="ebird-popup-title">${props.title}</a>
-                  <div class="ebird-popup-meta">${props.species_count} species · ${datesStr}</div>
+                  <div class="ebird-popup-meta">${props.species_count} species · ${props.total_individuals} birds · ${props.total_minutes} min</div>
                   <div class="ebird-popup-checklists">${checklistRowsHtml}</div>`;
         }
 

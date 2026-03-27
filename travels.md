@@ -41,13 +41,16 @@ permalink: /travels/
     z-index: 10; font-weight: bold; color: #555;
   }
 
-  /* Popup Styles for Observations */
+  /* Popup base */
   .maplibregl-popup-content {
     padding: 10px;
-    max-width: 200px;
-    text-align: center;
+    max-width: 240px;
     font-family: sans-serif;
   }
+  /* Waypoint popup */
+  .popup-waypoint { text-align: center; }
+
+  /* iNat popup */
   .obs-popup-img {
     width: 100%;
     height: auto;
@@ -62,7 +65,8 @@ permalink: /travels/
     font-weight: bold;
     font-size: 0.9em;
   }
-  .obs-popup-link:hover { text-decoration: underline; color: #74ac00; /* iNat Green */ }
+  .obs-popup-link:hover { text-decoration: underline; color: #74ac00; }
+  .obs-popup-count { font-size: 0.85em; color: #666; margin-top: 2px; }
 
   /* eBird popup */
   .ebird-popup-title { display: block; font-weight: bold; font-size: 1em; color: #333; text-decoration: none; }
@@ -518,7 +522,11 @@ permalink: /travels/
           map.getSource('waypoints').setData({ type: 'FeatureCollection', features });
           applyWaypointFilter(tripSlug);
         })
-        .catch(() => {}); // API down → map works normally with no waypoints shown
+        .catch(() => {
+          const toggle = document.getElementById('toggle-waypoints');
+          toggle.disabled = true;
+          toggle.closest('.legend-section-label').style.opacity = '0.4';
+        });
 
       // --- 5. LAYER TOGGLES ---
       function setLayerGroupVisibility(layers, visible) {
@@ -551,84 +559,48 @@ permalink: /travels/
         map.getCanvas().style.cursor = '';
       });
 
-      /**
-       * Handle Clicks on Observation Points
-       * Creates a popup containing the image and title, hyperlinked to the URL.
-       */
-      map.on('click', 'inat-points', (e) => {
-        if (map.queryRenderedFeatures(e.point, { layers: ['waypoints'] }).length > 0) return;
-        // MapLibre returns features under the click. We take the first one.
-        // Note: Properties in GeoJSON are sometimes treated as strings, but usually preserved.
-        const coordinates = e.features[0].geometry.coordinates.slice();
-        const props = e.features[0].properties;
-
-        // Ensure we handle wrapped worlds (MapLibre quirk)
-        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-        }
-
-        // Construct HTML for the popup
-        // Note: We check if properties exist to avoid "undefined" errors
-        const imgHtml = props.image_url
-          ? `<img src="${props.image_url}" class="obs-popup-img" alt="Observation Photo" />`
-          : '';
-
-        const titleHtml = props.title || 'Observation';
-        const linkUrl = props.obs_url || '#';
-        const obsCount = props.global_count || '[Unknown]';
-
-        const popupContent = `
-          <a href="${linkUrl}" target="_blank" class="obs-popup-link">
-            ${imgHtml}
-            ${titleHtml}
-          </a>
-          ${obsCount} global observations
-        `;
-
-        currentPopup = new maplibregl.Popup()
-          .setLngLat(coordinates)
-          .setHTML(popupContent)
-          .addTo(map);
-        currentPopup.on('close', () => { currentPopup = null; });
-      });
-
       map.on('mouseenter', 'ebird-points-border', () => { map.getCanvas().style.cursor = 'pointer'; });
       map.on('mouseleave', 'ebird-points-border', () => { map.getCanvas().style.cursor = ''; });
-      map.on('click', 'ebird-points-border', (e) => {
-        if (map.queryRenderedFeatures(e.point, { layers: ['waypoints'] }).length > 0) return;
-        const coordinates = e.features[0].geometry.coordinates.slice();
-        const props = e.features[0].properties;
+      map.on('mouseenter', 'waypoints', () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', 'waypoints', () => { map.getCanvas().style.cursor = ''; });
+
+      map.on('click', (e) => {
+        const hits = map.queryRenderedFeatures(e.point, { layers: ['waypoints', 'inat-points', 'ebird-points-border'] });
+        if (!hits.length) return;
+
+        const feature = hits[0];
+        const props = feature.properties;
+        const coordinates = feature.geometry.coordinates.slice();
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
           coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
         }
-        const checklists = JSON.parse(props.checklists || '[]').sort((a, b) => a.date.localeCompare(b.date) || a.start_time.localeCompare(b.start_time));
-        const datesStr = props.min_date === props.max_date ? props.min_date : `${props.min_date} – ${props.max_date}`;
-        const checklistRowsHtml = checklists.map(c => {
-          const durationStr = c.duration_min ? ` · ${c.duration_min} min` : '';
-          return `<div class="ebird-checklist-row">
-            <a href="${c.url}" target="_blank">${c.date} ${c.start_time}</a>
-            <span class="ebird-checklist-detail">${c.species_count} sp${durationStr}</span>
-          </div>`;
-        }).join('');
+
+        let html;
+        if (feature.layer.id === 'waypoints') {
+          html = `<div class="popup-waypoint"><strong>${props.name}</strong>${props.photo_url ? `<img src="${props.photo_url}" class="obs-popup-img" alt="${props.name}" />` : ''}</div>`;
+        } else if (feature.layer.id === 'inat-points') {
+          const imgHtml = props.image_url ? `<img src="${props.image_url}" class="obs-popup-img" alt="Observation Photo" />` : '';
+          html = `<a href="${props.obs_url || '#'}" target="_blank" class="obs-popup-link">${imgHtml}${props.title || 'Observation'}</a>
+                  <div class="obs-popup-count">${props.global_count || '[Unknown]'} global observations</div>`;
+        } else {
+          const checklists = JSON.parse(props.checklists || '[]').sort((a, b) => a.date.localeCompare(b.date) || a.start_time.localeCompare(b.start_time));
+          const datesStr = props.min_date === props.max_date ? props.min_date : `${props.min_date} – ${props.max_date}`;
+          const checklistRowsHtml = checklists.map(c => {
+            const durationStr = c.duration_min ? ` · ${c.duration_min} min` : '';
+            return `<div class="ebird-checklist-row">
+              <a href="${c.url}" target="_blank">${c.date} ${c.start_time}</a>
+              <span class="ebird-checklist-detail">${c.species_count} sp${durationStr}</span>
+            </div>`;
+          }).join('');
+          html = `<a href="${props.hotspot_url}" target="_blank" class="ebird-popup-title">${props.title}</a>
+                  <div class="ebird-popup-meta">${props.species_count} species · ${datesStr}</div>
+                  <div class="ebird-popup-checklists">${checklistRowsHtml}</div>`;
+        }
+
+        if (currentPopup) { currentPopup.remove(); }
         currentPopup = new maplibregl.Popup()
           .setLngLat(coordinates)
-          .setHTML(`
-            <a href="${props.hotspot_url}" target="_blank" class="ebird-popup-title">${props.title}</a>
-            <div class="ebird-popup-meta">${props.species_count} species · ${datesStr}</div>
-            <div class="ebird-popup-checklists">${checklistRowsHtml}</div>
-          `)
-          .addTo(map);
-        currentPopup.on('close', () => { currentPopup = null; });
-      });
-
-      map.on('mouseenter', 'waypoints', () => { map.getCanvas().style.cursor = 'pointer'; });
-      map.on('mouseleave', 'waypoints', () => { map.getCanvas().style.cursor = ''; });
-      map.on('click', 'waypoints', (e) => {
-        const props = e.features[0].properties;
-        const coords = e.features[0].geometry.coordinates.slice();
-        currentPopup = new maplibregl.Popup()
-          .setLngLat(coords)
-          .setHTML(`<strong>${props.name}</strong>${props.photo_url ? `<img src="${props.photo_url}" class="obs-popup-img" alt="${props.name}" />` : ''}`)
+          .setHTML(html)
           .addTo(map);
         currentPopup.on('close', () => { currentPopup = null; });
       });

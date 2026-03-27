@@ -3775,6 +3775,15 @@
         "hotspot_url": "https://ebird.org/hotspot/L21849878",
         "checklists": [
           {
+            "id": "S191682035",
+            "url": "https://ebird.org/checklist/S191682035",
+            "date": "2024-08-12",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
+          {
             "id": "S192749270",
             "url": "https://ebird.org/checklist/S192749270",
             "date": "2024-08-23",
@@ -3802,6 +3811,24 @@
             "species_count": 11
           },
           {
+            "id": "S247111554",
+            "url": "https://ebird.org/checklist/S247111554",
+            "date": "2025-06-05",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
+          {
+            "id": "S248324770",
+            "url": "https://ebird.org/checklist/S248324770",
+            "date": "2025-06-08",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
+          {
             "id": "S249386589",
             "url": "https://ebird.org/checklist/S249386589",
             "date": "2025-06-10",
@@ -3809,6 +3836,15 @@
             "duration_min": 65,
             "individual_count": 25,
             "species_count": 15
+          },
+          {
+            "id": "S248981649",
+            "url": "https://ebird.org/checklist/S248981649",
+            "date": "2025-06-10",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
           },
           {
             "id": "S249705089",
@@ -3887,6 +3923,10 @@
             "scientific_name": "Tyrannus tyrannus"
           },
           {
+            "common_name": "Eastern Wood-Pewee",
+            "scientific_name": "Contopus virens"
+          },
+          {
             "common_name": "Field Sparrow",
             "scientific_name": "Spizella pusilla"
           },
@@ -3939,6 +3979,10 @@
             "scientific_name": "Phasianus colchicus"
           },
           {
+            "common_name": "Rose-breasted Grosbeak",
+            "scientific_name": "Pheucticus ludovicianus"
+          },
+          {
             "common_name": "Spotted Towhee",
             "scientific_name": "Pipilo maculatus"
           },
@@ -3963,8 +4007,8 @@
             "scientific_name": "Hirundinidae sp."
           }
         ],
-        "species_count": 33,
-        "min_date": "2024-08-23",
+        "species_count": 35,
+        "min_date": "2024-08-12",
         "max_date": "2025-06-13"
       }
     },
@@ -5716,6 +5760,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.6844481,
+          36.6362604
+        ]
+      },
+      "properties": {
+        "title": "SE of Mt Silliman",
+        "location_id": "L35599776",
+        "hotspot_url": "https://ebird.org/hotspot/L35599776",
+        "checklists": [
+          {
+            "id": "S190728261",
+            "url": "https://ebird.org/checklist/S190728261",
+            "date": "2024-08-02",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Sooty Grouse",
+            "scientific_name": "Dendragapus fuliginosus"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-08-02",
+        "max_date": "2024-08-02"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -97.400027,
           43.25061
         ]
@@ -5725,6 +5804,15 @@
         "location_id": "L28312837",
         "hotspot_url": "https://ebird.org/hotspot/L28312837",
         "checklists": [
+          {
+            "id": "S191682085",
+            "url": "https://ebird.org/checklist/S191682085",
+            "date": "2024-08-13",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
           {
             "id": "S251260223",
             "url": "https://ebird.org/checklist/S251260223",
@@ -5843,7 +5931,7 @@
           }
         ],
         "species_count": 24,
-        "min_date": "2025-06-15",
+        "min_date": "2024-08-13",
         "max_date": "2025-06-16"
       }
     },
@@ -6173,6 +6261,41 @@
         "species_count": 11,
         "min_date": "2024-12-18",
         "max_date": "2024-12-18"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -113.5872284,
+          39.082602
+        ]
+      },
+      "properties": {
+        "title": "UT Hwy 50 Confusion Range",
+        "location_id": "L35820499",
+        "hotspot_url": "https://ebird.org/hotspot/L35820499",
+        "checklists": [
+          {
+            "id": "S191681639",
+            "url": "https://ebird.org/checklist/S191681639",
+            "date": "2024-08-10",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Chukar",
+            "scientific_name": "Alectoris chukar"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-08-10",
+        "max_date": "2024-08-10"
       }
     },
     {
@@ -8297,6 +8420,15 @@
             "species_count": 10
           },
           {
+            "id": "S207581728",
+            "url": "https://ebird.org/checklist/S207581728",
+            "date": "2024-12-21",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
+          {
             "id": "S206156175",
             "url": "https://ebird.org/checklist/S206156175",
             "date": "2024-12-22",
@@ -8384,6 +8516,10 @@
             "scientific_name": "Mixornis gularis"
           },
           {
+            "common_name": "Red-whiskered Bulbul",
+            "scientific_name": "Pycnonotus jocosus"
+          },
+          {
             "common_name": "Ruby-cheeked Sunbird",
             "scientific_name": "Chalcoparia singalensis"
           },
@@ -8412,7 +8548,7 @@
             "scientific_name": "Nectariniidae sp. (sunbird sp.)"
           }
         ],
-        "species_count": 26,
+        "species_count": 27,
         "min_date": "2024-12-20",
         "max_date": "2024-12-22"
       }
@@ -8932,6 +9068,24 @@
             "duration_min": 45,
             "individual_count": 26,
             "species_count": 10
+          },
+          {
+            "id": "S208946462",
+            "url": "https://ebird.org/checklist/S208946462",
+            "date": "2025-01-12",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
+          {
+            "id": "S208932780",
+            "url": "https://ebird.org/checklist/S208932780",
+            "date": "2025-01-12",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
           }
         ],
         "species": [
@@ -8944,12 +9098,20 @@
             "scientific_name": "Dicrurus aeneus"
           },
           {
+            "common_name": "Crested Serpent-Eagle",
+            "scientific_name": "Spilornis cheela"
+          },
+          {
             "common_name": "Gray Wagtail",
             "scientific_name": "Motacilla cinerea"
           },
           {
             "common_name": "Greater Coucal (Greater)",
             "scientific_name": "Centropus sinensis [sinensis Group]"
+          },
+          {
+            "common_name": "Indochinese Blue Flycatcher",
+            "scientific_name": "Cyornis sumatrensis"
           },
           {
             "common_name": "Pin-striped Tit-Babbler",
@@ -8988,9 +9150,9 @@
             "scientific_name": "Columbidae sp."
           }
         ],
-        "species_count": 13,
+        "species_count": 15,
         "min_date": "2025-01-10",
-        "max_date": "2025-01-11"
+        "max_date": "2025-01-12"
       }
     },
     {
@@ -9642,6 +9804,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -77.0707849,
+          -12.0725313
+        ]
+      },
+      "properties": {
+        "title": "Pueblo Libre, Provincia de Lima, PE",
+        "location_id": "L51563919",
+        "hotspot_url": "https://ebird.org/hotspot/L51563919",
+        "checklists": [
+          {
+            "id": "S267454231",
+            "url": "https://ebird.org/checklist/S267454231",
+            "date": "2025-08-15",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Croaking Ground Dove",
+            "scientific_name": "Columbina cruziana"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-08-15",
+        "max_date": "2025-08-15"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -72.2619903,
           -13.2567261
         ]
@@ -9792,6 +9989,41 @@
         "species_count": 4,
         "min_date": "2025-10-10",
         "max_date": "2025-10-10"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.076114,
+          44.042877
+        ]
+      },
+      "properties": {
+        "title": "Couberg",
+        "location_id": "L24717953",
+        "hotspot_url": "https://ebird.org/hotspot/L24717953",
+        "checklists": [
+          {
+            "id": "S252530186",
+            "url": "https://ebird.org/checklist/S252530186",
+            "date": "2025-06-20",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Red-eyed Vireo",
+            "scientific_name": "Vireo olivaceus"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-06-20",
+        "max_date": "2025-06-20"
       }
     },
     {
@@ -11631,6 +11863,67 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -103.7670369,
+          40.8198931
+        ]
+      },
+      "properties": {
+        "title": "Pawnee Ntl Grassland east of buttes",
+        "location_id": "L35820672",
+        "hotspot_url": "https://ebird.org/hotspot/L35820672",
+        "checklists": [
+          {
+            "id": "S191682363",
+            "url": "https://ebird.org/checklist/S191682363",
+            "date": "2024-08-15",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
+          {
+            "id": "S191682346",
+            "url": "https://ebird.org/checklist/S191682346",
+            "date": "2024-08-15",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
+          {
+            "id": "S191682328",
+            "url": "https://ebird.org/checklist/S191682328",
+            "date": "2024-08-15",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Common Nighthawk",
+            "scientific_name": "Chordeiles minor"
+          },
+          {
+            "common_name": "Horned Lark",
+            "scientific_name": "Eremophila alpestris"
+          },
+          {
+            "common_name": "Lark Bunting",
+            "scientific_name": "Calamospiza melanocorys"
+          }
+        ],
+        "species_count": 3,
+        "min_date": "2024-08-15",
+        "max_date": "2024-08-15"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -71.58633,
           -13.14424
         ]
@@ -13363,6 +13656,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -107.1596514,
+          41.0932575
+        ]
+      },
+      "properties": {
+        "title": "outside Battle Creek Campground",
+        "location_id": "L35820583",
+        "hotspot_url": "https://ebird.org/hotspot/L35820583",
+        "checklists": [
+          {
+            "id": "S191681990",
+            "url": "https://ebird.org/checklist/S191681990",
+            "date": "2024-08-11",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Broad-tailed Hummingbird",
+            "scientific_name": "Selasphorus platycercus"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-08-11",
+        "max_date": "2024-08-11"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           105.8888054,
           20.3681243
         ]
@@ -14243,6 +14571,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -112.5926344,
+          39.3485678
+        ]
+      },
+      "properties": {
+        "title": "outside Delta UT",
+        "location_id": "L35820520",
+        "hotspot_url": "https://ebird.org/hotspot/L35820520",
+        "checklists": [
+          {
+            "id": "S191681731",
+            "url": "https://ebird.org/checklist/S191681731",
+            "date": "2024-08-10",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Swainson's Hawk",
+            "scientific_name": "Buteo swainsoni"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-08-10",
+        "max_date": "2024-08-10"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           116.5410769,
           6.009504
         ]
@@ -14879,6 +15242,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -74.1560519,
+          -42.7137783
+        ]
+      },
+      "properties": {
+        "title": "Punta Pirulil--Muelle de las Almas",
+        "location_id": "L774598",
+        "hotspot_url": "https://ebird.org/hotspot/L774598",
+        "checklists": [
+          {
+            "id": "S281771472",
+            "url": "https://ebird.org/checklist/S281771472",
+            "date": "2025-10-19",
+            "start_time": "10:34 AM",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Slender-billed Parakeet",
+            "scientific_name": "Enicognathus leptorhynchus"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-10-19",
+        "max_date": "2025-10-19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -73.2900041,
           -46.3917729
         ]
@@ -15118,6 +15516,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -118.7163597,
+          36.6385582
+        ]
+      },
+      "properties": {
+        "title": "Silliman Creek west of Silliman Lake",
+        "location_id": "L35599796",
+        "hotspot_url": "https://ebird.org/hotspot/L35599796",
+        "checklists": [
+          {
+            "id": "S190728326",
+            "url": "https://ebird.org/checklist/S190728326",
+            "date": "2024-08-02",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Olive-sided Flycatcher",
+            "scientific_name": "Contopus cooperi"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-08-02",
+        "max_date": "2024-08-02"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -71.7831123,
           -13.567487
         ]
@@ -15231,6 +15664,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -97.3394131,
+          43.3124453
+        ]
+      },
+      "properties": {
+        "title": "Salem Mennonite Church",
+        "location_id": "L35743187",
+        "hotspot_url": "https://ebird.org/hotspot/L35743187",
+        "checklists": [
+          {
+            "id": "S191339448",
+            "url": "https://ebird.org/checklist/S191339448",
+            "date": "2024-08-13",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Eastern Kingbird",
+            "scientific_name": "Tyrannus tyrannus"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-08-13",
+        "max_date": "2024-08-13"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           101.7418903,
           3.713773
         ]
@@ -15299,6 +15767,41 @@
         "species_count": 11,
         "min_date": "2025-02-12",
         "max_date": "2025-02-12"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          100.3444335,
+          5.4202473
+        ]
+      },
+      "properties": {
+        "title": "George Town Fort",
+        "location_id": "L39958815",
+        "hotspot_url": "https://ebird.org/hotspot/L39958815",
+        "checklists": [
+          {
+            "id": "S211910600",
+            "url": "https://ebird.org/checklist/S211910600",
+            "date": "2025-02-04",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Black-naped Oriole",
+            "scientific_name": "Oriolus chinensis"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-02-04",
+        "max_date": "2025-02-04"
       }
     },
     {
@@ -15806,6 +16309,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -119.51386,
+          49.314946
+        ]
+      },
+      "properties": {
+        "title": "Kaleden--KVR trail South",
+        "location_id": "L43861355",
+        "hotspot_url": "https://ebird.org/hotspot/L43861355",
+        "checklists": [
+          {
+            "id": "S263713633",
+            "url": "https://ebird.org/checklist/S263713633",
+            "date": "2025-07-27",
+            "start_time": "12:30 PM",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Northern Rough-winged Swallow",
+            "scientific_name": "Stelgidopteryx serripennis"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-07-27",
+        "max_date": "2025-07-27"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -72.35394,
           -13.1140461
         ]
@@ -15846,6 +16384,41 @@
         "species_count": 4,
         "min_date": "2025-09-03",
         "max_date": "2025-09-03"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          137.8142931,
+          35.9675456
+        ]
+      },
+      "properties": {
+        "title": "Narai",
+        "location_id": "L46274560",
+        "hotspot_url": "https://ebird.org/hotspot/L46274560",
+        "checklists": [
+          {
+            "id": "S244119937",
+            "url": "https://ebird.org/checklist/S244119937",
+            "date": "2025-05-29",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Asian House-Martin",
+            "scientific_name": "Delichon dasypus"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-05-29",
+        "max_date": "2025-05-29"
       }
     },
     {
@@ -16184,6 +16757,41 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -79.482338,
+          45.0868187
+        ]
+      },
+      "properties": {
+        "title": "Huckleberry Rock trail",
+        "location_id": "L36995758",
+        "hotspot_url": "https://ebird.org/hotspot/L36995758",
+        "checklists": [
+          {
+            "id": "S197172160",
+            "url": "https://ebird.org/checklist/S197172160",
+            "date": "2024-10-01",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Golden-crowned Kinglet",
+            "scientific_name": "Regulus satrapa"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-10-01",
+        "max_date": "2024-10-01"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -73.743968,
           -42.4318193
         ]
@@ -16258,6 +16866,299 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -106.8108711,
+          51.8848367
+        ]
+      },
+      "properties": {
+        "title": "Pike Lake, SK",
+        "location_id": "L49564504",
+        "hotspot_url": "https://ebird.org/hotspot/L49564504",
+        "checklists": [
+          {
+            "id": "S258923143",
+            "url": "https://ebird.org/checklist/S258923143",
+            "date": "2025-07-11",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Veery",
+            "scientific_name": "Catharus fuscescens"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-07-11",
+        "max_date": "2025-07-11"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.2936401,
+          48.589241
+        ]
+      },
+      "properties": {
+        "title": "Pukaskwa NP",
+        "location_id": "L49337319",
+        "hotspot_url": "https://ebird.org/hotspot/L49337319",
+        "checklists": [
+          {
+            "id": "S257944779",
+            "url": "https://ebird.org/checklist/S257944779",
+            "date": "2025-07-07",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Swainson's Thrush",
+            "scientific_name": "Catharus ustulatus"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-07-07",
+        "max_date": "2025-07-07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          101.1323258,
+          19.8916184
+        ]
+      },
+      "properties": {
+        "title": "Mekong near Pakbeng, Laos",
+        "location_id": "L39306482",
+        "hotspot_url": "https://ebird.org/hotspot/L39306482",
+        "checklists": [
+          {
+            "id": "S208690804",
+            "url": "https://ebird.org/checklist/S208690804",
+            "date": "2025-01-08",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "White Wagtail",
+            "scientific_name": "Motacilla alba"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-01-08",
+        "max_date": "2025-01-08"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -114.3032639,
+          39.0172175
+        ]
+      },
+      "properties": {
+        "title": "Great Basin NP Summit TH",
+        "location_id": "L35820444",
+        "hotspot_url": "https://ebird.org/hotspot/L35820444",
+        "checklists": [
+          {
+            "id": "S191681433",
+            "url": "https://ebird.org/checklist/S191681433",
+            "date": "2024-08-10",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Red Crossbill",
+            "scientific_name": "Loxia curvirostra"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-08-10",
+        "max_date": "2024-08-10"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -114.1263786,
+          39.014866
+        ]
+      },
+      "properties": {
+        "title": "Great Basin Visitor Center",
+        "location_id": "L35820412",
+        "hotspot_url": "https://ebird.org/hotspot/L35820412",
+        "checklists": [
+          {
+            "id": "S191681325",
+            "url": "https://ebird.org/checklist/S191681325",
+            "date": "2024-08-10",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Black-throated Sparrow",
+            "scientific_name": "Amphispiza bilineata"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2024-08-10",
+        "max_date": "2024-08-10"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.041457,
+          45.157196
+        ]
+      },
+      "properties": {
+        "title": "Cottage",
+        "location_id": "L36528902",
+        "hotspot_url": "https://ebird.org/hotspot/L36528902",
+        "checklists": [
+          {
+            "id": "S194888623",
+            "url": "https://ebird.org/checklist/S194888623",
+            "date": "2024-09-12",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          },
+          {
+            "id": "S196117092",
+            "url": "https://ebird.org/checklist/S196117092",
+            "date": "2024-09-22",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Black-throated Blue Warbler",
+            "scientific_name": "Setophaga caerulescens"
+          },
+          {
+            "common_name": "White-throated Sparrow",
+            "scientific_name": "Zonotrichia albicollis"
+          }
+        ],
+        "species_count": 2,
+        "min_date": "2024-09-12",
+        "max_date": "2024-09-22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.7580891,
+          -16.1899426
+        ]
+      },
+      "properties": {
+        "title": "Lake Titicaca, Chua Cocani",
+        "location_id": "L53142213",
+        "hotspot_url": "https://ebird.org/hotspot/L53142213",
+        "checklists": [
+          {
+            "id": "S274859094",
+            "url": "https://ebird.org/checklist/S274859094",
+            "date": "2025-09-21",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Yellow-winged Blackbird",
+            "scientific_name": "Agelasticus thilius"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-09-21",
+        "max_date": "2025-09-21"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3495828,
+          46.510849
+        ]
+      },
+      "properties": {
+        "title": "Whitefish Island",
+        "location_id": "L49273394",
+        "hotspot_url": "https://ebird.org/hotspot/L49273394",
+        "checklists": [
+          {
+            "id": "S257654124",
+            "url": "https://ebird.org/checklist/S257654124",
+            "date": "2025-07-06",
+            "start_time": "",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "American Redstart",
+            "scientific_name": "Setophaga ruticilla"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-07-06",
+        "max_date": "2025-07-06"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -73.770191,
           -42.6208266
         ]
@@ -16286,6 +17187,41 @@
         "species_count": 1,
         "min_date": "2025-10-19",
         "max_date": "2025-10-19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.4402881,
+          -9.4968102
+        ]
+      },
+      "properties": {
+        "title": "PN Huascar\u00e1n--Senda Laguna Churup",
+        "location_id": "L1909574",
+        "hotspot_url": "https://ebird.org/hotspot/L1909574",
+        "checklists": [
+          {
+            "id": "S283071736",
+            "url": "https://ebird.org/checklist/S283071736",
+            "date": "2025-08-22",
+            "start_time": "02:10 PM",
+            "duration_min": null,
+            "individual_count": 0,
+            "species_count": 1
+          }
+        ],
+        "species": [
+          {
+            "common_name": "Tit-like Dacnis (petersi/bella)",
+            "scientific_name": "Xenodacnis parina petersi/bella"
+          }
+        ],
+        "species_count": 1,
+        "min_date": "2025-08-22",
+        "max_date": "2025-08-22"
       }
     }
   ]

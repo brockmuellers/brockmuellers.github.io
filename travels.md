@@ -155,7 +155,7 @@ permalink: /travels/
   .legend-toggle { cursor: pointer; margin: 0; accent-color: #555; }
   .legend-gradient-row { display: flex; align-items: center; gap: 5px; margin-top: 4px; }
 .legend-gradient-bar { width: 60px; height: 8px; border-radius: 3px; border: 1px solid #ccc; background: linear-gradient(to right, #000000, #4a0404, #7f0000, #b30000, #d73027, #f46d43, #fdae61, #fee090, #ffffbf, #ffffff); }
-.legend-gradient-bar.ebird { background: linear-gradient(to right, #ffffff, #d946ef); border-color: #74ac00; }
+.legend-gradient-bar.ebird { background: linear-gradient(to right, #ffffff, #b05aaa); border-color: #b05aaa; }
 </style>
 
 <div class="travel-tabs" role="tablist">
@@ -427,7 +427,7 @@ permalink: /travels/
       // Two canvas images, same pattern as waypoint diamond:
       // - fill: solid fuchsia square, icon-opacity driven by species count
       // - border: green outline with transparent center, always opaque
-      const squareSize = 12;
+      const squareSize = 10;
 
       const fillCanvas = document.createElement('canvas');
       fillCanvas.width = squareSize; fillCanvas.height = squareSize;
@@ -440,7 +440,7 @@ permalink: /travels/
       const borderCanvas = document.createElement('canvas');
       borderCanvas.width = squareSize; borderCanvas.height = squareSize;
       const bctx = borderCanvas.getContext('2d');
-      bctx.strokeStyle = '#74ac00';
+      bctx.strokeStyle = '#b05aaa';
       bctx.lineWidth = 2;
       bctx.strokeRect(1, 1, squareSize - 2, squareSize - 2);
       const borderData = bctx.getImageData(0, 0, squareSize, squareSize);
@@ -453,7 +453,7 @@ permalink: /travels/
         type: 'symbol',
         source: 'ebird-obs',
         layout: { ...ebirdLayout, 'icon-image': 'ebird-square-fill' },
-        paint: { 'icon-color': ['interpolate', ['linear'], ['get', 'species_count'], 0, '#ffffff', 50, '#d946ef'] }
+        paint: { 'icon-color': ['interpolate', ['linear'], ['get', 'species_count'], 0, '#ffffff', 50, '#b05aaa'] }
       });
       map.addLayer({
         id: 'ebird-points-border',

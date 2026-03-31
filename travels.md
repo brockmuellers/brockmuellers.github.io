@@ -244,6 +244,7 @@ permalink: /travels/
   const loader = document.getElementById('loader');
   let currentRequestId = 0; // Track the latest tab request
   let mapReady = false;     // Becomes true after the map 'load' event fires
+  let currentTripSlug = null;
   // Helper to toggle loading spinner
   const setLoading = (isLoading) => {
     loader.style.display = isLoading ? 'flex' : 'none';
@@ -330,6 +331,7 @@ permalink: /travels/
   }
 
   function initMap(multiLineString, startDate, endDate, tripSlug) {
+    currentTripSlug = tripSlug;
     const bounds = getBounds(multiLineString);
     map = new maplibregl.Map({
       container: 'map',
@@ -527,7 +529,7 @@ permalink: /travels/
               properties: { id: w.id, name: w.name, description: w.description, photo_url: w.photo_url || null, trip: w.trip || null }
             }));
           map.getSource('waypoints').setData({ type: 'FeatureCollection', features });
-          applyWaypointFilter(tripSlug);
+          applyWaypointFilter(currentTripSlug);
         })
         .catch(() => {
           const toggle = document.getElementById('toggle-waypoints');
@@ -640,6 +642,7 @@ permalink: /travels/
   }
 
   function updateMap(multiLineString, startDate, endDate, tripSlug) {
+    currentTripSlug = tripSlug;
     // If the map isn't ready yet, wait for the first (and only) 'load' event,
     // but still respect whichever tab was most recently clicked.
     if (!mapReady) {

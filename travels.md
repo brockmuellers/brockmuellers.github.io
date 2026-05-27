@@ -3,7 +3,7 @@ layout: page
 title: Travels
 permalink: /travels/
 # Tabs are defined in _data/travels.yml
-# This is proudly cowritten by copilot and gemini pro
+# This is proudly cowritten by claude, copilot, and gemini pro
 ---
 
 <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />

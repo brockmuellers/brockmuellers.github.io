@@ -2,7 +2,7 @@ name: Sara Brockmueller
 website: self.brockmuellers.com
 email: brockmuellers@gmail.com
 github: github.com/brockmuellers
-summary: Software engineer with 6+ years professional experience. Most experienced with system design, building platforms/frameworks, and scaling systems (but always excited to learn new things!). Looking to work on hard problems, collaborate with smart and passionate people, and build important products.
+summary: Software engineer with 10+ years professional experience. Most experienced with system design, data modeling, building platforms/frameworks, and scaling systems (but always excited to learn new things!). Looking to work on hard problems, collaborate with smart and passionate people, and build important products.
 code-priorities: Shipping features quickly and confidently via readable/maintainable code, solid unit tests, and generic libraries to increase developer velocity.
 culture-priorities: Respect, transparency, social responsibility, curiosity, and using failure for growth.
 
@@ -15,32 +15,51 @@ education:
 skills:
 
   - name: Languages/Frameworks
-    value: Proficient in Java, Python, Go, and gRPC. Significant experience in Ruby on Rails. Some prior experience in Django, Meteor, and MATLAB.
+    value: Proficient in Go, Python, Java. Significant experience in Ruby on Rails.
 
   - name: Databases
-    value: DynamoDB, PostgreSQL, some experience in MongoDB.
+    value: PostgreSQL, DynamoDB, some experience in MongoDB.
 
   - name: Infrastructure
-    value: Proficient with AWS services for compute (EC2, ECS, Batch, Lambda), storage (S3, DynamoDB), integration (SQS, SNS). Some experience with metrics/monitoring (Prometheus/Grafana, AWS CloudWatch), infrastructure as code (Terraform).
+    value: Proficient with AWS services for compute (EC2, ECS, Batch, Lambda), storage (S3, DynamoDB), integration (SQS, SNS). Experienced with metrics/monitoring (Datadog, New Relic) and infrastructure (Docker, Kubernetes, Terraform).
 
   - name: Architecture
-    value: Distributed and concurrent systems, MapReduce, cloud-based services, microservices (both REST APIs and RPC), web development, atabase design.
+    value: Distributed and concurrent systems, MapReduce, cloud-based services, microservices (both REST APIs and RPC), web development, database design.
 
 experience:
 
   jobs:
 
-    - company: Silo
-      role: Software Engineer
-      start: Apr 2020
+    - company: Sabbatical
+      role: travel and personal projects
+      start: Jul 2024
       end: present
 
       detailed-items:
-        - description: Developing backend of a perishable foods marketplace - automating workflows and improving efficiency for wholesale distributers.
+        - description:
 
       simple-items:
-        - Developing backend of a perishable foods marketplace - automating workflows and improving efficiency for wholesale distributers.
+        - Global travel, international relocation, and independent technical projects with a focus on AI.
 
+    - company: Silo
+      role: Software Engineer
+      start: Apr 2020
+      end: Jul 2024
+
+      detailed-items:
+
+        - description: Architected and scaled Go/PostgreSQL systems for a wholesale produce ERP and perishable foods marketplace, supporting growth from early-stage to $2B in annualized GMV.
+        - description: Designed the technical foundations of an order negotiation platform that enabled a primary avenue for customer acquisition, utilizing finite state machines, tenant-level data isolation, and immutable versioning for auditability.
+        - description: Proactively re-architected legacy systems into a multi-tenant model, unlocking supply chain network modeling and new sales targeting capabilities.
+        - description: Drove critical financial compliance integrations.
+        - description: Worked directly with stakeholders to guide cross-functional engineering and product efforts, including ORM migrations and data-driven sustainability features.
+
+      simple-items:
+        - Architected and scaled Go/PostgreSQL systems for a wholesale produce ERP and perishable foods marketplace, supporting growth from early-stage to $2B in annualized GMV.
+        - Designed the technical foundations of an order negotiation platform that enabled a primary avenue for customer acquisition, utilizing finite state machines, tenant-level data isolation, and immutable versioning for auditability.
+        - Proactively re-architected legacy systems into a multi-tenant model, unlocking supply chain network modeling and new sales targeting capabilities.
+        - Drove critical financial compliance integrations.
+        - Worked directly with stakeholders to guide cross-functional engineering and product efforts, including ORM migrations and data-driven sustainability features.
 
     - company: 3Scan
       role: Software Engineer

@@ -1,12 +1,13 @@
 ---
-layout: page
-title: Climate change resources
-summary:  >-
-    A set of resources I've collected on 
-    understanding and combating climate change.
+layout: post
+title: "List: climate change resources"
+subtitle: "Understanding and combating climate change"
+categories: climate
+image: /assets/images/foot.jpg
+---
 ---
 
-I've spent several months trying to understand climate change and the current state of mitigation strategies. These are some resources that I've found helpful.
+I've spent months trying to understand climate change and the current state of mitigation strategies. These are some resources that I've found helpful.
 
 ## Staying positive
 
@@ -87,7 +88,7 @@ Industries with most software jobs:
     * Technology development (these tend to be less software-focused): battery development, engineering cleaner industrial materials, direct air capture
     * Female empowerment: microloans, improving birth control availability
 
-## Sort of related
+## Misc
 
 [The backend of America](https://aeon.co/essays/america-still-has-a-heartland-it-s-just-an-artificial-one)
 
@@ -99,12 +100,9 @@ While [this article on facing extinction](https://www.catherineingram.com/facing
 As theoretical physicist Peter Russell mused in a podcast conversation with me in 2016, “What if we saw ourselves as a cosmic flame blooming in the universe and coming to its natural end?”\
 What if we forgave everybody everything?
 
+[A frequently cited example of climate nihilism that's generally denounced by scientists](https://www.newyorker.com/culture/cultural-comment/what-if-we-stopped-pretending)
 
-{% if jekyll.environment == "development" %}
-
----
-
-Some additional resources on trying to hold hope:
+Some additional resources on why and how we must hold hope:
 
 * https://medium.com/@matthewianhale/living-in-an-unstable-world-existential-climate-risk-and-the-dangers-of-climate-nihilism-bcd6653b603e
 * https://medium.com/@maryheglar/home-is-always-worth-it-d2821634dcd9
@@ -116,9 +114,3 @@ Some additional resources on trying to hold hope:
 * https://www.vox.com/22595896/climate-change-fire-heat-wave-anxiety
 * https://www.washingtonpost.com/climate-solutions/2021/08/09/change-ipcc-report/
 * https://www.cnn.com/2021/08/10/opinions/frightening-climate-change-report-fred-krupp/index.html
-
-An frequently cited example of climate nihilism that's generally denounced by scientists:
-
-https://www.newyorker.com/culture/cultural-comment/what-if-we-stopped-pretending
-
-{% endif %}

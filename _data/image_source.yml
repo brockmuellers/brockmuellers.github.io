@@ -1,5 +1,5 @@
 /assets/images/botanical_gardens.jpg:
-    text: "Sara Brockmueller; Denver Botanic Gardens; Jun 2018"
+    text: "Sara Brockmueller; Denver Botanic Gardens, Jun 2018"
 
 /assets/images/echo.jpg:
     text: "Sara Brockmueller; Oct 2019"
@@ -28,6 +28,10 @@
 /assets/images/orchid_species.jpg:
     text: "The Plant List"
     url: "http://www.theplantlist.org/browse/A/Orchidaceae/"
+
+/assets/images/redwood_ring.jpg:
+    text: "Sara Brockmueller; Saratoga, CA, Oct 2021"
+    url: "https://self.brockmuellers.com/"
 
 /assets/images/snowy_railing.jpg:
     text: "Artem Beliaikin"

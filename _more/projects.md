@@ -8,7 +8,7 @@ summary: "A small selection of non-tech projects I've done"
 
 ### Wonder Woman
 
-My biggest recent project: Wonder Woman, cosplay-style. Materials used: EVA foam, Worbla, silicone caulk, acrylics. November 2019.
+Wonder Woman, cosplay-style. Materials used: EVA foam, Worbla, silicone caulk, acrylics. November 2019.
 
 | ![](/assets/images/projects/wonder_woman_final.jpg) | ![](/assets/images/projects/wonder_woman_bracers.jpg)
 | Finished product | Worbla bracers

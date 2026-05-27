@@ -54,5 +54,13 @@ collections:
 # Excluded items can be processed by explicitly listing the directories or
 # their entries' file path in the `include:` list.
 #
+header_pages:
+  - about.md
+  - resume.md
+  - thoughts.md
+  - more.md
+  - plants.md
+  - travels.md
+
 exclude:
   - CLAUDE.md

@@ -10,7 +10,7 @@ Just a bit about me.
 
 ### Professional
 
-Professionally, I'm a backend software engineer. I'm most interested in building tools that solve real problems.
+I'm a backend software engineer. I'm most interested in building tools that solve real problems.
 
 So far, my favorite technical project has been designing a distributed data processing system for scientists developing image analysis algorithms. From a product perspective, I loved streamlining the chaotic workflows of produce wholesalers - the food supply chain is so complex and fascinating. I also enjoy building team consensus, mentorship, and working directly with people to understand their problems and find creative solutions to them.
 

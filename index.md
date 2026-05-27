@@ -21,6 +21,16 @@ I'm passionate about climate change and sustainability, as well as music, plants
 
 * [LinkedIn](https://www.linkedin.com/in/{{ site.linkedin_username }})
 
+{% if jekyll.environment == "development" %}
+
+* Featured projects:
+	* [Travel log]({% link about.md %}) exploring my sabbatical travels ([github](https://github.com/brockmuellers/travel-log))
+	* ACB tracker for doing Canadian taxes ([github](https://github.com/brockmuellers/acb-tracker-ca))
+	* OCR transcription of handwritten letters ([github](https://github.com/brockmuellers/family-history))
+	* Birdnet
+
+{% endif %}
+
 ---
 
 {% include sourced_image.html image=page.image image_class="large-img"%}

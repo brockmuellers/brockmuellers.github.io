@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "List: climate change resources"
+title: "Climate change resources"
 subtitle: "Understanding and combating climate change"
 categories: climate
-image: /assets/images/foot.jpg
+image: /assets/images/redwood_ring.jpg
 ---
 ---
 
-I've spent months trying to understand climate change and the current state of mitigation strategies. These are some resources that I've found helpful.
+I've spent months trying to understand climate change, the current state of mitigation strategies, and how I can make a difference. These are some resources that I've found helpful.
 
 ## Staying positive
 
@@ -104,13 +104,13 @@ What if we forgave everybody everything?
 
 Some additional resources on why and how we must hold hope:
 
-* https://medium.com/@matthewianhale/living-in-an-unstable-world-existential-climate-risk-and-the-dangers-of-climate-nihilism-bcd6653b603e
-* https://medium.com/@maryheglar/home-is-always-worth-it-d2821634dcd9
-* https://www.vice.com/en/article/j5w374/climate-despair-is-making-people-give-up-on-life
-* https://www.theguardian.com/commentisfree/2021/mar/24/scientists-facts-feelings-climate-crisis-sadness
-* https://behavioralscientist.org/urgency-and-agency-michael-mann-on-conquering-climate-despair/
-* https://www.washingtonpost.com/magazine/2021/04/12/climate-news-is-relentlessly-objectively-grim-should-we-ever-allow-ourselves-feel-optimism/
-* https://www.forbes.com/sites/davidcarlin/2021/04/21/fighting-back-against-the-3-ds-of-climate-inaction/?sh=41eca24f18ae
-* https://www.vox.com/22595896/climate-change-fire-heat-wave-anxiety
-* https://www.washingtonpost.com/climate-solutions/2021/08/09/change-ipcc-report/
-* https://www.cnn.com/2021/08/10/opinions/frightening-climate-change-report-fred-krupp/index.html
+* <https://medium.com/@matthewianhale/living-in-an-unstable-world-existential-climate-risk-and-the-dangers-of-climate-nihilism-bcd6653b603e>
+* <https://medium.com/@maryheglar/home-is-always-worth-it-d2821634dcd9>
+* <https://www.vice.com/en/article/j5w374/climate-despair-is-making-people-give-up-on-life>
+* <https://www.theguardian.com/commentisfree/2021/mar/24/scientists-facts-feelings-climate-crisis-sadness>
+* <https://behavioralscientist.org/urgency-and-agency-michael-mann-on-conquering-climate-despair/>
+* <https://www.washingtonpost.com/magazine/2021/04/12/climate-news-is-relentlessly-objectively-grim-should-we-ever-allow-ourselves-feel-optimism/>
+* <https://www.forbes.com/sites/davidcarlin/2021/04/21/fighting-back-against-the-3-ds-of-climate-inaction/?sh=41eca24f18ae>
+* <https://www.vox.com/22595896/climate-change-fire-heat-wave-anxiety>
+* <https://www.washingtonpost.com/climate-solutions/2021/08/09/change-ipcc-report/>
+* <https://www.cnn.com/2021/08/10/opinions/frightening-climate-change-report-fred-krupp/index.html>

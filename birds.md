@@ -5,9 +5,13 @@ permalink: /birds/
 birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
 ---
 
+Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) installation.
+
 <div id="birds-status">Loading bird data...</div>
 <div id="birds-content" style="display:none">
   <p id="birds-title" style="text-align:center;font-weight:bold"></p>
+  <h3>Recent detections</h3>
+  <ul id="birds-recent"></ul>
   <h3>Last 7 days — by hour</h3>
   <div id="birds-chart" style="overflow-x:auto"></div>
   <h3>All time — by 15-minute window</h3>
@@ -23,6 +27,15 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
     })
     .then(function(data) {
       document.getElementById("birds-status").style.display = "none";
+
+      // Five most recent detections
+      var recent = data.recent_observations.slice().sort(function(a, b) {
+        return b.timestamp.localeCompare(a.timestamp);
+      }).slice(0, 5);
+      var recentHtml = recent.map(function(obs) {
+        return "<li>" + obs.timestamp + " — " + obs.common_name + "</li>";
+      }).join("");
+      document.getElementById("birds-recent").innerHTML = recentHtml;
 
       // Aggregate recent_observations into { speciesName: { total, hours: {0..23: count} } }
       var species = {};

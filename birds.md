@@ -129,15 +129,14 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
         });
       });
 
-      var cellW15 = "16px";
+      var cellW15 = "4px";
       var html15 = "<table style='border-collapse:collapse;font-size:11px'>";
 
-      // Header: show hour label on the :00 slot only
+      // Header: show hour label every 4 slots (on the hour), positioned over the group
       html15 += "<tr><td style='width:120px'></td><td style='width:120px'></td>";
-      SLOTS.forEach(function(slot) {
-        var label = slot.endsWith(":00") ? slot.split(":")[0] : "";
-        html15 += "<td style='width:" + cellW15 + ";text-align:center;color:#666;font-size:10px'>" + label + "</td>";
-      });
+      for (var hh2 = 0; hh2 < 24; hh2++) {
+        html15 += "<td colspan='4' style='text-align:center;color:#666;font-size:10px'>" + hh2 + "</td>";
+      }
       html15 += "</tr>";
 
       names15.forEach(function(name) {

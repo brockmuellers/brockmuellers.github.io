@@ -130,7 +130,7 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
       });
 
       var cellW15 = "4px";
-      var html15 = "<table style='border-collapse:collapse;font-size:11px'>";
+      var html15 = "<table style='border-collapse:collapse;font-size:11px;table-layout:fixed;width:" + (240 + 96 * 4) + "px'>";
 
       // Header: show hour label every 4 slots (on the hour), positioned over the group
       html15 += "<tr><td style='width:120px'></td><td style='width:120px'></td>";

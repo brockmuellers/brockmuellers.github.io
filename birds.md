@@ -138,7 +138,7 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
       var html15 = "<table style='border-collapse:collapse;font-size:13px'>";
       html15 += "<tr><td style='width:120px'></td><td style='width:120px;text-align:center;color:#666;font-size:11px'>Detections</td>";
       HOURS.forEach(function(h) {
-        html15 += "<td style='width:28px;text-align:center;color:#666;font-size:11px'>" + h + "</td>";
+        html15 += "<td style='width:20px;text-align:center;color:#666;font-size:11px'>" + h + "</td>";
       });
       html15 += "</tr>";
 
@@ -157,7 +157,7 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
           var alpha = count ? (0.15 + 0.85 * count / maxHour15).toFixed(2) : 0;
           var bg = count ? "rgba(34,100,34," + alpha + ")" : "#e8e8e8";
           var label = count ? String(count) : "";
-          html15 += "<td style='width:28px;height:22px;background:" + bg +
+          html15 += "<td style='width:20px;height:22px;background:" + bg +
             ";text-align:center;font-size:11px;color:#fff;border:1px solid #ccc'>" + label + "</td>";
         });
         html15 += "</tr>";

@@ -67,7 +67,7 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
       var cellW = "28px";
       var barW = "120px";
 
-      var html = "<table style='border-collapse:collapse;font-size:13px'>";
+      var html = "<table style='border-collapse:collapse;font-size:13px;table-layout:fixed;width:" + (240 + 24 * 20) + "px'>";
 
       // Header row
       html += "<tr>";
@@ -96,7 +96,7 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
           var alpha = count ? (0.15 + 0.85 * count / maxHour).toFixed(2) : 0;
           var bg = count ? "rgba(34,100,34," + alpha + ")" : "#e8e8e8";
           var label = count ? String(count) : "";
-          html += "<td style='width:" + cellW + ";min-width:" + cellW + ";max-width:" + cellW + ";height:22px;background:" + bg +
+          html += "<td style='width:" + cellW + ";height:22px;background:" + bg +
             ";text-align:center;font-size:11px;color:#fff;border:1px solid #ccc'>" + label + "</td>";
         });
         html += "</tr>";
@@ -135,7 +135,7 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
         });
       });
 
-      var html15 = "<table style='border-collapse:collapse;font-size:13px'>";
+      var html15 = "<table style='border-collapse:collapse;font-size:13px;table-layout:fixed;width:" + (240 + 24 * 20) + "px'>";
       html15 += "<tr><td style='width:120px'></td><td style='width:120px;text-align:center;color:#666;font-size:11px'>Detections</td>";
       HOURS.forEach(function(h) {
         html15 += "<td style='width:20px;text-align:center;color:#666;font-size:11px'>" + h + "</td>";

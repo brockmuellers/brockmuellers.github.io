@@ -74,14 +74,14 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
         // Bar cell
         html += "<td style='padding:2px 4px'>" +
           "<div style='display:flex;align-items:center;gap:4px'>" +
-          "<div style='width:" + barPct + "%;max-width:100px;background:#333;height:14px'></div>" +
+          "<div style='width:" + barPct + "%;max-width:100px;background:#2d6a2d;height:14px'></div>" +
           "<span style='font-size:11px'>" + sp.total + "</span>" +
           "</div></td>";
         // Hour cells
         HOURS.forEach(function(h) {
           var count = sp.hours[h] || 0;
           var alpha = count ? (0.15 + 0.85 * count / maxHour).toFixed(2) : 0;
-          var bg = count ? "rgba(50,50,50," + alpha + ")" : "#e8e8e8";
+          var bg = count ? "rgba(34,100,34," + alpha + ")" : "#e8e8e8";
           var label = count ? String(count) : "";
           html += "<td style='width:" + cellW + ";height:22px;background:" + bg +
             ";text-align:center;font-size:11px;color:#fff;border:1px solid #ccc'>" + label + "</td>";
@@ -147,13 +147,13 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
         html15 += "<td style='text-align:right;padding-right:6px;white-space:nowrap'>" + name + "</td>";
         html15 += "<td style='padding:2px 4px'>" +
           "<div style='display:flex;align-items:center;gap:4px'>" +
-          "<div style='width:" + barPct + "%;max-width:100px;background:#333;height:14px'></div>" +
+          "<div style='width:" + barPct + "%;max-width:100px;background:#2d6a2d;height:14px'></div>" +
           "<span style='font-size:11px'>" + sp.total + "</span>" +
           "</div></td>";
         SLOTS.forEach(function(slot) {
           var count = sp.slots[slot] || 0;
           var alpha = count ? (0.15 + 0.85 * count / maxSlot).toFixed(2) : 0;
-          var bg = count ? "rgba(50,50,50," + alpha + ")" : "#e8e8e8";
+          var bg = count ? "rgba(34,100,34," + alpha + ")" : "#e8e8e8";
           html15 += "<td style='width:" + cellW15 + ";height:20px;background:" + bg +
             ";border:1px solid #ccc'></td>";
         });

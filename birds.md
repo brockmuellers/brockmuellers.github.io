@@ -14,7 +14,7 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
   <ul id="birds-recent"></ul>
   <h3>Last 7 days — by hour</h3>
   <div id="birds-chart" style="overflow-x:auto"></div>
-  <h3>All time — by 15-minute window</h3>
+  <h3>All time — by hour</h3>
   <div id="birds-chart-15min" style="overflow-x:auto"></div>
 </div>
 
@@ -109,24 +109,17 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
       html += "</table>";
       document.getElementById("birds-chart").innerHTML = html;
 
-      // --- 15-minute heatmap ---
-      // Aggregate into { speciesName: { total, slots: {"00:00": count, ...} } }
-      var SLOTS = [];
-      for (var hh = 0; hh < 24; hh++) {
-        ["00","15","30","45"].forEach(function(mm) {
-          SLOTS.push((hh < 10 ? "0" : "") + hh + ":" + mm);
-        });
-      }
-
+      // --- All-time heatmap (monthly_stats, grouped by hour) ---
       var species15 = {};
       Object.keys(data.monthly_stats).forEach(function(month) {
         Object.keys(data.monthly_stats[month]).forEach(function(name) {
-          if (!species15[name]) species15[name] = { total: 0, slots: {} };
+          if (!species15[name]) species15[name] = { total: 0, hours: {} };
           var slots = data.monthly_stats[month][name];
           Object.keys(slots).forEach(function(slot) {
+            var hour = parseInt(slot.split(":")[0], 10);
             var count = slots[slot];
             species15[name].total += count;
-            species15[name].slots[slot] = (species15[name].slots[slot] || 0) + count;
+            species15[name].hours[hour] = (species15[name].hours[hour] || 0) + count;
           });
         });
       });
@@ -135,21 +128,18 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
         return species15[b].total - species15[a].total;
       });
       var maxTotal15 = species15[names15[0]].total;
-      var maxSlot = 0;
+      var maxHour15 = 0;
       names15.forEach(function(n) {
-        Object.keys(species15[n].slots).forEach(function(s) {
-          if (species15[n].slots[s] > maxSlot) maxSlot = species15[n].slots[s];
+        Object.keys(species15[n].hours).forEach(function(h) {
+          if (species15[n].hours[h] > maxHour15) maxHour15 = species15[n].hours[h];
         });
       });
 
-      var cellW15 = "4px";
-      var html15 = "<table style='border-collapse:collapse;font-size:11px;table-layout:fixed;width:" + (240 + 96 * 4) + "px'>";
-
-      // Header: show hour label every 4 slots (on the hour), positioned over the group
-      html15 += "<tr><td style='width:120px'></td><td style='width:120px'></td>";
-      for (var hh2 = 0; hh2 < 24; hh2++) {
-        html15 += "<td colspan='4' style='text-align:center;color:#666;font-size:10px'>" + hh2 + "</td>";
-      }
+      var html15 = "<table style='border-collapse:collapse;font-size:13px'>";
+      html15 += "<tr><td style='width:120px'></td><td style='width:120px;text-align:center;color:#666;font-size:11px'>Detections</td>";
+      HOURS.forEach(function(h) {
+        html15 += "<td style='width:28px;text-align:center;color:#666;font-size:11px'>" + h + "</td>";
+      });
       html15 += "</tr>";
 
       names15.forEach(function(name) {
@@ -162,18 +152,19 @@ Data pulled from a home [BirdNET-Pi](https://github.com/Nachtzuster/BirdNET-Pi) 
           "<div style='width:" + barPct + "%;max-width:100px;background:#2d6a2d;height:14px'></div>" +
           "<span style='font-size:11px'>" + sp.total + "</span>" +
           "</div></td>";
-        SLOTS.forEach(function(slot) {
-          var count = sp.slots[slot] || 0;
-          var alpha = count ? (0.15 + 0.85 * count / maxSlot).toFixed(2) : 0;
+        HOURS.forEach(function(h) {
+          var count = sp.hours[h] || 0;
+          var alpha = count ? (0.15 + 0.85 * count / maxHour15).toFixed(2) : 0;
           var bg = count ? "rgba(34,100,34," + alpha + ")" : "#e8e8e8";
-          html15 += "<td style='width:" + cellW15 + ";height:20px;background:" + bg +
-            ";border:1px solid #ccc'></td>";
+          var label = count ? String(count) : "";
+          html15 += "<td style='width:28px;height:22px;background:" + bg +
+            ";text-align:center;font-size:11px;color:#fff;border:1px solid #ccc'>" + label + "</td>";
         });
         html15 += "</tr>";
       });
 
       html15 += "<tr><td></td><td style='text-align:center;font-size:11px;color:#666'>Detections</td>";
-      html15 += "<td colspan='" + SLOTS.length + "' style='text-align:center;font-size:11px;color:#666;padding-top:4px'>Hour of Day</td></tr>";
+      html15 += "<td colspan='24' style='text-align:center;font-size:11px;color:#666;padding-top:4px'>Hour of Day</td></tr>";
       html15 += "</table>";
 
       document.getElementById("birds-chart-15min").innerHTML = html15;

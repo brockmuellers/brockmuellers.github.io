@@ -63,7 +63,7 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
 
       // Build table
       var HOURS = Array.from({length: 24}, function(_, i) { return i; });
-      var tableW = 720;
+      var tableW = 1080;
 
       var html = "<table style='border-collapse:collapse;font-size:13px;table-layout:fixed;width:" + tableW + "px'>";
 

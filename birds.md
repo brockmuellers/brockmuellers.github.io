@@ -8,35 +8,97 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
 <div id="birds-status">Loading bird data...</div>
 <div id="birds-content" style="display:none">
   <p><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
-  <h3>Recent observations</h3>
-  <table>
-    <thead><tr><th>Bird</th><th>Time</th><th>Confidence</th></tr></thead>
-    <tbody id="recent-observations"></tbody>
-  </table>
+  <h3>Detections — last 7 days</h3>
+  <div style="overflow-x:auto">
+    <table id="bird-heatmap" style="border-collapse:collapse;font-size:13px;white-space:nowrap"></table>
+  </div>
 </div>
 
 <script>
 (function() {
   var url = "{{ page.birds_data_url }}";
+  var GREEN = "#2d6a4f";
+  var BAR_WIDTH = 120;
 
   fetch(url)
-    .then(function(response) {
-      if (!response.ok) throw new Error("HTTP " + response.status);
-      return response.json();
+    .then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
     })
     .then(function(data) {
-      document.getElementById("birds-status").style.display = "none";
-      document.getElementById("generated-at-value").textContent = new Date(data.generated_at).toLocaleString('en-US', { timeZone: data.timezone });
+      document.getElementById("generated-at-value").textContent =
+        new Date(data.generated_at).toLocaleString('en-US', { timeZone: data.timezone });
 
-      var tbody = document.getElementById("recent-observations");
-      data.recent_observations.slice(0, 5).forEach(function(obs) {
-        var tr = document.createElement("tr");
-        tr.innerHTML = "<td>" + obs.common_name + "</td>" +
-                       "<td>" + obs.timestamp + "</td>" +
-                       "<td>" + Math.round(obs.confidence * 100) + "%</td>";
-        tbody.appendChild(tr);
+      var cutoff = new Date(data.generated_at).getTime() - 7 * 24 * 60 * 60 * 1000;
+      var recent = data.recent_observations.filter(function(o) {
+        return new Date(o.timestamp.replace(' ', 'T')).getTime() > cutoff;
       });
 
+      var species = {};
+      recent.forEach(function(o) {
+        if (!species[o.common_name]) species[o.common_name] = { total: 0, hours: new Array(24).fill(0) };
+        species[o.common_name].total++;
+        species[o.common_name].hours[parseInt(o.timestamp.split(' ')[1])]++;
+      });
+
+      var sorted = Object.keys(species).sort(function(a, b) {
+        return species[b].total - species[a].total;
+      });
+
+      var maxTotal = sorted.length ? species[sorted[0]].total : 1;
+      var maxHour = 1;
+      sorted.forEach(function(name) {
+        species[name].hours.forEach(function(c) { if (c > maxHour) maxHour = c; });
+      });
+
+      var table = document.getElementById("bird-heatmap");
+
+      // Header row
+      var headerRow = table.createTHead().insertRow();
+      function addTh(text, css) {
+        var t = document.createElement("th");
+        t.textContent = text;
+        t.style.cssText = css || "";
+        headerRow.appendChild(t);
+      }
+      addTh("", "min-width:140px;padding:2px 8px");
+      addTh("Detections", "width:" + BAR_WIDTH + "px;padding:2px 4px;font-weight:normal;color:#666;font-size:11px");
+      for (var h = 0; h < 24; h++) {
+        addTh(h, "width:24px;text-align:center;padding:2px 1px;font-weight:normal;font-size:11px" + (h === 12 ? ";color:" + GREEN : ""));
+      }
+
+      // Data rows
+      var tbody = table.createTBody();
+      sorted.forEach(function(name) {
+        var s = species[name];
+        var tr = tbody.insertRow();
+
+        var tdName = tr.insertCell();
+        tdName.textContent = name;
+        tdName.style.cssText = "text-align:right;padding:3px 8px";
+
+        var tdBar = tr.insertCell();
+        tdBar.style.cssText = "padding:3px 4px;width:" + BAR_WIDTH + "px";
+        var bar = document.createElement("div");
+        var pct = Math.round(s.total / maxTotal * 100);
+        bar.style.cssText = "background:" + GREEN + ";height:18px;width:" + pct + "%;min-width:2px;display:flex;align-items:center;justify-content:flex-end;padding-right:3px;box-sizing:border-box;color:#fff;font-size:11px";
+        bar.textContent = s.total;
+        tdBar.appendChild(bar);
+
+        for (var h = 0; h < 24; h++) {
+          var tdH = tr.insertCell();
+          tdH.style.cssText = "width:24px;text-align:center;padding:2px 1px;font-size:11px;border:1px solid #f0f0f0";
+          var count = s.hours[h];
+          if (count > 0) {
+            var alpha = 0.2 + (count / maxHour) * 0.8;
+            tdH.style.backgroundColor = "rgba(45,106,79," + alpha.toFixed(2) + ")";
+            tdH.style.color = alpha > 0.55 ? "#fff" : "#333";
+            tdH.textContent = count;
+          }
+        }
+      });
+
+      document.getElementById("birds-status").style.display = "none";
       document.getElementById("birds-content").style.display = "block";
     })
     .catch(function(err) {

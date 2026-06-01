@@ -64,3 +64,4 @@ header_pages:
 
 exclude:
   - CLAUDE.md
+  - vendor/

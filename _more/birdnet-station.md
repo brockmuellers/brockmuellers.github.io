@@ -2,7 +2,8 @@
 layout: page
 title: BirdNET Station
 permalink: /birdnet-station/
-machine_logs_url: https://birdnet-data.brockmuellers.com/machine-logs.json
+event_log_url: https://birdnet-data.brockmuellers.com/birdnet-events.json
+summary: "Status and logs for echo-birdnet"
 ---
 
 echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr89/BirdNET-Pi).
@@ -25,7 +26,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
 
 <script>
 (function() {
-  var url = "{{ page.machine_logs_url }}";
+  var url = "{{ page.event_log_url }}";
 
   var LEVEL_STYLE = {
     "INFO":  "color:#2d6a4f",

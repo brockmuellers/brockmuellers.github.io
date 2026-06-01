@@ -8,6 +8,17 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
 <div id="birds-status">Loading bird data...</div>
 <div id="birds-content" style="display:none">
   <p><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
+  <h3>Recent detections</h3>
+  <table id="bird-recent" style="border-collapse:collapse;font-size:13px">
+    <thead>
+      <tr>
+        <th style="text-align:left;padding:3px 12px 3px 0;font-weight:normal;color:#666;font-size:11px">Species</th>
+        <th style="text-align:left;padding:3px 12px 3px 0;font-weight:normal;color:#666;font-size:11px">Time</th>
+        <th style="text-align:right;padding:3px 0;font-weight:normal;color:#666;font-size:11px">Confidence</th>
+      </tr>
+    </thead>
+    <tbody id="bird-recent-body"></tbody>
+  </table>
   <h3>Detections — last 7 days</h3>
   <div style="overflow-x:auto">
     <table id="bird-heatmap" style="border-collapse:collapse;font-size:13px;white-space:nowrap"></table>
@@ -28,6 +39,21 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
     .then(function(data) {
       document.getElementById("generated-at-value").textContent =
         new Date(data.generated_at).toLocaleString('en-US', { timeZone: data.timezone });
+
+      var recentBody = document.getElementById("bird-recent-body");
+      var top5 = data.recent_observations.slice(0, 5);
+      top5.forEach(function(o) {
+        var tr = recentBody.insertRow();
+        var tdName = tr.insertCell();
+        tdName.textContent = o.common_name;
+        tdName.style.cssText = "padding:3px 12px 3px 0";
+        var tdTime = tr.insertCell();
+        tdTime.textContent = new Date(o.timestamp.replace(' ', 'T')).toLocaleString('en-US', { timeZone: data.timezone });
+        tdTime.style.cssText = "padding:3px 12px 3px 0;color:#555";
+        var tdConf = tr.insertCell();
+        tdConf.textContent = Math.round(o.confidence * 100) + "%";
+        tdConf.style.cssText = "text-align:right;padding:3px 0;color:#555";
+      });
 
       var cutoff = new Date(data.generated_at).getTime() - 7 * 24 * 60 * 60 * 1000;
       var recent = data.recent_observations.filter(function(o) {

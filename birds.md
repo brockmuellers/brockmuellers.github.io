@@ -7,7 +7,13 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
 
 <div id="birds-status">Loading bird data...</div>
 <div id="birds-content" style="display:none">
-  <p><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
+  <div style="display:flex;justify-content:space-between;align-items:baseline">
+    <p style="margin:0 0 1em"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
+    <a href="/birdnet-station/" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:2px solid #2d6a4f;border-radius:4px;text-decoration:none;font-size:13px;color:#2d6a4f;background:#f0f7f4">
+      <img src="/assets/images/birdnet_logo.png" style="height:18px;width:auto;vertical-align:middle">
+      BirdNET Station
+    </a>
+  </div>
   <h3>Recent detections</h3>
   <table id="bird-recent" style="border-collapse:collapse;font-size:13px">
     <thead>

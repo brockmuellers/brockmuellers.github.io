@@ -6,12 +6,12 @@ event_log_url: https://birdnet-data.brockmuellers.com/birdnet-events.json
 summary: "Status and logs for echo-birdnet"
 ---
 
-echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr89/BirdNET-Pi).
+echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr89/BirdNET-Pi) with [custom telemetry tools](https://github.com/brockmuellers/birdnet-tools).
 
 <div id="machine-status">Loading...</div>
 <div id="machine-content" style="display:none">
   <p style="margin:0 0 1em;color:#555;font-size:13px"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
-  <div id="health-metrics" style="margin:0 0 1.5em;display:flex;flex-wrap:wrap;gap:6px"></div>
+  <div id="health-metrics" style="margin:0 0 1.5em;display:flex;flex-direction:column;gap:8px"></div>
   <div id="source-filters" style="margin:0 0 1em;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
     <span style="font-size:11px;color:#666;font-weight:normal">Sources:</span>
   </div>
@@ -57,23 +57,44 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
       var uptimeH = Math.floor(h.uptime_seconds / 3600);
       var uptimeM = Math.floor((h.uptime_seconds % 3600) / 60);
 
-      // Each entry: [label, value, color]
-      // For threshold-based entries, color is derived from value via the thresholds below.
-      var METRICS = [
-        // label            value                                                      green_thresh  yellow_thresh  higher_is_better  format
-        { label: "Upload",  value: uploadAge,                                          green: 60,    yellow: 180,   higher: false,
+      var T = {
+        temp:   { green: 60,   yellow: 70,   higher: false },
+        memory: { green: 300,  yellow: 100,  higher: true  },
+        wifi:   { green: -65,  yellow: -80,  higher: true  },
+      };
+
+      var CURRENT_METRICS = [
+        { label: "Upload",  value: uploadAge,              green: 60,       yellow: 180,      higher: false,
           fmt: function(v) { return v < 60 ? Math.round(v) + "m ago" : v < 1440 ? Math.round(v / 60) + "h ago" : ">1d ago"; } },
-        { label: "Temp",    value: h.temp_c,                                           green: 60,    yellow: 70,    higher: false,
+        { label: "Temp",    value: h.temp_c,               green: T.temp.green,   yellow: T.temp.yellow,   higher: T.temp.higher,
           fmt: function(v) { return v + "°C"; } },
-        { label: "Memory",  value: h.memory_available_mb,                              green: 300,   yellow: 100,   higher: true,
+        { label: "Memory",  value: h.memory_available_mb,  green: T.memory.green, yellow: T.memory.yellow, higher: T.memory.higher,
           fmt: function(v) { return Math.round(v) + " MB free"; } },
-        { label: "Disk",    value: h.disk["/"].used_pct,                               green: 70,    yellow: 85,    higher: false,
+        { label: "Disk",    value: h.disk["/"].used_pct,   green: 70,       yellow: 85,       higher: false,
           fmt: function(v) { return v + "% used"; } },
-        { label: "WiFi",    value: h.wifi_signal_dbm,                                  green: -65,   yellow: -80,   higher: true,
+        { label: "WiFi",    value: h.wifi_signal_dbm,      green: T.wifi.green,   yellow: T.wifi.yellow,   higher: T.wifi.higher,
           fmt: function(v) { return v + " dBm"; } },
         { label: "Uptime",  value: h.uptime_seconds, color: "neutral",
           fmt: function() { return (uptimeH > 0 ? uptimeH + "h " : "") + uptimeM + "m"; } },
       ];
+
+      function windowMetrics(w) {
+        return [
+          { label: "Max Temp",   value: w.temp_c.max,              green: T.temp.green,   yellow: T.temp.yellow,   higher: T.temp.higher,
+            fmt: function(v) { return v + "°C"; } },
+          { label: "Avg WiFi",   value: w.wifi_signal_dbm.avg,     green: T.wifi.green,   yellow: T.wifi.yellow,   higher: T.wifi.higher,
+            fmt: function(v) { return Math.round(v) + " dBm"; } },
+          { label: "Min Memory", value: w.memory_available_mb.min, green: T.memory.green, yellow: T.memory.yellow, higher: T.memory.higher,
+            fmt: function(v) { return Math.round(v) + " MB free"; } },
+        ];
+      }
+
+      function chipColor(m) {
+        if (m.color) return m.color;
+        return m.higher
+          ? (m.value > m.green ? "green" : m.value > m.yellow ? "yellow" : "red")
+          : (m.value <= m.green ? "green" : m.value <= m.yellow ? "yellow" : "red");
+      }
 
       function chip(label, value, color) {
         var el = document.createElement("span");
@@ -82,17 +103,22 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
         return el;
       }
 
-      METRICS.forEach(function(m) {
-        var color = m.color;
-        if (!color) {
-          if (m.higher) {
-            color = m.value > m.green ? "green" : m.value > m.yellow ? "yellow" : "red";
-          } else {
-            color = m.value <= m.green ? "green" : m.value <= m.yellow ? "yellow" : "red";
-          }
-        }
-        healthDiv.appendChild(chip(m.label, m.fmt(m.value), color));
-      });
+      function metricSection(sectionLabel, metrics) {
+        var row = document.createElement("div");
+        row.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;align-items:center";
+        var lbl = document.createElement("span");
+        lbl.style.cssText = "font-size:11px;color:#999;width:60px;flex-shrink:0";
+        lbl.textContent = sectionLabel;
+        row.appendChild(lbl);
+        metrics.forEach(function(m) {
+          row.appendChild(chip(m.label, m.fmt(m.value), chipColor(m)));
+        });
+        return row;
+      }
+
+      healthDiv.appendChild(metricSection("Current",   CURRENT_METRICS));
+      healthDiv.appendChild(metricSection("Last Hour", windowMetrics(data.last_hour)));
+      healthDiv.appendChild(metricSection("Last Day",  windowMetrics(data.last_day)));
 
       var tbody = document.getElementById("event-log-body");
       var filtersDiv = document.getElementById("source-filters");

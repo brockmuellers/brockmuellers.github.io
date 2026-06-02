@@ -57,18 +57,18 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
       const uptimeM = Math.floor((h.uptime_seconds % 3600) / 60);
 
       const T = {
-        temp:   { green: 60,  yellow: 70,  higher: false },
-        memory: { green: 300, yellow: 100, higher: true  },
-        wifi:   { green: -65, yellow: -80, higher: true  },
+        temp:   { green: 55,  yellow: 70,   higher: false },
+        memory: { green: 300, yellow: 100,  higher: true  },
+        wifi:   { green: -65, yellow: -80,  higher: true  },
+        upload: { green: 20,  yellow: 60,  higher: false },
+        disk:   { green: 70,  yellow: 85,   higher: false },
       };
 
       const CURRENT_METRICS = [
-        { label: "Upload",  value: uploadAge,             green: 60, yellow: 180, higher: false,
-          fmt: v => v < 60 ? `${Math.round(v)}m ago` : v < 1440 ? `${Math.round(v / 60)}h ago` : ">1d ago" },
+        { label: "Upload",  value: uploadAge,             ...T.upload, fmt: v => v < 60 ? `${Math.round(v)}m ago` : v < 1440 ? `${Math.round(v / 60)}h ago` : ">1d ago" },
         { label: "Temp",    value: h.temp_c,              ...T.temp,   fmt: v => `${v}°C` },
         { label: "Memory",  value: h.memory_available_mb, ...T.memory, fmt: v => `${Math.round(v)} MB free` },
-        { label: "Disk",    value: h.disk["/"].used_pct,  green: 70, yellow: 85, higher: false,
-          fmt: v => `${v}% used` },
+        { label: "Disk",    value: h.disk["/"].used_pct,  ...T.disk,   fmt: v => `${v}% used` },
         { label: "WiFi",    value: h.wifi_signal_dbm,     ...T.wifi,   fmt: v => `${v} dBm` },
         { label: "Uptime",  value: h.uptime_seconds, color: "neutral",
           fmt: () => `${uptimeH > 0 ? uptimeH + "h " : ""}${uptimeM}m` },

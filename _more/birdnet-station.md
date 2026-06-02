@@ -144,13 +144,17 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
           const xf = t => px + ((t - tMin) / tRange) * (W - 2 * px);
           const yf = v => plotH - py - ((v - vMin) / vRange) * (plotH - 2 * py);
 
-          const bandPts = [
-            ...vals.map((v, i) => `${xf(times[i])},${yf(v.min)}`),
-            ...[...vals].reverse().map((v, i) => `${xf(times[vals.length - 1 - i])},${yf(v.max)}`),
-          ].join(" ");
-          const avgPts = vals.map((v, i) => `${xf(times[i])},${yf(v.avg)}`).join(" ");
-
-          const latestColor = chipColor({ ...metric, value: vals[vals.length - 1].avg });
+          const CHART_STROKE = { green: "#16a34a", yellow: "#ca8a04", red: "#dc2626", neutral: "#6b7280" };
+          const pointColors = vals.map(v => chipColor({ ...metric, value: v.avg }));
+          const bandSvg = vals.slice(0, -1).map((v, i) => {
+            const c = chipColor({ ...metric, value: metric.higher ? v.min : v.max });
+            const fill = c === "green" ? "#e5e7eb" : BG[c];
+            const pts = `${xf(times[i]).toFixed(1)},${yf(v.min).toFixed(1)} ${xf(times[i+1]).toFixed(1)},${yf(vals[i+1].min).toFixed(1)} ${xf(times[i+1]).toFixed(1)},${yf(vals[i+1].max).toFixed(1)} ${xf(times[i]).toFixed(1)},${yf(v.max).toFixed(1)}`;
+            return `<polygon points="${pts}" fill="${fill}" opacity="0.6"/>`;
+          }).join('');
+          const segSvg = vals.slice(0, -1).map((v, i) =>
+            `<line x1="${xf(times[i]).toFixed(1)}" y1="${yf(v.avg).toFixed(1)}" x2="${xf(times[i+1]).toFixed(1)}" y2="${yf(vals[i+1].avg).toFixed(1)}" stroke="${CHART_STROKE[pointColors[i]]}" stroke-width="1.5" stroke-linecap="round"/>`
+          ).join('');
 
           const wrap = document.createElement("div");
           wrap.style.cssText = "display:flex;flex-direction:column;gap:2px";
@@ -162,8 +166,8 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
                 <span>${metric.fmt(vMin)}</span>
               </div>
               <svg width="${W}" height="${H}" style="display:block;border-radius:3px;background:#f9fafb">
-                <polygon points="${bandPts}" fill="${BG[latestColor]}" opacity="0.8"/>
-                <polyline points="${avgPts}" fill="none" stroke="${FG[latestColor]}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+                ${bandSvg}
+                ${segSvg}
                 <text x="${px}" y="${H - 2}" text-anchor="start" font-size="9" fill="#bbb">${fmtTime(tMin)}</text>
                 <text x="${W - px}" y="${H - 2}" text-anchor="end" font-size="9" fill="#bbb">${fmtTime(tMax)}</text>
                 ${midnightTimes.map(t => `<text x="${xf(t).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="9" fill="#bbb">${fmtDate(t)}</text>`).join('')}

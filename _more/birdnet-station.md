@@ -173,10 +173,12 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
 
       const hiddenSources = new Set();
       const allSources = [...new Set(renderedGroups.map(g => g.source))].sort();
+      const INITIAL_LIMIT = 100;
+      let showAll = renderedGroups.length <= INITIAL_LIMIT;
 
       const applyFilter = () => {
-        renderedGroups.forEach(g => {
-          const hide = hiddenSources.has(g.source);
+        renderedGroups.forEach((g, i) => {
+          const hide = hiddenSources.has(g.source) || (!showAll && i >= INITIAL_LIMIT);
           g.mainRow.style.display = hide ? "none" : "table-row";
           if (g.toggleTr) g.toggleTr.style.display = hide ? "none" : "table-row";
           g.hiddenRows.forEach(r => {
@@ -202,6 +204,20 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
         });
         filtersDiv.appendChild(btn);
       });
+
+      applyFilter();
+
+      if (!showAll) {
+        const showMoreBtn = document.createElement("button");
+        showMoreBtn.textContent = `Show all (${renderedGroups.length - INITIAL_LIMIT} more groups)`;
+        showMoreBtn.style.cssText = "margin-top:8px;font-size:12px;padding:4px 12px;border:1px solid #ccc;border-radius:3px;background:#fff;cursor:pointer;color:#333";
+        showMoreBtn.addEventListener("click", () => {
+          showAll = true;
+          showMoreBtn.remove();
+          applyFilter();
+        });
+        document.getElementById("event-log").insertAdjacentElement("afterend", showMoreBtn);
+      }
 
       document.getElementById("machine-status").style.display = "none";
       document.getElementById("machine-content").style.display = "block";

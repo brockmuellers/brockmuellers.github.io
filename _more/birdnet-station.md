@@ -13,8 +13,13 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
   <p style="margin:0 0 1em;color:#555;font-size:13px"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
   <div id="health-metrics" style="margin:0 0 1em;display:flex;flex-direction:column;gap:8px"></div>
   <div id="metric-charts" style="margin:0 0 1.5em;display:flex;flex-wrap:wrap;gap:16px"></div>
-  <div id="source-filters" style="margin:0 0 1em;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
-    <span style="font-size:11px;color:#666;font-weight:normal">Sources:</span>
+  <div style="margin:0 0 1em;padding-top:0.75em;border-top:1px solid #e5e7eb;display:flex;flex-direction:column;gap:6px">
+    <div id="level-filters" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+      <span style="font-size:11px;color:#666;font-weight:normal;width:60px;flex-shrink:0">Levels:</span>
+    </div>
+    <div id="source-filters" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+      <span style="font-size:11px;color:#666;font-weight:normal;width:60px;flex-shrink:0">Sources:</span>
+    </div>
   </div>
   <table id="event-log" style="border-collapse:collapse;font-size:13px;width:100%">
     <thead>
@@ -227,17 +232,19 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
           });
         }
 
-        return { source: group[0].source, mainRow, toggleTr, hiddenRows, state: groupState };
+        return { source: group[0].source, level: group[0].level, mainRow, toggleTr, hiddenRows, state: groupState };
       });
 
       const hiddenSources = new Set();
+      const hiddenLevels = new Set();
       const allSources = [...new Set(renderedGroups.map(g => g.source))].sort();
+      const allLevels = [...new Set(renderedGroups.map(g => g.level))].sort();
       const INITIAL_LIMIT = 100;
       let showAll = renderedGroups.length <= INITIAL_LIMIT;
 
       const applyFilter = () => {
         renderedGroups.forEach((g, i) => {
-          const hide = hiddenSources.has(g.source) || (!showAll && i >= INITIAL_LIMIT);
+          const hide = hiddenSources.has(g.source) || hiddenLevels.has(g.level) || (!showAll && i >= INITIAL_LIMIT);
           g.mainRow.style.display = hide ? "none" : "table-row";
           if (g.toggleTr) g.toggleTr.style.display = hide ? "none" : "table-row";
           g.hiddenRows.forEach(r => {
@@ -245,6 +252,24 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
           });
         });
       };
+
+      const levelFiltersDiv = document.getElementById("level-filters");
+      allLevels.forEach(lvl => {
+        const btn = document.createElement("button");
+        btn.textContent = lvl;
+        btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#fff;cursor:pointer;color:#333";
+        btn.addEventListener("click", () => {
+          if (hiddenLevels.has(lvl)) {
+            hiddenLevels.delete(lvl);
+            btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#fff;cursor:pointer;color:#333";
+          } else {
+            hiddenLevels.add(lvl);
+            btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#e9ecef;cursor:pointer;color:#999;text-decoration:line-through";
+          }
+          applyFilter();
+        });
+        levelFiltersDiv.appendChild(btn);
+      });
 
       allSources.forEach(src => {
         const btn = document.createElement("button");

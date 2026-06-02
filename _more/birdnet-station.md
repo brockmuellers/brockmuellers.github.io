@@ -72,9 +72,9 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
 
       const CURRENT_METRICS = [
         { label: "Upload",  value: uploadAge,             ...T.upload, fmt: v => v < 60 ? `${Math.round(v)}m ago` : v < 1440 ? `${Math.round(v / 60)}h ago` : ">1d ago" },
+        { label: "Disk",    value: h.disk["/"].used_pct,  ...T.disk,   fmt: v => `${v}% used` },
         { label: "Temp",    value: h.temp_c,              ...T.temp,   fmt: v => `${v}°C` },
         { label: "Memory",  value: h.memory_available_mb, ...T.memory, fmt: v => `${Math.round(v)} MB free` },
-        { label: "Disk",    value: h.disk["/"].used_pct,  ...T.disk,   fmt: v => `${v}% used` },
         { label: "WiFi",    value: h.wifi_signal_dbm,     ...T.wifi,   fmt: v => `${v} dBm` },
         { label: "Uptime",  value: h.uptime_seconds, color: "neutral",
           fmt: () => `${uptimeH > 0 ? uptimeH + "h " : ""}${uptimeM}m` },
@@ -82,8 +82,8 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
 
       const windowMetrics = w => [
         { label: "Max Temp",   value: w.temp_c.max,              ...T.temp,   fmt: v => `${v}°C` },
-        { label: "Avg WiFi",   value: w.wifi_signal_dbm.avg,     ...T.wifi,   fmt: v => `${Math.round(v)} dBm` },
         { label: "Min Memory", value: w.memory_available_mb.min, ...T.memory, fmt: v => `${Math.round(v)} MB free` },
+        { label: "Avg WiFi",   value: w.wifi_signal_dbm.avg,     ...T.wifi,   fmt: v => `${Math.round(v)} dBm` },
       ];
 
       const chipColor = m => {

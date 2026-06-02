@@ -10,7 +10,8 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
 
 <div id="machine-status">Loading...</div>
 <div id="machine-content" style="display:none">
-  <p style="margin:0 0 1.5em;color:#555;font-size:13px"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
+  <p style="margin:0 0 1em;color:#555;font-size:13px"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
+  <div id="health-metrics" style="margin:0 0 1.5em;display:flex;flex-wrap:wrap;gap:6px"></div>
   <div id="source-filters" style="margin:0 0 1em;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
     <span style="font-size:11px;color:#666;font-weight:normal">Sources:</span>
   </div>
@@ -45,6 +46,53 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
     .then(function(data) {
       document.getElementById("generated-at-value").textContent =
         new Date(data.generated_at).toLocaleString('en-US', { timeZone: data.timezone });
+
+      // Health metrics
+      var h = data.health;
+      var healthDiv = document.getElementById("health-metrics");
+      var BG = { green: "#dcfce7", yellow: "#fef9c3", red: "#fee2e2", neutral: "#f3f4f6" };
+      var FG = { green: "#166534", yellow: "#854d0e", red: "#991b1b", neutral: "#374151" };
+
+      var uploadAge = (new Date(data.generated_at) - new Date(h.last_successful_upload_at)) / 60000;
+      var uptimeH = Math.floor(h.uptime_seconds / 3600);
+      var uptimeM = Math.floor((h.uptime_seconds % 3600) / 60);
+
+      // Each entry: [label, value, color]
+      // For threshold-based entries, color is derived from value via the thresholds below.
+      var METRICS = [
+        // label            value                                                      green_thresh  yellow_thresh  higher_is_better  format
+        { label: "Upload",  value: uploadAge,                                          green: 60,    yellow: 180,   higher: false,
+          fmt: function(v) { return v < 60 ? Math.round(v) + "m ago" : v < 1440 ? Math.round(v / 60) + "h ago" : ">1d ago"; } },
+        { label: "Temp",    value: h.temp_c,                                           green: 60,    yellow: 70,    higher: false,
+          fmt: function(v) { return v + "°C"; } },
+        { label: "Memory",  value: h.memory_available_mb,                              green: 300,   yellow: 100,   higher: true,
+          fmt: function(v) { return Math.round(v) + " MB free"; } },
+        { label: "Disk",    value: h.disk["/"].used_pct,                               green: 70,    yellow: 85,    higher: false,
+          fmt: function(v) { return v + "% used"; } },
+        { label: "WiFi",    value: h.wifi_signal_dbm,                                  green: -65,   yellow: -80,   higher: true,
+          fmt: function(v) { return v + " dBm"; } },
+        { label: "Uptime",  value: h.uptime_seconds, color: "neutral",
+          fmt: function() { return (uptimeH > 0 ? uptimeH + "h " : "") + uptimeM + "m"; } },
+      ];
+
+      function chip(label, value, color) {
+        var el = document.createElement("span");
+        el.style.cssText = "display:inline-block;padding:3px 10px;border-radius:4px;font-size:12px;background:" + BG[color] + ";color:" + FG[color];
+        el.innerHTML = "<span style='opacity:0.7'>" + label + ":</span> " + value;
+        return el;
+      }
+
+      METRICS.forEach(function(m) {
+        var color = m.color;
+        if (!color) {
+          if (m.higher) {
+            color = m.value > m.green ? "green" : m.value > m.yellow ? "yellow" : "red";
+          } else {
+            color = m.value <= m.green ? "green" : m.value <= m.yellow ? "yellow" : "red";
+          }
+        }
+        healthDiv.appendChild(chip(m.label, m.fmt(m.value), color));
+      });
 
       var tbody = document.getElementById("event-log-body");
       var filtersDiv = document.getElementById("source-filters");

@@ -11,7 +11,8 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
 <div id="machine-status">Loading...</div>
 <div id="machine-content" style="display:none">
   <p style="margin:0 0 1em;color:#555;font-size:13px"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
-  <div id="health-metrics" style="margin:0 0 1.5em;display:flex;flex-direction:column;gap:8px"></div>
+  <div id="health-metrics" style="margin:0 0 1em;display:flex;flex-direction:column;gap:8px"></div>
+  <div id="metric-charts" style="margin:0 0 1.5em;display:flex;flex-wrap:wrap;gap:16px"></div>
   <div id="source-filters" style="margin:0 0 1em;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
     <span style="font-size:11px;color:#666;font-weight:normal">Sources:</span>
   </div>
@@ -108,6 +109,64 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
       healthDiv.appendChild(metricSection("Current",   CURRENT_METRICS));
       healthDiv.appendChild(metricSection("Last Hour", windowMetrics(data.last_hour)));
       healthDiv.appendChild(metricSection("Last Day",  windowMetrics(data.last_day)));
+
+      const CHART_METRICS = [
+        { key: "temp_c",              label: "Temperature", ...T.temp,   fmt: v => `${v.toFixed(1)}°C` },
+        { key: "memory_available_mb", label: "Memory Free", ...T.memory, fmt: v => `${Math.round(v)} MB` },
+        { key: "wifi_signal_dbm",     label: "WiFi Signal", ...T.wifi,   fmt: v => `${Math.round(v)} dBm` },
+      ];
+
+      const windows = [...data.metric_windows].sort((a, b) =>
+        new Date(a.window_start).getTime() - new Date(b.window_start).getTime()
+      );
+
+      if (windows && windows.length >= 2) {
+        const times = windows.map(w => new Date(w.window_start).getTime());
+        const tMin = Math.min(...times), tMax = Math.max(...times), tRange = tMax - tMin;
+        const chartsDiv = document.getElementById("metric-charts");
+        const fmtTime = ms => new Date(ms).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: data.timezone, hour12: false });
+        const midnightTimes = times.filter(t => fmtTime(t) === '00:00');
+        const fmtDate = ms => new Date(ms).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', timeZone: data.timezone });
+
+        CHART_METRICS.forEach(metric => {
+          if (!(metric.key in windows[0])) return;
+          const vals = windows.map(w => w[metric.key]);
+          const allVals = vals.flatMap(v => [v.min, v.max]);
+          const vMin = Math.min(...allVals), vMax = Math.max(...allVals);
+          const vRange = vMax - vMin || 1;
+
+          const W = 252, plotH = 67, H = plotH + 12, px = 4, py = 6;
+          const xf = t => px + ((t - tMin) / tRange) * (W - 2 * px);
+          const yf = v => plotH - py - ((v - vMin) / vRange) * (plotH - 2 * py);
+
+          const bandPts = [
+            ...vals.map((v, i) => `${xf(times[i])},${yf(v.min)}`),
+            ...[...vals].reverse().map((v, i) => `${xf(times[vals.length - 1 - i])},${yf(v.max)}`),
+          ].join(" ");
+          const avgPts = vals.map((v, i) => `${xf(times[i])},${yf(v.avg)}`).join(" ");
+
+          const latestColor = chipColor({ ...metric, value: vals[vals.length - 1].avg });
+
+          const wrap = document.createElement("div");
+          wrap.style.cssText = "display:flex;flex-direction:column;gap:2px";
+          wrap.innerHTML = `
+            <div style="font-size:11px;color:#999">${metric.label}</div>
+            <div style="display:flex;gap:3px;align-items:flex-start">
+              <div style="display:flex;flex-direction:column;justify-content:space-between;font-size:9px;color:#bbb;text-align:right;height:${plotH}px">
+                <span>${metric.fmt(vMax)}</span>
+                <span>${metric.fmt(vMin)}</span>
+              </div>
+              <svg width="${W}" height="${H}" style="display:block;border-radius:3px;background:#f9fafb">
+                <polygon points="${bandPts}" fill="${BG[latestColor]}" opacity="0.8"/>
+                <polyline points="${avgPts}" fill="none" stroke="${FG[latestColor]}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+                <text x="${px}" y="${H - 2}" text-anchor="start" font-size="9" fill="#bbb">${fmtTime(tMin)}</text>
+                <text x="${W - px}" y="${H - 2}" text-anchor="end" font-size="9" fill="#bbb">${fmtTime(tMax)}</text>
+                ${midnightTimes.map(t => `<text x="${xf(t).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="9" fill="#bbb">${fmtDate(t)}</text>`).join('')}
+              </svg>
+            </div>`;
+          chartsDiv.appendChild(wrap);
+        });
+      }
 
       const tbody = document.getElementById("event-log-body");
       const filtersDiv = document.getElementById("source-filters");

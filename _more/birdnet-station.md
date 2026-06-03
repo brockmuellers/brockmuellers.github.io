@@ -129,7 +129,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
         { key: "wifi_signal_dbm",     label: "WiFi Signal", ...T.wifi,   fmt: v => `${Math.round(v)} dBm` },
         { label: "Disk I/O", fmt: v => `${v.toFixed(1)} MB`, series: [
           { key: "disk_io_read_mb",  label: "Read",  color: "#2563eb" },
-          { key: "disk_io_write_mb", label: "Write", color: "#d97706" },
+          { key: "disk_io_write_mb", label: "Write", color: "#c026d3" },
         ]},
       ];
 
@@ -145,6 +145,13 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
         const fmtDate = ms => new Date(ms).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', timeZone: data.timezone });
         const W = 275, plotH = 70, H = plotH + 12, px = 4, py = 6;
         const CHART_STROKE = { green: "#16a34a", yellow: "#ca8a04", red: "#dc2626", neutral: "#6b7280" };
+
+        const buildBandSvg = (vals, tt, xf, yf, colorFn) =>
+          vals.slice(0, -1).map((v, i) => {
+            const vn = vals[i+1];
+            const pts = `${xf(tt[i]).toFixed(1)},${yf(v.min).toFixed(1)} ${xf(tt[i+1]).toFixed(1)},${yf(vn.min).toFixed(1)} ${xf(tt[i+1]).toFixed(1)},${yf(vn.max).toFixed(1)} ${xf(tt[i]).toFixed(1)},${yf(v.max).toFixed(1)}`;
+            return `<polygon points="${pts}" fill="${colorFn(i)}" opacity="0.15"/>`;
+          }).join('');
 
         const renderChart = (titleHtml, tt, vMin, vMax, fmt, buildInnerSvg) => {
           const vRange = vMax - vMin || 1;
@@ -178,13 +185,17 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
             const tt = ww.map(w => new Date(w.window_start).getTime());
             const allVals = ww.flatMap(w => metric.series.flatMap(s => [w[s.key].min, w[s.key].max]));
             const titleHtml = `<span>${metric.label}</span>${metric.series.map(s => `<span style="color:${s.color}">&#9679; ${s.label}</span>`).join('')}`;
-            renderChart(titleHtml, tt, Math.min(...allVals), Math.max(...allVals), metric.fmt, (xf, yf) =>
-              metric.series.map(s =>
+            renderChart(titleHtml, tt, Math.min(...allVals), Math.max(...allVals), metric.fmt, (xf, yf) => {
+              const bandsSvg = metric.series.map(s =>
+                buildBandSvg(ww.map(w => w[s.key]), tt, xf, yf, () => s.color)
+              ).join('');
+              const linesSvg = metric.series.map(s =>
                 ww.slice(0, -1).map((w, i) =>
                   `<line x1="${xf(tt[i]).toFixed(1)}" y1="${yf(w[s.key].avg).toFixed(1)}" x2="${xf(tt[i+1]).toFixed(1)}" y2="${yf(ww[i+1][s.key].avg).toFixed(1)}" stroke="${s.color}" stroke-width="1.5" stroke-linecap="round"/>`
                 ).join('')
-              ).join('')
-            );
+              ).join('');
+              return bandsSvg + linesSvg;
+            });
             return;
           }
 
@@ -193,12 +204,10 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
           const allVals = vals.flatMap(v => [v.min, v.max]);
           const pointColors = vals.map(v => chipColor({ ...metric, value: v.avg }));
           renderChart(metric.label, times, Math.min(...allVals), Math.max(...allVals), metric.fmt, (xf, yf) => {
-            const bandSvg = vals.slice(0, -1).map((v, i) => {
-              const c = chipColor({ ...metric, value: metric.higher ? v.min : v.max });
-              const fill = c === "green" ? "#e5e7eb" : BG[c];
-              const pts = `${xf(times[i]).toFixed(1)},${yf(v.min).toFixed(1)} ${xf(times[i+1]).toFixed(1)},${yf(vals[i+1].min).toFixed(1)} ${xf(times[i+1]).toFixed(1)},${yf(vals[i+1].max).toFixed(1)} ${xf(times[i]).toFixed(1)},${yf(v.max).toFixed(1)}`;
-              return `<polygon points="${pts}" fill="${fill}" opacity="0.6"/>`;
-            }).join('');
+            const bandSvg = buildBandSvg(vals, times, xf, yf, i => {
+              const c = chipColor({ ...metric, value: metric.higher ? vals[i].min : vals[i].max });
+              return CHART_STROKE[c];
+            });
             const segSvg = vals.slice(0, -1).map((v, i) =>
               `<line x1="${xf(times[i]).toFixed(1)}" y1="${yf(v.avg).toFixed(1)}" x2="${xf(times[i+1]).toFixed(1)}" y2="${yf(vals[i+1].avg).toFixed(1)}" stroke="${CHART_STROKE[pointColors[i]]}" stroke-width="1.5" stroke-linecap="round"/>`
             ).join('');

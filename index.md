@@ -27,7 +27,7 @@ I'm passionate about climate change and sustainability, as well as music, plants
 	* [Travel log]({% link about.md %}) exploring my sabbatical travels ([github](https://github.com/brockmuellers/travel-log))
 	* ACB tracker for doing Canadian taxes ([github](https://github.com/brockmuellers/acb-tracker-ca))
 	* OCR transcription of handwritten letters ([github](https://github.com/brockmuellers/family-history))
-	* Birdnet
+	* [Home BirdNET-Pi installation]({% link birds.md %}) with [custom telemetry]({% link _more/birdnet-station.md %}) ([github](https://github.com/brockmuellers/birdnet-tools))
 
 {% endif %}
 

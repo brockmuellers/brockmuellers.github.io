@@ -58,7 +58,9 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
       const BG = { green: "#dcfce7", yellow: "#fef9c3", red: "#fee2e2", neutral: "#f3f4f6" };
       const FG = { green: "#166534", yellow: "#854d0e", red: "#991b1b", neutral: "#374151" };
 
-      const uploadAge = (new Date(data.generated_at) - new Date(h.last_successful_upload_at)) / 60000;
+      const uploadTs = new Date(data.generated_at).getTime();
+      const uploadAge = () => (Date.now() - uploadTs) / 60000;
+      const fmtUploadAge = () => { const v = uploadAge(); return v < 60 ? `${Math.round(v)}m ago` : v < 1440 ? `${Math.round(v / 60)}h ago` : ">1d ago"; };
       const uptimeH = Math.floor(h.uptime_seconds / 3600);
       const uptimeM = Math.floor((h.uptime_seconds % 3600) / 60);
 
@@ -71,7 +73,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
       };
 
       const CURRENT_METRICS = [
-        { label: "Upload",  value: uploadAge,             ...T.upload, fmt: v => v < 60 ? `${Math.round(v)}m ago` : v < 1440 ? `${Math.round(v / 60)}h ago` : ">1d ago" },
+        { label: "Upload",  value: uploadAge(),            ...T.upload, fmt: fmtUploadAge, id: "upload-chip" },
         { label: "Disk",    value: h.disk["/"].used_pct,  ...T.disk,   fmt: v => `${v}% used` },
         { label: "Temp",    value: h.temp_c,              ...T.temp,   fmt: v => `${v}°C` },
         { label: "Memory",  value: h.memory_available_mb, ...T.memory, fmt: v => `${Math.round(v)} MB free` },
@@ -93,8 +95,9 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
           : (m.value <= m.green ? "green" : m.value <= m.yellow ? "yellow" : "red");
       };
 
-      const chip = (label, value, color) => {
+      const chip = (label, value, color, id) => {
         const el = document.createElement("span");
+        if (id) el.id = id;
         el.style.cssText = `display:inline-block;padding:3px 10px;border-radius:4px;font-size:12px;background:${BG[color]};color:${FG[color]}`;
         el.innerHTML = `<span style='opacity:0.7'>${label}:</span> ${value}`;
         return el;
@@ -107,7 +110,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
         lbl.style.cssText = "font-size:11px;color:#999;width:60px;flex-shrink:0";
         lbl.textContent = sectionLabel;
         row.appendChild(lbl);
-        metrics.forEach(m => row.appendChild(chip(m.label, m.fmt(m.value), chipColor(m))));
+        metrics.forEach(m => row.appendChild(chip(m.label, m.fmt(m.value), chipColor(m), m.id)));
         return row;
       };
 
@@ -115,10 +118,19 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
       healthDiv.appendChild(metricSection("Last Hour", windowMetrics(data.last_hour)));
       healthDiv.appendChild(metricSection("Last Day",  windowMetrics(data.last_day)));
 
+      setInterval(() => {
+        const el = document.getElementById("upload-chip");
+        if (el) el.innerHTML = `<span style='opacity:0.7'>Upload:</span> ${fmtUploadAge()}`;
+      }, 60000);
+
       const CHART_METRICS = [
         { key: "temp_c",              label: "Temperature", ...T.temp,   fmt: v => `${v.toFixed(1)}°C` },
         { key: "memory_available_mb", label: "Memory Free", ...T.memory, fmt: v => `${Math.round(v)} MB` },
         { key: "wifi_signal_dbm",     label: "WiFi Signal", ...T.wifi,   fmt: v => `${Math.round(v)} dBm` },
+        { label: "Disk I/O", fmt: v => `${v.toFixed(1)} MB`, series: [
+          { key: "disk_io_read_mb",  label: "Read",  color: "#2563eb" },
+          { key: "disk_io_write_mb", label: "Write", color: "#d97706" },
+        ]},
       ];
 
       const windows = [...data.metric_windows].sort((a, b) =>
@@ -130,50 +142,68 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
         const tMin = Math.min(...times), tMax = Math.max(...times), tRange = tMax - tMin;
         const chartsDiv = document.getElementById("metric-charts");
         const fmtTime = ms => new Date(ms).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: data.timezone, hour12: false });
-        const midnightTimes = times.filter(t => fmtTime(t) === '00:00');
         const fmtDate = ms => new Date(ms).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', timeZone: data.timezone });
+        const W = 275, plotH = 70, H = plotH + 12, px = 4, py = 6;
+        const CHART_STROKE = { green: "#16a34a", yellow: "#ca8a04", red: "#dc2626", neutral: "#6b7280" };
 
-        CHART_METRICS.forEach(metric => {
-          if (!(metric.key in windows[0])) return;
-          const vals = windows.map(w => w[metric.key]);
-          const allVals = vals.flatMap(v => [v.min, v.max]);
-          const vMin = Math.min(...allVals), vMax = Math.max(...allVals);
+        const renderChart = (titleHtml, tt, vMin, vMax, fmt, buildInnerSvg) => {
           const vRange = vMax - vMin || 1;
-
-          const W = 252, plotH = 67, H = plotH + 12, px = 4, py = 6;
-          const xf = t => px + ((t - tMin) / tRange) * (W - 2 * px);
+          const t0 = tt[0], t1 = tt[tt.length - 1], tr = t1 - t0;
+          const xf = t => px + ((t - t0) / tr) * (W - 2 * px);
           const yf = v => plotH - py - ((v - vMin) / vRange) * (plotH - 2 * py);
-
-          const CHART_STROKE = { green: "#16a34a", yellow: "#ca8a04", red: "#dc2626", neutral: "#6b7280" };
-          const pointColors = vals.map(v => chipColor({ ...metric, value: v.avg }));
-          const bandSvg = vals.slice(0, -1).map((v, i) => {
-            const c = chipColor({ ...metric, value: metric.higher ? v.min : v.max });
-            const fill = c === "green" ? "#e5e7eb" : BG[c];
-            const pts = `${xf(times[i]).toFixed(1)},${yf(v.min).toFixed(1)} ${xf(times[i+1]).toFixed(1)},${yf(vals[i+1].min).toFixed(1)} ${xf(times[i+1]).toFixed(1)},${yf(vals[i+1].max).toFixed(1)} ${xf(times[i]).toFixed(1)},${yf(v.max).toFixed(1)}`;
-            return `<polygon points="${pts}" fill="${fill}" opacity="0.6"/>`;
-          }).join('');
-          const segSvg = vals.slice(0, -1).map((v, i) =>
-            `<line x1="${xf(times[i]).toFixed(1)}" y1="${yf(v.avg).toFixed(1)}" x2="${xf(times[i+1]).toFixed(1)}" y2="${yf(vals[i+1].avg).toFixed(1)}" stroke="${CHART_STROKE[pointColors[i]]}" stroke-width="1.5" stroke-linecap="round"/>`
-          ).join('');
-
+          const midnightTt = tt.filter(t => fmtTime(t) === '00:00');
           const wrap = document.createElement("div");
           wrap.style.cssText = "display:flex;flex-direction:column;gap:2px";
           wrap.innerHTML = `
-            <div style="font-size:11px;color:#999">${metric.label}</div>
+            <div style="font-size:11px;color:#999;display:flex;gap:8px;align-items:center">${titleHtml}</div>
             <div style="display:flex;gap:3px;align-items:flex-start">
               <div style="display:flex;flex-direction:column;justify-content:space-between;font-size:9px;color:#bbb;text-align:right;height:${plotH}px">
-                <span>${metric.fmt(vMax)}</span>
-                <span>${metric.fmt(vMin)}</span>
+                <span>${fmt(vMax)}</span>
+                <span>${fmt(vMin)}</span>
               </div>
               <svg width="${W}" height="${H}" style="display:block;border-radius:3px;background:#f9fafb">
-                ${bandSvg}
-                ${segSvg}
-                <text x="${px}" y="${H - 2}" text-anchor="start" font-size="9" fill="#bbb">${fmtTime(tMin)}</text>
-                <text x="${W - px}" y="${H - 2}" text-anchor="end" font-size="9" fill="#bbb">${fmtTime(tMax)}</text>
-                ${midnightTimes.map(t => `<text x="${xf(t).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="9" fill="#bbb">${fmtDate(t)}</text>`).join('')}
+                ${buildInnerSvg(xf, yf)}
+                <text x="${px}" y="${H - 2}" text-anchor="start" font-size="9" fill="#bbb">${fmtTime(t0)}</text>
+                <text x="${W - px}" y="${H - 2}" text-anchor="end" font-size="9" fill="#bbb">${fmtTime(t1)}</text>
+                ${midnightTt.map(t => `<text x="${xf(t).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="9" fill="#bbb">${fmtDate(t)}</text>`).join('')}
               </svg>
             </div>`;
           chartsDiv.appendChild(wrap);
+        };
+
+        CHART_METRICS.forEach(metric => {
+          if (metric.series) {
+            const ww = windows.filter(w => metric.series.every(s => w[s.key] != null));
+            if (ww.length < 2) return;
+            const tt = ww.map(w => new Date(w.window_start).getTime());
+            const allVals = ww.flatMap(w => metric.series.flatMap(s => [w[s.key].min, w[s.key].max]));
+            const titleHtml = `<span>${metric.label}</span>${metric.series.map(s => `<span style="color:${s.color}">&#9679; ${s.label}</span>`).join('')}`;
+            renderChart(titleHtml, tt, Math.min(...allVals), Math.max(...allVals), metric.fmt, (xf, yf) =>
+              metric.series.map(s =>
+                ww.slice(0, -1).map((w, i) =>
+                  `<line x1="${xf(tt[i]).toFixed(1)}" y1="${yf(w[s.key].avg).toFixed(1)}" x2="${xf(tt[i+1]).toFixed(1)}" y2="${yf(ww[i+1][s.key].avg).toFixed(1)}" stroke="${s.color}" stroke-width="1.5" stroke-linecap="round"/>`
+                ).join('')
+              ).join('')
+            );
+            return;
+          }
+
+          if (!(metric.key in windows[0])) return;
+          const vals = windows.map(w => w[metric.key]);
+          const allVals = vals.flatMap(v => [v.min, v.max]);
+          const pointColors = vals.map(v => chipColor({ ...metric, value: v.avg }));
+          renderChart(metric.label, times, Math.min(...allVals), Math.max(...allVals), metric.fmt, (xf, yf) => {
+            const bandSvg = vals.slice(0, -1).map((v, i) => {
+              const c = chipColor({ ...metric, value: metric.higher ? v.min : v.max });
+              const fill = c === "green" ? "#e5e7eb" : BG[c];
+              const pts = `${xf(times[i]).toFixed(1)},${yf(v.min).toFixed(1)} ${xf(times[i+1]).toFixed(1)},${yf(vals[i+1].min).toFixed(1)} ${xf(times[i+1]).toFixed(1)},${yf(vals[i+1].max).toFixed(1)} ${xf(times[i]).toFixed(1)},${yf(v.max).toFixed(1)}`;
+              return `<polygon points="${pts}" fill="${fill}" opacity="0.6"/>`;
+            }).join('');
+            const segSvg = vals.slice(0, -1).map((v, i) =>
+              `<line x1="${xf(times[i]).toFixed(1)}" y1="${yf(v.avg).toFixed(1)}" x2="${xf(times[i+1]).toFixed(1)}" y2="${yf(vals[i+1].avg).toFixed(1)}" stroke="${CHART_STROKE[pointColors[i]]}" stroke-width="1.5" stroke-linecap="round"/>`
+            ).join('');
+            return bandSvg + segSvg;
+          });
         });
       }
 

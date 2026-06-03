@@ -21,15 +21,11 @@ I'm passionate about climate change and sustainability, as well as music, plants
 
 * [LinkedIn](https://www.linkedin.com/in/{{ site.linkedin_username }})
 
-{% if jekyll.environment == "development" %}
-
 * Featured projects:
-	* [Travel log]({% link about.md %}) exploring my sabbatical travels ([github](https://github.com/brockmuellers/travel-log))
-	* ACB tracker for doing Canadian taxes ([github](https://github.com/brockmuellers/acb-tracker-ca))
-	* OCR transcription of handwritten letters ([github](https://github.com/brockmuellers/family-history))
-	* [Home BirdNET-Pi installation]({% link birds.md %}) with [custom telemetry]({% link _more/birdnet-station.md %}) ([github](https://github.com/brockmuellers/birdnet-tools))
-
-{% endif %}
+	* [Travel log]({% link about.md %}) exploring my sabbatical travels {% include github-link.html repo="travel-log" %}
+	* ACB tracker for doing Canadian taxes {% include github-link.html repo="acb-tracker-ca" %}
+	* OCR transcription of handwritten letters {% include github-link.html repo="family-history" %}
+	* [Home BirdNET-Pi installation]({% link birds.md %}) with [custom telemetry]({% link _more/birdnet-station.md %}) {% include github-link.html repo="birdnet-tools" %}
 
 ---
 

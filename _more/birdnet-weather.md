@@ -200,7 +200,8 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
         const tbody = document.getElementById("daily-body");
         days.slice(-DAILY_ROWS).reverse().forEach((d, i) => {
           const tr = tbody.insertRow();
-          const label = new Date(d.window_start).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: tz });
+          // window_start is a bare local date ("2026-11-09"), which JS parses as UTC midnight, so format it in UTC too
+          const label = new Date(d.window_start).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
           const cells = [
             [i === 0 ? `${label} (so far)` : label, "left"],
             [fmtTemp(d.temp_c && d.temp_c.min), "right"],

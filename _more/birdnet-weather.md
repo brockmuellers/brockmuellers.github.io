@@ -122,9 +122,11 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
 
         // ---- Hourly charts (last 7 days) ----
         const cutoff = new Date(data.generated_at).getTime() - 7 * DAY;
-        const hours = (data.hourly || [])
-          .map(w => ({ ...w, t: new Date(w.window_start).getTime() }))
-          .filter(w => w.t >= cutoff);
+        // Hours with no entry (both sensors out) become empty slots, so they're drawn as gaps too
+        const byT = new Map((data.hourly || []).map(w => [new Date(w.window_start).getTime(), w]));
+        const times = [...byT.keys()].filter(t => t >= cutoff);
+        const hours = [];
+        if (times.length) for (let t = Math.min(...times); t <= Math.max(...times); t += HOUR) hours.push({ ...byT.get(t), t });
 
         const chartsDiv = document.getElementById("weather-charts");
         const W = 740, plotH = 90, H = plotH + 14, padL = 44, padR = 4, py = 6;
@@ -166,10 +168,16 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
             // Connect only consecutive hours that both have data, so gaps stay gaps
             for (let i = 0; i < hours.length - 1; i++) {
               const a = hours[i], b = hours[i + 1], va = getVal(a), vb = getVal(b);
-              if (va == null || vb == null || b.t - a.t > HOUR) continue;
+              if (va == null || vb == null) continue;
               svg += `<polygon points="${f(mid(a.t))},${f(yf(va.min))} ${f(mid(b.t))},${f(yf(vb.min))} ${f(mid(b.t))},${f(yf(vb.max))} ${f(mid(a.t))},${f(yf(va.max))}" fill="${color}" opacity="0.15"/>`;
               svg += `<line x1="${f(mid(a.t))}" y1="${f(yf(va.avg))}" x2="${f(mid(b.t))}" y2="${f(yf(vb.avg))}" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>`;
             }
+            // A lone hour (no data on either side) has no line, so draw it as a dot
+            hours.forEach((w, i) => {
+              const v = getVal(w);
+              if (v != null && getVal(hours[i - 1] || {}) == null && getVal(hours[i + 1] || {}) == null)
+                svg += `<circle cx="${f(mid(w.t))}" cy="${f(yf(v.avg))}" r="2" fill="${color}"/>`;
+            });
           }
 
           const wrap = document.createElement("div");

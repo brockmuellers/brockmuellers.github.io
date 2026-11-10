@@ -74,7 +74,7 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
   // Optional extras: if either fails, the page still renders without it
   const getJson = u => fetch(u).then(r => r.ok ? r.json() : null).catch(() => null);
   const climP = getJson("{{ '/assets/weather/climatology.json' | relative_url }}");
-  const omP = getJson("https://api.open-meteo.com/v1/forecast?latitude=49.27&longitude=-123.06&hourly=temperature_2m&past_days=8&forecast_days=1&timezone=GMT&timeformat=unixtime");
+  const omP = getJson("https://api.open-meteo.com/v1/forecast?latitude=49.27&longitude=-123.06&hourly=temperature_2m,relative_humidity_2m&past_days=8&forecast_days=1&timezone=GMT&timeformat=unixtime");
   const ecP = getJson("https://api.weather.gc.ca/collections/climate-daily/items?f=json&CLIMATE_IDENTIFIER=1108446&sortby=-LOCAL_DATE&limit=31&properties=LOCAL_DATE,TOTAL_PRECIPITATION");
 
   fetch(url)
@@ -221,21 +221,25 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
           chartsDiv.appendChild(wrap);
         };
 
-        // Open-Meteo hourly temperature, and how far the sensor's hourly averages sit from it
-        let omTemp = null, tempTitle = "Temperature";
-        if (om && om.hourly) {
-          omTemp = new Map(om.hourly.time.map((s, i) => [s * 1000, om.hourly.temperature_2m[i]]));
+        // Open-Meteo hourly readings as a Map (ms -> value), and the sensor's average offset from them
+        const omSeries = key => om && om.hourly ? new Map(om.hourly.time.map((s, i) => [s * 1000, om.hourly[key][i]])) : null;
+        const avgDiff = (ref, getVal) => {
+          if (!ref) return null;
           // Compare each sensor hour (t to t+1h) with the midpoint of Open-Meteo's readings at t and t+1h
-          const diffs = hours.filter(w => w.temp_c && omTemp.get(w.t) != null && omTemp.get(w.t + HOUR) != null)
-            .map(w => w.temp_c.avg - (omTemp.get(w.t) + omTemp.get(w.t + HOUR)) / 2);
-          if (diffs.length) {
-            const d = diffs.reduce((s, x) => s + x, 0) / diffs.length;
-            const mag = useF ? `${(Math.abs(d) * 9 / 5).toFixed(1)}°F` : `${Math.abs(d).toFixed(1)}°C`;
-            tempTitle += ` <span style="color:#999">· this week the sensor averaged ${mag} ${d >= 0 ? "warmer" : "cooler"} than Open-Meteo's current readings (dashed line)</span>`;
-          }
-        }
+          const diffs = hours.filter(w => getVal(w) && ref.get(w.t) != null && ref.get(w.t + HOUR) != null)
+            .map(w => getVal(w).avg - (ref.get(w.t) + ref.get(w.t + HOUR)) / 2);
+          return diffs.length ? diffs.reduce((s, x) => s + x, 0) / diffs.length : null;
+        };
+        const vsOm = (mag, word) => ` <span style="color:#999">· this week the sensor averaged ${mag} ${word} than Open-Meteo's current readings (dashed line)</span>`;
+
+        const omTemp = omSeries("temperature_2m"), dT = avgDiff(omTemp, w => w.temp_c);
+        const tempTitle = "Temperature" + (dT == null ? "" :
+          vsOm(useF ? `${(Math.abs(dT) * 9 / 5).toFixed(1)}°F` : `${Math.abs(dT).toFixed(1)}°C`, dT >= 0 ? "warmer" : "cooler"));
         renderChart(tempTitle, COLOR.temp, fmtTemp, w => w.temp_c, false, omTemp);
-        renderChart("Humidity", COLOR.humidity, fmtHum, w => w.humidity, false);
+
+        const omHum = omSeries("relative_humidity_2m"), dH = avgDiff(omHum, w => w.humidity);
+        const humTitle = "Humidity" + (dH == null ? "" : vsOm(`${Math.abs(dH).toFixed(0)} points`, dH >= 0 ? "higher" : "lower"));
+        renderChart(humTitle, COLOR.humidity, fmtHum, w => w.humidity, false, omHum);
         renderChart("Rain per hour", COLOR.rain, fmtRain, w => w.rain_mm, true);
 
         // ---- This month vs. normal ----

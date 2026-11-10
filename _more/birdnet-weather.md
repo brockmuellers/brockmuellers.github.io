@@ -38,6 +38,7 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
   </table>
 </div>
 
+{% include chart.html %}
 <script>
 {
   const url = "{{ page.weather_data_url }}";
@@ -143,8 +144,7 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
           const mid = t => xf(t + HOUR / 2);
           const vMin = bars ? 0 : Math.min(...present.map(w => getVal(w).min));
           const vMax = bars ? Math.max(...present.map(getVal)) : Math.max(...present.map(w => getVal(w).max));
-          const vRange = vMax - vMin || 1;
-          const yf = v => plotH - py - ((v - vMin) / vRange) * (plotH - 2 * py);
+          const yf = chartYScale(vMin, vMax, plotH, py);
           const f = n => n.toFixed(1);
 
           let svg = "";
@@ -169,8 +169,8 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
             for (let i = 0; i < hours.length - 1; i++) {
               const a = hours[i], b = hours[i + 1], va = getVal(a), vb = getVal(b);
               if (va == null || vb == null) continue;
-              svg += `<polygon points="${f(mid(a.t))},${f(yf(va.min))} ${f(mid(b.t))},${f(yf(vb.min))} ${f(mid(b.t))},${f(yf(vb.max))} ${f(mid(a.t))},${f(yf(va.max))}" fill="${color}" opacity="0.15"/>`;
-              svg += `<line x1="${f(mid(a.t))}" y1="${f(yf(va.avg))}" x2="${f(mid(b.t))}" y2="${f(yf(vb.avg))}" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>`;
+              svg += chartBand(mid(a.t), va, mid(b.t), vb, yf, color);
+              svg += chartLine(mid(a.t), va, mid(b.t), vb, yf, color);
             }
             // A lone hour (no data on either side) has no line, so draw it as a dot
             hours.forEach((w, i) => {

@@ -34,6 +34,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
   </table>
 </div>
 
+{% include chart.html %}
 <script>
 {
   const url = "{{ page.event_log_url }}";
@@ -146,18 +147,16 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
         const W = 275, plotH = 70, H = plotH + 12, px = 4, py = 6;
         const CHART_STROKE = { green: "#16a34a", yellow: "#ca8a04", red: "#dc2626", neutral: "#6b7280" };
 
+        // Band and avg-line segments between consecutive points; colorFn(i) colors segment i
         const buildBandSvg = (vals, tt, xf, yf, colorFn) =>
-          vals.slice(0, -1).map((v, i) => {
-            const vn = vals[i+1];
-            const pts = `${xf(tt[i]).toFixed(1)},${yf(v.min).toFixed(1)} ${xf(tt[i+1]).toFixed(1)},${yf(vn.min).toFixed(1)} ${xf(tt[i+1]).toFixed(1)},${yf(vn.max).toFixed(1)} ${xf(tt[i]).toFixed(1)},${yf(v.max).toFixed(1)}`;
-            return `<polygon points="${pts}" fill="${colorFn(i)}" opacity="0.15"/>`;
-          }).join('');
+          vals.slice(0, -1).map((v, i) => chartBand(xf(tt[i]), v, xf(tt[i+1]), vals[i+1], yf, colorFn(i))).join('');
+        const buildLineSvg = (vals, tt, xf, yf, colorFn) =>
+          vals.slice(0, -1).map((v, i) => chartLine(xf(tt[i]), v, xf(tt[i+1]), vals[i+1], yf, colorFn(i))).join('');
 
         const renderChart = (titleHtml, tt, vMin, vMax, fmt, buildInnerSvg) => {
-          const vRange = vMax - vMin || 1;
           const t0 = tt[0], t1 = tt[tt.length - 1], tr = t1 - t0;
           const xf = t => px + ((t - t0) / tr) * (W - 2 * px);
-          const yf = v => plotH - py - ((v - vMin) / vRange) * (plotH - 2 * py);
+          const yf = chartYScale(vMin, vMax, plotH, py);
           const midnightTt = tt.filter(t => fmtTime(t) === '00:00');
           const wrap = document.createElement("div");
           wrap.style.cssText = "display:flex;flex-direction:column;gap:2px";
@@ -190,9 +189,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
                 buildBandSvg(ww.map(w => w[s.key]), tt, xf, yf, () => s.color)
               ).join('');
               const linesSvg = metric.series.map(s =>
-                ww.slice(0, -1).map((w, i) =>
-                  `<line x1="${xf(tt[i]).toFixed(1)}" y1="${yf(w[s.key].avg).toFixed(1)}" x2="${xf(tt[i+1]).toFixed(1)}" y2="${yf(ww[i+1][s.key].avg).toFixed(1)}" stroke="${s.color}" stroke-width="1.5" stroke-linecap="round"/>`
-                ).join('')
+                buildLineSvg(ww.map(w => w[s.key]), tt, xf, yf, () => s.color)
               ).join('');
               return bandsSvg + linesSvg;
             });
@@ -208,9 +205,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
               const c = chipColor({ ...metric, value: metric.higher ? vals[i].min : vals[i].max });
               return CHART_STROKE[c];
             });
-            const segSvg = vals.slice(0, -1).map((v, i) =>
-              `<line x1="${xf(times[i]).toFixed(1)}" y1="${yf(v.avg).toFixed(1)}" x2="${xf(times[i+1]).toFixed(1)}" y2="${yf(vals[i+1].avg).toFixed(1)}" stroke="${CHART_STROKE[pointColors[i]]}" stroke-width="1.5" stroke-linecap="round"/>`
-            ).join('');
+            const segSvg = buildLineSvg(vals, times, xf, yf, i => CHART_STROKE[pointColors[i]]);
             return bandSvg + segSvg;
           });
         });

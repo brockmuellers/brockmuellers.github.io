@@ -1,0 +1,22 @@
+<script>
+// Shared SVG chart helpers for the BirdNET pages. Each returns an SVG string.
+// Values passed to chartBand/chartLine are {min, max, avg} objects.
+
+// Maps a value to a y coordinate: vMax at the top of the plot, vMin at the bottom, py of padding
+function chartYScale(vMin, vMax, plotH, py) {
+  const vRange = vMax - vMin || 1;
+  return v => plotH - py - ((v - vMin) / vRange) * (plotH - 2 * py);
+}
+
+// Shaded min–max band between two points
+function chartBand(x1, a, x2, b, yf, color) {
+  const f = n => n.toFixed(1);
+  return `<polygon points="${f(x1)},${f(yf(a.min))} ${f(x2)},${f(yf(b.min))} ${f(x2)},${f(yf(b.max))} ${f(x1)},${f(yf(a.max))}" fill="${color}" opacity="0.15"/>`;
+}
+
+// Avg line segment between two points
+function chartLine(x1, a, x2, b, yf, color) {
+  const f = n => n.toFixed(1);
+  return `<line x1="${f(x1)}" y1="${f(yf(a.avg))}" x2="${f(x2)}" y2="${f(yf(b.avg))}" stroke="${color}" stroke-width="1.5" stroke-linecap="round"/>`;
+}
+</script>

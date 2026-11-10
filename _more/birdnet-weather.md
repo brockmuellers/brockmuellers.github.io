@@ -61,7 +61,7 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
   const HOUR = 3600000, DAY = 24 * HOUR;
   const STALE_MINUTES = 30;
   const DAILY_ROWS = 14;
-  const COLOR = { temp: "#ea580c", humidity: "#0d9488", rain: "#2563eb" };
+  const COLOR = { temp: "#ea580c", humidity: "#0d9488", rain: "#2563eb", dew: "#7c3aed" };
   const BG = { yellow: "#fef9c3", red: "#fee2e2", neutral: "#f3f4f6" };
   const FG = { yellow: "#854d0e", red: "#991b1b", neutral: "#374151" };
 
@@ -159,7 +159,8 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
 
         // getVal(w) returns a number (bars) or {min,max,avg} (band + line), or undefined if missing.
         // ref (optional) is a Map of hour start ms -> value, drawn as a dashed gray comparison line.
-        const renderChart = (title, color, fmt, getVal, bars, ref) => {
+        // extra (optional) is {getVal, color}: a second series (one number per hour) drawn as a thin line.
+        const renderChart = (title, color, fmt, getVal, bars, ref, extra) => {
           if (hours.length < 2) return;
           const present = hours.filter(w => getVal(w) != null);
           if (!present.length) return;
@@ -167,7 +168,8 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
           const xf = t => padL + ((t - t0) / (t1 - t0)) * (W - padL - padR);
           const mid = t => xf(t + HOUR / 2);
           const refPts = ref ? [...ref].filter(([t, v]) => t >= t0 && t <= t1 && v != null) : [];
-          const refVals = refPts.map(([, v]) => v);
+          const extraVals = extra ? hours.map(extra.getVal).filter(v => v != null) : [];
+          const refVals = [...refPts.map(([, v]) => v), ...extraVals];
           const vMin = bars ? 0 : Math.min(...present.map(w => getVal(w).min), ...refVals);
           const vMax = bars ? Math.max(...present.map(getVal)) : Math.max(...present.map(w => getVal(w).max), ...refVals);
           const yf = chartYScale(vMin, vMax, plotH, py);
@@ -205,6 +207,12 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
                 svg += `<circle cx="${f(mid(w.t))}" cy="${f(yf(v.avg))}" r="2" fill="${color}"/>`;
             });
           }
+          // Second series, connecting consecutive hours that both have a value
+          if (extra) for (let i = 0; i < hours.length - 1; i++) {
+            const va = extra.getVal(hours[i]), vb = extra.getVal(hours[i + 1]);
+            if (va != null && vb != null)
+              svg += `<line x1="${f(mid(hours[i].t))}" y1="${f(yf(va))}" x2="${f(mid(hours[i + 1].t))}" y2="${f(yf(vb))}" stroke="${extra.color}" stroke-width="1" stroke-linecap="round" opacity="0.5"/>`;
+          }
           // Comparison line; its values are instants at the top of each hour
           if (refPts.length > 1)
             svg += `<polyline points="${refPts.map(([t, v]) => `${f(xf(t))},${f(yf(v))}`).join(" ")}" fill="none" stroke="#9ca3af" stroke-width="1" stroke-dasharray="4 3"/>`;
@@ -233,9 +241,15 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
         const vsOm = (mag, word) => ` <span style="color:#999">· this week the sensor averaged ${mag} ${word} than Open-Meteo's current readings (dashed line)</span>`;
 
         const omTemp = omSeries("temperature_2m"), dT = avgDiff(omTemp, w => w.temp_c);
-        const tempTitle = "Temperature" + (dT == null ? "" :
+        // Dew point from the hour's average temperature and humidity (Magnus formula)
+        const dewPoint = w => {
+          if (!w.temp_c || !w.humidity) return null;
+          const g = Math.log(w.humidity.avg / 100) + 17.62 * w.temp_c.avg / (243.12 + w.temp_c.avg);
+          return 243.12 * g / (17.62 - g);
+        };
+        const tempTitle = `Temperature <span style="color:${COLOR.dew}">and dew point</span>` + (dT == null ? "" :
           vsOm(useF ? `${(Math.abs(dT) * 9 / 5).toFixed(1)}°F` : `${Math.abs(dT).toFixed(1)}°C`, dT >= 0 ? "warmer" : "cooler"));
-        renderChart(tempTitle, COLOR.temp, fmtTemp, w => w.temp_c, false, omTemp);
+        renderChart(tempTitle, COLOR.temp, fmtTemp, w => w.temp_c, false, omTemp, { getVal: dewPoint, color: COLOR.dew });
 
         const omHum = omSeries("relative_humidity_2m"), dH = avgDiff(omHum, w => w.humidity);
         const humTitle = "Humidity" + (dH == null ? "" : vsOm(`${Math.abs(dH).toFixed(0)} points`, dH >= 0 ? "higher" : "lower"));

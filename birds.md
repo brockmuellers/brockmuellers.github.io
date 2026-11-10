@@ -12,6 +12,10 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
       <img src="/assets/images/birdnet_logo.png" style="height:22px;width:auto;display:block">
       <span style="position:relative;top:1px">BirdNET Station</span>
     </a>
+    <a href="/birdnet-weather/" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:2px solid #2d6a4f;border-radius:4px;text-decoration:none;font-size:15px;line-height:1;color:#2d6a4f;background:#f0f7f4;flex-shrink:0">
+      <span style="font-size:20px;line-height:22px;position:relative;top:2px">🌦</span>
+      <span style="position:relative;top:1px">Weather</span>
+    </a>
     <span style="font-size:12px;color:#555">Updated at: <span id="generated-at-value"></span></span>
   </div>
   <h3>Recent detections</h3>

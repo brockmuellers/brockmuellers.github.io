@@ -33,6 +33,20 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
   #daily th:first-child, #daily td:first-child { text-align: left; }
   #daily th:last-child, #daily td:last-child { padding: 3px 0; }
   #daily td + td { color: #555; }
+
+  #forecast-options { margin: 0 0 0.5em; color: #555; font-size: 13px; }
+  #forecast { border-collapse: collapse; font-size: 13px; margin: 0 0 0.5em; }
+  #forecast th { font-weight: normal; color: #666; font-size: 11px; }
+  #forecast th, #forecast td { text-align: right; padding: 3px 0 3px 16px; }
+  #forecast th:first-child, #forecast td:first-child { text-align: left; padding-left: 0; }
+  #forecast tfoot td { color: #555; }
+  #forecast tfoot tr:first-child td { border-top: 2px solid #9ca3af; }  /* Separates the days from the stats */
+  #forecast .best { font-weight: bold; }
+  /* "?" hover tips; tabindex lets a tap show them on touch screens */
+  .tip { position: relative; cursor: help; }
+  .tip-icon { display: inline-block; width: 13px; height: 13px; line-height: 13px; border-radius: 50%; background: #e5e7eb; color: #555; font-size: 10px; text-align: center; }
+  .tip::after { content: attr(data-tip); display: none; position: absolute; left: 0; top: 100%; z-index: 1; width: 240px; padding: 6px 8px; border-radius: 4px; background: #374151; color: #fff; font-size: 12px; font-weight: normal; white-space: normal; text-align: left; }
+  .tip:hover::after, .tip:focus::after { display: block; }
 </style>
 
 <div id="weather-status">Loading...</div>
@@ -71,6 +85,28 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
     </thead>
     <tbody id="daily-body"></tbody>
   </table>
+  <div id="forecast-section" style="display:none">
+    <h3>Forecast accuracy</h3>
+    <div id="forecast-options">
+      Forecast made
+      <label><input type="radio" name="fc-lead" value="1" checked> 1 day</label>
+      <label><input type="radio" name="fc-lead" value="3"> 3 days</label>
+      <label><input type="radio" name="fc-lead" value="5"> 5 days</label>
+      ahead<br>
+      <label><input type="radio" name="fc-key" value="high" checked> High</label>
+      <label><input type="radio" name="fc-key" value="low"> Low</label>
+      <label><input type="radio" name="fc-key" value="rain"> Rain</label>
+    </div>
+    <table id="forecast">
+      <thead id="forecast-head"></thead>
+      <tbody id="forecast-body"></tbody>
+      <tfoot id="forecast-foot"></tfoot>
+    </table>
+    <p class="caption">
+      Each model's forecast for this location, from Open-Meteo's archive of past runs: ECMWF (European), GFS (US), GEM (Environment Canada), and ICON (German); most weather apps use one or more of these.
+      Model highs and lows are hourly, so they can be a little milder than the sensor's. Days with less than 22 hours of sensor data are left out.
+    </p>
+  </div>
   <p class="credits">Model and historical weather data by <a href="https://open-meteo.com/">Open-Meteo.com</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>).
     Rain data from <a href="https://climate.weather.gc.ca/">Environment and Climate Change Canada</a>; contains information licensed under the <a href="https://open.canada.ca/en/open-government-licence-canada">Open Government Licence – Canada</a>.</p>
 </div>
@@ -91,19 +127,23 @@ const fmtTemp = v => v == null ? "—" : useF ? `${(v * 9 / 5 + 32).toFixed(1)}�
 const fmtHum  = v => v == null ? "—" : `${Math.round(v)}%`;
 const fmtRain = v => v == null ? "—" : useIn ? `${(v / 25.4).toFixed(2)} in` : `${v.toFixed(1)} mm`;
 
-// Optional extras: if either fails, the page still renders without it
-const getJson = u => fetch(u).then(r => r.ok ? r.json() : null).catch(() => null);
+// Optional extras: if one fails or takes more than a few seconds, the page renders without it
+const getJson = u => fetch(u, { signal: AbortSignal.timeout(5000) }).then(r => r.ok ? r.json() : null).catch(() => null);
 const climP = getJson("{{ '/assets/weather/climatology.json' | relative_url }}");
 const omP = getJson("https://api.open-meteo.com/v1/forecast?latitude=49.27&longitude=-123.06&hourly=temperature_2m,relative_humidity_2m&past_days=8&forecast_days=1&timezone=GMT&timeformat=unixtime");
 const ecP = getJson("https://api.weather.gc.ca/collections/climate-daily/items?f=json&CLIMATE_IDENTIFIER=1108446&sortby=-LOCAL_DATE&limit=31&properties=LOCAL_DATE,TOTAL_PRECIPITATION");
+// Archived model forecasts: each variable_previous_dayN is what the model run N days earlier forecast for that hour
+const FC_MODELS = { ecmwf_ifs025: "ECMWF", gfs_seamless: "GFS", gem_seamless: "GEM", icon_seamless: "ICON" };
+const fcVars = [1, 3, 5].flatMap(n => [`temperature_2m_previous_day${n}`, `precipitation_previous_day${n}`]);
+const fcP = getJson(`https://previous-runs-api.open-meteo.com/v1/forecast?latitude=49.27&longitude=-123.06&hourly=${fcVars}&models=${Object.keys(FC_MODELS)}&past_days=31&forecast_days=1&timezone=America/Vancouver`);
 
-fetch(url)
+fetch(url, { signal: AbortSignal.timeout(20000) })
   .then(r => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json();
   })
-  .then(data => Promise.all([data, climP, omP, ecP]))
-  .then(([data, clim, om, ec]) => {
+  .then(data => Promise.all([data, climP, omP, ecP, fcP]))
+  .then(([data, clim, om, ec, fc]) => {
     const tz = data.timezone;
     document.getElementById("generated-at-value").textContent =
       new Date(data.generated_at).toLocaleString('en-US');  // Viewer's time zone
@@ -401,6 +441,98 @@ fetch(url)
           fmtRain(d.rain_mm),
         ].forEach(text => { tr.insertCell().textContent = text; });
       });
+
+      // ---- Forecast accuracy: past days' sensor readings vs. each model's forecast from N days before ----
+      if (fc?.hourly) {
+        const lead = document.querySelector("input[name=fc-lead]:checked").value;
+        const key = document.querySelector("input[name=fc-key]:checked").value;
+        const isRain = key === "rain";
+        // Only days the sensor covered almost fully, counted from the hourly data (so at most the last 30 days)
+        const localDay = ms => new Date(ms).toLocaleDateString('en-CA', { timeZone: tz });  // YYYY-MM-DD
+        const hoursCovered = {};
+        (data.hourly || []).forEach(w => {
+          if ((isRain ? w.rain_mm : w.temp_c) == null) return;
+          const day = localDay(new Date(w.window_start).getTime());
+          hoursCovered[day] = (hoursCovered[day] || 0) + 1;
+        });
+        const actual = d => isRain ? d.rain_mm : key === "high" ? d.temp_c?.max : d.temp_c?.min;
+        // Skip today, which isn't over yet
+        const rows = days.slice(0, -1).filter(d => hoursCovered[d.window_start] >= 22 && actual(d) != null).reverse();
+
+        // A model's forecast for a local day, from its 24 hourly values (Vancouver has no DST, so every day is 24 hours)
+        const fcIdx = new Map(fc.hourly.time.map((s, i) => [s, i]));
+        const forecast = (model, date) => {
+          const i = fcIdx.get(`${date}T00:00`);
+          if (i == null) return null;
+          // Precipitation is the total over the preceding hour, so the day's rain is 01:00 through the next 00:00
+          const vals = isRain
+            ? fc.hourly[`precipitation_previous_day${lead}_${model}`].slice(i + 1, i + 25)
+            : fc.hourly[`temperature_2m_previous_day${lead}_${model}`].slice(i, i + 24);
+          if (vals.length < 24 || vals.includes(null)) return null;
+          return isRain ? vals.reduce((s, v) => s + v, 0) : key === "high" ? Math.max(...vals) : Math.min(...vals);
+        };
+
+        const fmt = isRain ? fmtRain : fmtTemp;
+        // Differences: scale only, no +32
+        const fmtDiff = v => isRain ? fmtRain(v) : useF ? `${(v * 9 / 5).toFixed(1)}°F` : `${v.toFixed(1)}°C`;
+        // A "close enough" miss: 2°F (1.1°C) or 0.1 in (2.5 mm)
+        const tolerance = isRain ? 2.54 : 10 / 9;
+        const signed = v => v == null ? "—" : `${v > 0 ? "+" : v < 0 ? "−" : ""}${fmtDiff(Math.abs(v))}`;
+        const models = Object.keys(FC_MODELS);
+        // Per model: forecast minus actual each day, and (rain) whether it correctly called a rain day or a dry day
+        const misses = Object.fromEntries(models.map(m => [m, []]));
+        const rainCalls = Object.fromEntries(models.map(m => [m, []]));
+        const RAIN_DAY = 1;  // mm
+        const label = date => new Date(date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+
+        document.getElementById("forecast-head").innerHTML =
+          `<tr><th>Date</th><th>Actual</th>${models.map(m => `<th>${FC_MODELS[m]}</th>`).join("")}</tr>`;
+        document.getElementById("forecast-body").innerHTML = rows.map(d => {
+          const cells = models.map(m => {
+            const v = forecast(m, d.window_start);
+            if (v != null) {
+              misses[m].push(v - actual(d));
+              rainCalls[m].push((v >= RAIN_DAY) === (actual(d) >= RAIN_DAY));
+            }
+            return `<td>${fmt(v)}</td>`;
+          });
+          return `<tr><td>${label(d.window_start)}</td><td>${fmt(actual(d))}</td>${cells.join("")}</tr>`;
+        }).join("");
+
+        const mean = a => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
+        // Standard deviation: how much the misses vary around the model's bias
+        const spread = a => {
+          if (a.length < 2) return null;
+          const m = mean(a);
+          return Math.sqrt(mean(a.map(x => (x - m) ** 2)));
+        };
+        const share = (a, ok) => a.length ? a.filter(ok).length / a.length : null;
+        const pct = v => `${Math.round(v * 100)}%`;
+        // One stat per model (stat(m)), shaded green from best (strongest, and bold) to worst (faintest).
+        // score(v) is lower for better values: by default closer to zero is better.
+        const statRow = (name, tip, stat, show, score = Math.abs) => {
+          const vals = models.map(stat);
+          const scores = vals.filter(v => v != null).map(score);
+          const best = Math.min(...scores), worst = Math.max(...scores);
+          return `<tr><td>${name} <span class="tip" tabindex="0" data-tip="${tip}"><span class="tip-icon">?</span></span></td><td></td>${vals.map(v => {
+            if (v == null) return "<td>—</td>";
+            const s = score(v), shade = worst > best ? (worst - s) / (worst - best) : 1;
+            return `<td style="background: rgba(22, 163, 74, ${(0.05 + 0.3 * shade).toFixed(2)})"${s === best ? ` class="best"` : ""}>${show(v)}</td>`;
+          }).join("")}</tr>`;
+        };
+        document.getElementById("forecast-foot").innerHTML =
+          statRow("Spread", "How much the misses vary from day to day, around the bias (standard deviation). A forecast that's always 3° high has no spread. A steady offset in the sensor doesn't affect it, so it's the fairest comparison between models.",
+            m => spread(misses[m]), fmtDiff) +
+          statRow("Bias", "Whether the forecast ran high (+) or low (−) on average. A steady bias is easy to adjust for in your head. An offset in the sensor itself shows up as bias for every model.",
+            m => mean(misses[m]), signed) +
+          statRow(`Days within ${fmtDiff(tolerance)}`, "How often the forecast was close enough to what the sensor measured.",
+            m => share(misses[m], x => Math.abs(x) <= tolerance), pct, v => -v) +
+          (isRain ? statRow("Rain or not", `How often the forecast correctly called whether there'd be at least ${fmtRain(RAIN_DAY)} of rain that day.`,
+            m => share(rainCalls[m], ok => ok), pct, v => -v) : "") +
+          statRow("Worst miss", "The forecast's single biggest miss in this period.",
+            m => misses[m].length ? Math.max(...misses[m].map(Math.abs)) : null, fmtDiff);
+        document.getElementById("forecast-section").style.display = rows.length ? "block" : "none";
+      }
     };
 
     render();
@@ -409,6 +541,7 @@ fetch(url)
       useIn = document.querySelector("input[name=rain-unit]:checked").value === "in";
       render();
     });
+    document.getElementById("forecast-options").addEventListener("change", render);
 
     document.getElementById("weather-status").style.display = "none";
     document.getElementById("weather-content").style.display = "block";

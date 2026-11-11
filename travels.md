@@ -692,6 +692,7 @@ permalink: /travels/
       this.setAttribute('aria-selected', 'true');
 
       // Check if this is the "World View" tab
+      let trackPromise;
       if (url.includes('WORLD')) {
         // Load ALL tracks and combine them into one flat array
         trackPromise = Promise.all(ALL_TRACKS.map(u => loadGPX(u)))

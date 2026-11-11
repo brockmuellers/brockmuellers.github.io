@@ -22,7 +22,7 @@ I'm passionate about climate change and sustainability, as well as music, plants
 * [LinkedIn](https://www.linkedin.com/in/{{ site.linkedin_username }})
 
 * Featured projects:
-	* [Travel log]({% link about.md %}) exploring my sabbatical travels {% include github-link.html repo="travel-log" %}
+	* [Travel log]({% link travels.md %}) exploring my sabbatical travels {% include github-link.html repo="travel-log" %}
 	* ACB tracker for doing Canadian taxes {% include github-link.html repo="acb-tracker-ca" %}
 	* OCR transcription of handwritten letters {% include github-link.html repo="family-history" %}
 	* [Home BirdNET-Pi]({% link birds.md %}) with [weather station]({% link _more/birdnet-weather.md %}) and [custom telemetry]({% link _more/birdnet-station.md %}) {% include github-link.html repo="birdnet-tools" %}

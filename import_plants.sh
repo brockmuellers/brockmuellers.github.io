@@ -2,7 +2,7 @@
 
 # Designed for a csv file exported by google sheets, which may have carriage returns.
 
-INFILE=$1 # e.g. 2020_03_31
+INFILE=$1 # e.g. ~/Downloads/plants.csv
 
 OUTFILE=`dirname "$0"`/_data/plants.csv
 

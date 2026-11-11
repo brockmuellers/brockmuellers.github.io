@@ -3,13 +3,16 @@
 DATE_FOR_BACKUP=$1 # e.g. 2020_03_31
 
 BACKUP_DIR=~/Dropbox/Documents/Work/Resumes
-RESUME_DIR=`dirname "$0"`/assets/resume
+# Run from the repo root, wherever the script was called from
+cd "$(dirname "$0")" || exit 1
+
+RESUME_DIR=assets/resume
 JSON_OUT_FILE=resume.json
 JSON_PATH=${RESUME_DIR}/${JSON_OUT_FILE}
 
 # Translate pretty YAML file into ugly JSON file so lua can handle it
 # Note that json.lua is required; see README for more info
-cat _data/resume.yml | python3 -c 'import sys, yaml, json; y=yaml.load(sys.stdin.read()); print(json.dumps(y))' > $JSON_PATH &&
+cat _data/resume.yml | python3 -c 'import sys, yaml, json; y=yaml.safe_load(sys.stdin.read()); print(json.dumps(y))' > $JSON_PATH &&
 
 cd $RESUME_DIR &&
 lualatex -synctex=1 -interaction=nonstopmode "resume".tex &&

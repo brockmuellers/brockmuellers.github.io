@@ -32,8 +32,9 @@ bundle exec jekyll serve --trace --drafts --config _config.yml,_config.local.yml
 - Plant database: `_data/plants.csv`
 
 **Interactive features** use inline JavaScript within Markdown pages:
-- `travels.md` — MapLibre GL 3.6.2 interactive map with GPX tracks (`assets/gpx/`), iNaturalist GeoJSON observations (`assets/observations/`), waypoint search via external API (`travel_log_waypoint_search_api` in `_config.yml`), and multi-tab trip filtering configured in `_data/travels.yml`
+- `travels.md` — MapLibre GL 3.6.2 interactive map with trip tracks (GeoJSON in `assets/gpx/`, derived from GPX), iNaturalist and eBird GeoJSON observations (`assets/observations/`), waypoints and search via the travel-log API (`travel_log_api` and `travel_log_site_token` in `_config.yml`), and multi-tab trip filtering configured in `_data/travels.yml`
 - `plants.md` — DataTables 1.10.20 for sortable/filterable plant database
+- `birds.md`, `_more/birdnet-station.md`, `_more/birdnet-weather.md` — BirdNET-Pi detections, station health, and weather, fetched as JSON from `birdnet-data.brockmuellers.com`. Shared SVG chart helpers live in `_includes/chart.html`. The weather page's normals come from `assets/weather/climatology.json`, built once by `./build_climatology.py`
 
 **Resume** is data-driven: `_data/resume.yml` → JSON conversion → LaTeX compilation via LuaLaTeX → PDF in `assets/resume/`.
 

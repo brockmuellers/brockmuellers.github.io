@@ -222,582 +222,577 @@ permalink: /travels/
   <div id="waypoint-search-results" aria-live="polite"></div>
 </div>
 
-<script>
-(function() {
-  const gpxCache = {}; // Cache to store parsed coordinates
-  const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
-  const EBIRD_GEOJSON_URL = "{{ ebird_file }}";
-  const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
-  const TRAVEL_LOG_API = "{{ site.travel_log_api }}";
+<script type="module">
+const gpxCache = {}; // Cache to store parsed coordinates
+const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
+const EBIRD_GEOJSON_URL = "{{ ebird_file }}";
+const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
+const TRAVEL_LOG_API = "{{ site.travel_log_api }}";
 
-  const API_HEADERS = { 'Accept': 'application/json' };
-  if (TRAVEL_LOG_SITE_TOKEN) API_HEADERS['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
+const API_HEADERS = { 'Accept': 'application/json' };
+if (TRAVEL_LOG_SITE_TOKEN) API_HEADERS['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
 
-  // Every real trip, for the World tab (e.g. "west-coast")
-  const ALL_TRIPS = [
-    {% for item in site.data.travels %}
-      {% unless item.file == 'WORLD' %}
-        "{{ item.file | replace: '.gpx', '' }}",
-      {% endunless %}
-    {% endfor %}
-  ];
+// Every real trip, for the World tab (e.g. "west-coast")
+const ALL_TRIPS = [
+  {% for item in site.data.travels %}
+    {% unless item.file == 'WORLD' %}
+      "{{ item.file | replace: '.gpx', '' }}",
+    {% endunless %}
+  {% endfor %}
+];
 
-  let map;
-  let currentPopup = null;
-  const loader = document.getElementById('loader');
-  let currentRequestId = 0; // Track the latest tab request
-  let mapReady = false;     // Becomes true after the map 'load' event fires
-  let currentTripSlug = null;
-  // Helper to toggle loading spinner
-  const setLoading = (isLoading) => {
-    loader.style.display = isLoading ? 'flex' : 'none';
-  };
+let map;
+let currentPopup = null;
+const loader = document.getElementById('loader');
+let currentRequestId = 0; // Track the latest tab request
+let mapReady = false;     // Becomes true after the map 'load' event fires
+let currentTripSlug = null;
+// Helper to toggle loading spinner
+const setLoading = (isLoading) => {
+  loader.style.display = isLoading ? 'flex' : 'none';
+};
 
-  function getBounds(features) {
-    const bounds = new maplibregl.LngLatBounds();
-    features.forEach(f => f.geometry.coordinates.forEach(coord => bounds.extend(coord)));
-    return bounds;
+function getBounds(features) {
+  const bounds = new maplibregl.LngLatBounds();
+  features.forEach(f => f.geometry.coordinates.forEach(coord => bounds.extend(coord)));
+  return bounds;
+}
+
+// Load a trip's pre-generated GeoJSON (derived from GPX) with caching
+function loadGPX(tripSlug) {
+  const geojsonUrl = "{{ gpx_base }}" + tripSlug + ".geojson";
+  if (gpxCache[geojsonUrl]) {
+    return Promise.resolve(gpxCache[geojsonUrl]);
   }
+  setLoading(true);
+  return fetch(geojsonUrl)
+    .then(r => {
+      if (!r.ok) throw new Error("Network response was not ok");
+      return r.json();
+    })
+    .then(fc => {
+      gpxCache[geojsonUrl] = fc.features;
+      return fc.features;
+    })
+    .finally(() => setLoading(false));
+}
 
-  // Load a trip's pre-generated GeoJSON (derived from GPX) with caching
-  function loadGPX(tripSlug) {
-    const geojsonUrl = "{{ gpx_base }}" + tripSlug + ".geojson";
-    if (gpxCache[geojsonUrl]) {
-      return Promise.resolve(gpxCache[geojsonUrl]);
-    }
-    setLoading(true);
-    return fetch(geojsonUrl)
-      .then(r => {
-        if (!r.ok) throw new Error("Network response was not ok");
-        return r.json();
-      })
-      .then(fc => {
-        gpxCache[geojsonUrl] = fc.features;
-        return fc.features;
-      })
-      .finally(() => setLoading(false));
+// Filter eBird checklists by date range using min_date/max_date properties.
+function applyEbirdDateFilter(start, end) {
+  if (!map || !map.getLayer('ebird-points-border')) return;
+  if (start && end) {
+    const filter = ['all', ['<=', ['get', 'min_date'], end], ['>=', ['get', 'max_date'], start]];
+    map.setFilter('ebird-points-fill', filter);
+    map.setFilter('ebird-points-border', filter);
+  } else {
+    map.setFilter('ebird-points-fill', ['==', '1', '0']);
+    map.setFilter('ebird-points-border', ['==', '1', '0']);
   }
+}
 
-  // Filter eBird checklists by date range using min_date/max_date properties.
-  function applyEbirdDateFilter(start, end) {
-    if (!map || !map.getLayer('ebird-points-border')) return;
-    if (start && end) {
-      const filter = ['all', ['<=', ['get', 'min_date'], end], ['>=', ['get', 'max_date'], start]];
-      map.setFilter('ebird-points-fill', filter);
-      map.setFilter('ebird-points-border', filter);
-    } else {
-      map.setFilter('ebird-points-fill', ['==', '1', '0']);
-      map.setFilter('ebird-points-border', ['==', '1', '0']);
-    }
+// Filter iNaturalist observations by date to match the dates for this tab
+function applyInatDateFilter(start, end) {
+  if (!map || !map.getLayer('inat-points')) return;
+
+  // MapLibre Filter Expression:
+  // "ALL conditions must be true: date >= start AND date <= end"
+  // We treat dates as strings, which works for YYYY-MM-DD format.
+  if (start && end) {
+    map.setFilter('inat-points', [
+      'all',
+      ['>=', ['get', 'date'], start],
+      ['<=', ['get', 'date'], end]
+    ]);
+  } else {
+    // If no dates provided, show nothing (or show all, depending on preference)
+    // Here we show nothing to keep it clean if dates are missing
+    map.setFilter('inat-points', ['==', '1', '0']);
   }
+}
 
-  // Filter iNaturalist observations by date to match the dates for this tab
-  function applyInatDateFilter(start, end) {
-    if (!map || !map.getLayer('inat-points')) return;
-
-    // MapLibre Filter Expression:
-    // "ALL conditions must be true: date >= start AND date <= end"
-    // We treat dates as strings, which works for YYYY-MM-DD format.
-    if (start && end) {
-      map.setFilter('inat-points', [
-        'all',
-        ['>=', ['get', 'date'], start],
-        ['<=', ['get', 'date'], end]
-      ]);
-    } else {
-      // If no dates provided, show nothing (or show all, depending on preference)
-      // Here we show nothing to keep it clean if dates are missing
-      map.setFilter('inat-points', ['==', '1', '0']);
-    }
+// tripSlug is null for the World tab (show all), otherwise e.g. "west-coast"
+function applyWaypointFilter(tripSlug) {
+  if (!map || !map.getLayer('waypoints')) return;
+  if (tripSlug) {
+    map.setFilter('waypoints', ['==', ['get', 'trip'], tripSlug]);
+  } else {
+    map.setFilter('waypoints', null);
   }
+}
 
-  // tripSlug is null for the World tab (show all), otherwise e.g. "west-coast"
-  function applyWaypointFilter(tripSlug) {
-    if (!map || !map.getLayer('waypoints')) return;
-    if (tripSlug) {
-      map.setFilter('waypoints', ['==', ['get', 'trip'], tripSlug]);
-    } else {
-      map.setFilter('waypoints', null);
-    }
-  }
-
-  function initMap(multiLineString, startDate, endDate, tripSlug) {
-    currentTripSlug = tripSlug;
-    const bounds = getBounds(multiLineString);
-    map = new maplibregl.Map({
-      container: 'map',
-      style: {
-        version: 8,
-        sources: {
-          'raster-tiles': {
-            type: 'raster',
-            tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
-            tileSize: 256,
-            attribution: '&copy; OpenStreetMap Contributors'
-          }
-        },
-        layers: [{ id: 'simple-tiles', type: 'raster', source: 'raster-tiles', minzoom: 0, maxzoom: 19 }]
+function initMap(multiLineString, startDate, endDate, tripSlug) {
+  currentTripSlug = tripSlug;
+  const bounds = getBounds(multiLineString);
+  map = new maplibregl.Map({
+    container: 'map',
+    style: {
+      version: 8,
+      sources: {
+        'raster-tiles': {
+          type: 'raster',
+          tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '&copy; OpenStreetMap Contributors'
+        }
       },
-      bounds: bounds,
-      fitBoundsOptions: { padding: 40 }
-    });
-
-    map.on('load', function() {
-      mapReady = true;
-      // Add source/layer once map is fully loaded
-
-      // --- 1. SETUP GPX TRACK LAYER ---
-      map.addSource('gpx-track', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: multiLineString }
-      });
-      const transportColor = ['match', ['get', 'transport'],
-        /* air */
-        'flight',    '#9333ea',
-        /* water */
-        'ferry',     '#06b6d4',
-        'motorboat', '#0284c7',
-        /* rail */
-        'train',     '#eab308',
-        /* road */
-        'bus',       '#f97316',
-        'car',       '#ef4444',
-        '4x4',       '#b45309',
-        'motorbike', '#f43f5e',
-        /* foot */
-        'walking',   '#22c55e',
-        'hiking',    '#15803d',
-        /* default */ '#d9534f'
-      ];
-      map.addLayer({
-        id: 'gpx-line',
-        type: 'line',
-        source: 'gpx-track',
-        filter: ['!=', ['get', 'transport'], 'flight'],
-        layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: { 'line-width': 4, 'line-color': transportColor }
-      });
-      map.addLayer({
-        id: 'gpx-line-flight',
-        type: 'line',
-        source: 'gpx-track',
-        filter: ['==', ['get', 'transport'], 'flight'],
-        layout: { 'line-join': 'round', 'line-cap': 'round' },
-        paint: { 'line-width': 2, 'line-color': transportColor, 'line-dasharray': [4, 4] }
-      });
-
-      // --- 2. SETUP WAYPOINTS LAYER (added before observations so obs render on top) ---
-      const diamondSize = 16;
-      const diamondCanvas = document.createElement('canvas');
-      diamondCanvas.width = diamondSize;
-      diamondCanvas.height = diamondSize;
-      const dctx = diamondCanvas.getContext('2d');
-      const h = diamondSize / 2;
-      dctx.beginPath();
-      dctx.moveTo(h, 0); dctx.lineTo(diamondSize, h); dctx.lineTo(h, diamondSize); dctx.lineTo(0, h);
-      dctx.closePath();
-      dctx.fillStyle = '#e2e8f0';
-      dctx.fill();
-      dctx.strokeStyle = '#64748b';
-      dctx.lineWidth = 2;
-      dctx.stroke();
-      const diamondData = dctx.getImageData(0, 0, diamondSize, diamondSize);
-      map.addImage('waypoint-diamond', { width: diamondSize, height: diamondSize, data: diamondData.data });
-
-      map.addSource('waypoints', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-      map.addLayer({
-        id: 'waypoints',
-        type: 'symbol',
-        source: 'waypoints',
-        layout: {
-          'icon-image': 'waypoint-diamond',
-          'icon-size': ['interpolate', ['linear'], ['zoom'], 0, 0.5, 8, 0.83],
-          'icon-allow-overlap': true
-        }
-      });
-
-      // --- 3. SETUP EBIRD LAYER ---
-      // Two canvas images, same pattern as waypoint diamond:
-      // - fill: solid fuchsia square, icon-opacity driven by species count
-      // - border: green outline with transparent center, always opaque
-      const squareSize = 10;
-
-      const fillCanvas = document.createElement('canvas');
-      fillCanvas.width = squareSize; fillCanvas.height = squareSize;
-      const fctx = fillCanvas.getContext('2d');
-      fctx.fillStyle = '#ffffff';
-      fctx.fillRect(0, 0, squareSize, squareSize);
-      const fillData = fctx.getImageData(0, 0, squareSize, squareSize);
-      map.addImage('ebird-square-fill', { width: squareSize, height: squareSize, data: fillData.data }, { sdf: true });
-
-      const borderCanvas = document.createElement('canvas');
-      borderCanvas.width = squareSize; borderCanvas.height = squareSize;
-      const bctx = borderCanvas.getContext('2d');
-      bctx.strokeStyle = '#b05aaa';
-      bctx.lineWidth = 2;
-      bctx.strokeRect(1, 1, squareSize - 2, squareSize - 2);
-      const borderData = bctx.getImageData(0, 0, squareSize, squareSize);
-      map.addImage('ebird-square-border', { width: squareSize, height: squareSize, data: borderData.data });
-
-      map.addSource('ebird-obs', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-      const ebirdLayout = { 'icon-allow-overlap': true, 'icon-size': ['interpolate', ['linear'], ['zoom'], 0, 0.8, 8, 1.2] };
-      map.addLayer({
-        id: 'ebird-points-fill',
-        type: 'symbol',
-        source: 'ebird-obs',
-        layout: { ...ebirdLayout, 'icon-image': 'ebird-square-fill' },
-        paint: { 'icon-color': ['interpolate', ['linear'], ['get', 'species_count'], 0, '#ffffff', 50, '#b05aaa'] }
-      });
-      map.addLayer({
-        id: 'ebird-points-border',
-        type: 'symbol',
-        source: 'ebird-obs',
-        layout: { ...ebirdLayout, 'icon-image': 'ebird-square-border' }
-      });
-
-      fetch(EBIRD_GEOJSON_URL)
-        .then(r => r.json())
-        .then(fc => {
-          fc.features.forEach(f => {
-            const checklists = f.properties.checklists;
-            const totalMin = checklists.reduce((sum, c) => sum + (c.duration_min || 0), 0);
-            const totalIndividuals = checklists.reduce((sum, c) => sum + (c.individual_count || 0), 0);
-            f.properties.total_minutes = totalMin;
-            f.properties.total_individuals = totalIndividuals;
-          });
-          map.getSource('ebird-obs').setData(fc);
-          applyEbirdDateFilter(startDate, endDate);
-        })
-        .catch(() => {}); // Missing file → layer stays empty
-
-      // --- 4. SETUP INATURALIST OBSERVATIONS LAYER ---
-      map.addSource('inat-obs', {
-        type: 'geojson',
-        data: OBS_GEOJSON_URL
-      });
-
-      map.addLayer({
-        id: 'inat-points',
-        type: 'circle',
-        source: 'inat-obs',
-        paint: {
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 8, 5],
-          'circle-stroke-color': '#74ac00', // iNat Green border
-          'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 0, 1, 8, 3],
-
-          // LOGIC: Color based on "counts" property; black for rarest sightings -> red -> white
-          'circle-color': [
-            'step',
-            ['to-number', ['get', 'global_count']],
-
-            '#000000',
-            5, '#4a0404',
-            20, '#7f0000',
-            75, '#b30000',
-            250, '#d73027',
-            1000, '#f46d43',
-            3500, '#fdae61',
-            10000, '#fee090',
-            25000, '#ffffbf',
-            50000, '#ffffff'
-          ]
-        }
-      });
-
-      applyInatDateFilter(startDate, endDate);
-
-      fetch(TRAVEL_LOG_API + '/waypoints', { headers: API_HEADERS })
-        .then(r => r.json())
-        .then(waypoints => {
-          const features = waypoints
-            .filter(w => w.coordinates)
-            .map(w => ({
-              type: 'Feature',
-              geometry: { type: 'Point', coordinates: w.coordinates },
-              properties: { id: w.id, name: w.name, description: w.description, photo_url: w.photo_url || null, trip: w.trip || null }
-            }));
-          map.getSource('waypoints').setData({ type: 'FeatureCollection', features });
-          applyWaypointFilter(currentTripSlug);
-        })
-        .catch(() => {
-          const toggle = document.getElementById('toggle-waypoints');
-          toggle.disabled = true;
-          toggle.closest('.legend-section-label').style.opacity = '0.4';
-        });
-
-      // --- 5. LAYER TOGGLES ---
-      function setLayerGroupVisibility(layers, visible) {
-        const v = visible ? 'visible' : 'none';
-        layers.forEach(id => map.setLayoutProperty(id, 'visibility', v));
-      }
-      document.getElementById('toggle-gpx').addEventListener('change', e => {
-        setLayerGroupVisibility(['gpx-line', 'gpx-line-flight'], e.target.checked);
-      });
-      document.getElementById('toggle-waypoints').addEventListener('change', e => {
-        setLayerGroupVisibility(['waypoints'], e.target.checked);
-      });
-      document.getElementById('toggle-inat').addEventListener('change', e => {
-        setLayerGroupVisibility(['inat-points'], e.target.checked);
-      });
-      document.getElementById('toggle-ebird').addEventListener('change', e => {
-        setLayerGroupVisibility(['ebird-points-fill', 'ebird-points-border'], e.target.checked);
-      });
-
-      // --- 6. INTERACTION LOGIC ---
-
-      /**
-       * Change cursor to pointer when hovering over a point
-       */
-      map.on('mouseenter', 'inat-points', () => {
-        map.getCanvas().style.cursor = 'pointer';
-      });
-
-      map.on('mouseleave', 'inat-points', () => {
-        map.getCanvas().style.cursor = '';
-      });
-
-      map.on('mouseenter', 'ebird-points-border', () => { map.getCanvas().style.cursor = 'pointer'; });
-      map.on('mouseleave', 'ebird-points-border', () => { map.getCanvas().style.cursor = ''; });
-      map.on('mouseenter', 'waypoints', () => { map.getCanvas().style.cursor = 'pointer'; });
-      map.on('mouseleave', 'waypoints', () => { map.getCanvas().style.cursor = ''; });
-
-      map.on('click', (e) => {
-        const hits = map.queryRenderedFeatures(e.point, { layers: ['waypoints', 'inat-points', 'ebird-points-border'] });
-        if (!hits.length) return;
-
-        const feature = hits[0];
-        const props = feature.properties;
-        const coordinates = feature.geometry.coordinates.slice();
-        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-        }
-
-        let html;
-        if (feature.layer.id === 'waypoints') {
-          html = `<div class="popup-waypoint"><strong>${props.name}</strong>${props.photo_url ? `<img src="${props.photo_url}" class="obs-popup-img" alt="${props.name}" />` : ''}</div>`;
-        } else if (feature.layer.id === 'inat-points') {
-          const imgHtml = props.image_url ? `<img src="${props.image_url}" class="obs-popup-img" alt="Observation Photo" />` : '';
-          html = `<a href="${props.obs_url || '#'}" target="_blank" class="obs-popup-link">${imgHtml}${props.title || 'Observation'}</a>
-                  <div class="obs-popup-count">${props.global_count || '[Unknown]'} global observations</div>`;
-        } else {
-          const checklists = JSON.parse(props.checklists || '[]').sort((a, b) => a.date.localeCompare(b.date) || a.start_time.localeCompare(b.start_time));
-          const datesStr = props.min_date === props.max_date ? props.min_date : `${props.min_date} – ${props.max_date}`;
-          const checklistRowsHtml = checklists.map(c => {
-            const durationStr = c.duration_min ? ` · ${c.duration_min} min` : '';
-            return `<div class="ebird-checklist-row">
-              <a href="${c.url}" target="_blank">${c.date} ${c.start_time}</a>
-              <span class="ebird-checklist-detail">${c.species_count} sp${durationStr}</span>
-            </div>`;
-          }).join('');
-          html = `<a href="${props.hotspot_url}" target="_blank" class="ebird-popup-title">${props.title}</a>
-                  <div class="ebird-popup-meta">${props.species_count} species · ${props.total_individuals} birds · ${props.total_minutes} min</div>
-                  <div class="ebird-popup-checklists">${checklistRowsHtml}</div>`;
-        }
-
-        if (currentPopup) { currentPopup.remove(); }
-        currentPopup = new maplibregl.Popup()
-          .setLngLat(coordinates)
-          .setHTML(html)
-          .addTo(map);
-        currentPopup.on('close', () => { currentPopup = null; });
-      });
-
-      // --- Right Click (Context Menu) for Coordinates ---
-
-      // 1. Prevent the default browser menu from appearing
-      map.getCanvas().addEventListener('contextmenu', (e) => e.preventDefault());
-
-      // 2. Show coordinates on right-click
-      map.on('contextmenu', (e) => {
-        if (currentPopup) { currentPopup.remove(); currentPopup = null; }
-        const lat = e.lngLat.lat.toFixed(5);
-        const lon = e.lngLat.lng.toFixed(5);
-
-        currentPopup = new maplibregl.Popup({ closeButton: false }) // Hide the "x" since clicking elsewhere closes it
-          .setLngLat(e.lngLat)
-          .setHTML(`
-            <div style="text-align:center; font-size: 0.9em; padding: 5px;">
-              <strong>${lat}, ${lon}</strong><br>
-              <button onclick="navigator.clipboard.writeText('${lat}, ${lon}')" style="margin-top:5px; cursor:pointer;">
-                Copy to Clipboard
-              </button>
-            </div>
-          `)
-          .addTo(map);
-        currentPopup.on('close', () => { currentPopup = null; });
-      });
-    });
-  }
-
-  function updateMap(multiLineString, startDate, endDate, tripSlug) {
-    currentTripSlug = tripSlug;
-    // If the map isn't ready yet, wait for the first (and only) 'load' event,
-    // but still respect whichever tab was most recently clicked.
-    if (!mapReady) {
-      const scheduledRequestId = currentRequestId;
-      map.once('load', () => {
-        if (scheduledRequestId !== currentRequestId) return;
-        updateMap(multiLineString, startDate, endDate, tripSlug);
-      });
-      return;
-    }
-
-    const source = map.getSource('gpx-track');
-    if (!source) return;
-
-    source.setData({ type: 'FeatureCollection', features: multiLineString });
-
-    applyInatDateFilter(startDate, endDate);
-    applyEbirdDateFilter(startDate, endDate);
-    applyWaypointFilter(tripSlug);
-
-    const bounds = getBounds(multiLineString);
-    // Ensure bounds are valid before fitting
-    if (!bounds.isEmpty()) {
-      map.fitBounds(bounds, { padding: 40 });
-    }
-  }
-
-  // Tab Click Event Listeners
-  const buttons = document.querySelectorAll('.travel-tabs button');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const start = this.getAttribute('data-start');
-      const end = this.getAttribute('data-end');
-      const tripSlug = this.dataset.slug || null;  // null for the World tab
-      const requestId = ++currentRequestId;
-
-      if (currentPopup) { currentPopup.remove(); currentPopup = null; }
-
-      // UI Updates
-      buttons.forEach(b => {
-        b.classList.remove('active');
-        b.setAttribute('aria-selected', 'false');
-      });
-      this.classList.add('active');
-      this.setAttribute('aria-selected', 'true');
-
-      // Check if this is the "World View" tab
-      let trackPromise;
-      if (!tripSlug) {
-        // Load ALL tracks and combine them into one flat array
-        trackPromise = Promise.all(ALL_TRIPS.map(loadGPX))
-                              .then(results => results.flat());
-      } else {
-        // Load just the single track
-        trackPromise = loadGPX(tripSlug);
-      }
-
-      trackPromise.then(multiLine => {
-        // Ignore if a newer tab has been clicked since this request started
-        if (requestId !== currentRequestId) return;
-        if (multiLine.length === 0) return;
-
-        if (!map) initMap(multiLine, start, end, tripSlug);
-        else updateMap(multiLine, start, end, tripSlug);
-      }).catch(err => console.error("Error processing GPX:", err));
-    });
+      layers: [{ id: 'simple-tiles', type: 'raster', source: 'raster-tiles', minzoom: 0, maxzoom: 19 }]
+    },
+    bounds: bounds,
+    fitBoundsOptions: { padding: 40 }
   });
 
-  // Initialize First Tab (the same code path as clicking it)
-  const firstTab = document.querySelector('.travel-tabs button.active');
-  if (firstTab) {
-    firstTab.click();
-  } else {
-     document.getElementById('map').innerHTML = '<p style="padding:20px; text-align:center;">No travels found.</p>';
-  }
+  map.on('load', () => {
+    mapReady = true;
+    // Add source/layer once map is fully loaded
 
-  // --- Waypoint search ---
-  const waypointQuery = document.getElementById('waypoint-query');
-  const waypointSearchBtn = document.getElementById('waypoint-search-btn');
-  const waypointResults = document.getElementById('waypoint-search-results');
-
-  function renderWaypointResults(data) {
-    if (!Array.isArray(data) || data.length === 0) {
-      waypointResults.innerHTML = '<p class="search-empty">No waypoints found. Try another search.</p>';
-      return;
-    }
-    waypointResults.innerHTML = data.map(function(item) {
-      const score = typeof item.score === 'number' ? item.score.toFixed(1) : item.score;
-      const dist = typeof item.distance === 'number' ? item.distance.toFixed(3) : item.distance;
-      const photos = Array.isArray(item.photos) ? item.photos.slice(0, 5) : [];
-      const photosHtml = photos.length === 0 ? '' :
-        '<div class="waypoint-photos">' +
-          photos.map(function(photo) {
-            const src = photo.url || '';
-            const caption = (photo.caption || '').replace(/"/g, '&quot;');
-            return '<img src="' + src + '" title="' + caption + '" alt="' + caption + '" />';
-          }).join('') +
-        '</div>';
-      return (
-        '<li class="waypoint-item">' +
-          '<h4>' + (item.coordinates ? '<button data-coordinates="' + item.coordinates + '">' + (item.name || 'Unnamed') + '</button>' : (item.name || 'Unnamed')) + '</h4>' +
-          '<div class="waypoint-meta">Score: ' + score + (item.distance != null ? ' &middot; Distance: ' + dist : '') +
-            (item.description_distance != null ? ' &middot; Desc: ' + item.description_distance.toFixed(3) : '') +
-            (item.photo_distance != null ? ' &middot; Photo: ' + item.photo_distance.toFixed(3) : '') +
-          '</div>' +
-          (item.description ? '<p>' + item.description + '</p>' : '') +
-          photosHtml +
-        '</li>'
-      );
-    }).join('');
-  }
-
-  function doWaypointSearch() {
-    const q = (waypointQuery.value || '').trim();
-    if (!q) {
-      waypointResults.innerHTML = '<p class="search-empty">Enter a search term (e.g. ancient temples).</p>';
-      return;
-    }
-    waypointResults.innerHTML = '<p class="search-empty">Searching…</p>';
-    waypointSearchBtn.disabled = true;
-
-    const activeTab = document.querySelector('.travel-tabs button.active');
-    const tripSlug = activeTab ? activeTab.dataset.slug : '';
-    const url = TRAVEL_LOG_API + '/waypoints/search?q=' + encodeURIComponent(q) +
-      (tripSlug ? '&trip=' + encodeURIComponent(tripSlug) : '');
-    fetch(url, { headers: API_HEADERS })
-      .then(function(r) {
-        if (!r.ok) throw new Error(r.status === 401 ? 'Invalid or missing site token. Set travel_log_site_token in _config.yml.' : 'Search failed: ' + r.status);
-        return r.json();
-      })
-      .then(function(data) {
-        renderWaypointResults(data);
-      })
-      .catch(function(err) {
-        waypointResults.innerHTML = '<p class="search-error">' + (err.message || 'Search failed.') + '</p>';
-      })
-      .finally(function() {
-        waypointSearchBtn.disabled = false;
-      });
-  }
-
-  if (waypointSearchBtn && waypointQuery) {
-    waypointSearchBtn.addEventListener('click', doWaypointSearch);
-    waypointQuery.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') { e.preventDefault(); doWaypointSearch(); }
+    // --- 1. SETUP GPX TRACK LAYER ---
+    map.addSource('gpx-track', {
+      type: 'geojson',
+      data: { type: 'FeatureCollection', features: multiLineString }
+    });
+    const transportColor = ['match', ['get', 'transport'],
+      /* air */
+      'flight',    '#9333ea',
+      /* water */
+      'ferry',     '#06b6d4',
+      'motorboat', '#0284c7',
+      /* rail */
+      'train',     '#eab308',
+      /* road */
+      'bus',       '#f97316',
+      'car',       '#ef4444',
+      '4x4',       '#b45309',
+      'motorbike', '#f43f5e',
+      /* foot */
+      'walking',   '#22c55e',
+      'hiking',    '#15803d',
+      /* default */ '#d9534f'
+    ];
+    map.addLayer({
+      id: 'gpx-line',
+      type: 'line',
+      source: 'gpx-track',
+      filter: ['!=', ['get', 'transport'], 'flight'],
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-width': 4, 'line-color': transportColor }
+    });
+    map.addLayer({
+      id: 'gpx-line-flight',
+      type: 'line',
+      source: 'gpx-track',
+      filter: ['==', ['get', 'transport'], 'flight'],
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-width': 2, 'line-color': transportColor, 'line-dasharray': [4, 4] }
     });
 
-    waypointResults.addEventListener('click', function(e) {
-      var btn = e.target.closest('button[data-coordinates]');
-      if (!btn || !map) return;
-      var coords = btn.getAttribute('data-coordinates').split(',').map(Number);
-      map.flyTo({ center: coords, zoom: 13 });
+    // --- 2. SETUP WAYPOINTS LAYER (added before observations so obs render on top) ---
+    const diamondSize = 16;
+    const diamondCanvas = document.createElement('canvas');
+    diamondCanvas.width = diamondSize;
+    diamondCanvas.height = diamondSize;
+    const dctx = diamondCanvas.getContext('2d');
+    const h = diamondSize / 2;
+    dctx.beginPath();
+    dctx.moveTo(h, 0); dctx.lineTo(diamondSize, h); dctx.lineTo(h, diamondSize); dctx.lineTo(0, h);
+    dctx.closePath();
+    dctx.fillStyle = '#e2e8f0';
+    dctx.fill();
+    dctx.strokeStyle = '#64748b';
+    dctx.lineWidth = 2;
+    dctx.stroke();
+    const diamondData = dctx.getImageData(0, 0, diamondSize, diamondSize);
+    map.addImage('waypoint-diamond', { width: diamondSize, height: diamondSize, data: diamondData.data });
+
+    map.addSource('waypoints', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    map.addLayer({
+      id: 'waypoints',
+      type: 'symbol',
+      source: 'waypoints',
+      layout: {
+        'icon-image': 'waypoint-diamond',
+        'icon-size': ['interpolate', ['linear'], ['zoom'], 0, 0.5, 8, 0.83],
+        'icon-allow-overlap': true
+      }
     });
 
-    // Health check on page load — disable search if API is unreachable
-    fetch(TRAVEL_LOG_API + '/health', { headers: API_HEADERS })
-      .then(function(r) {
-        if (!r.ok) throw new Error('API returned ' + r.status);
+    // --- 3. SETUP EBIRD LAYER ---
+    // Two canvas images, same pattern as waypoint diamond:
+    // - fill: solid fuchsia square, icon-opacity driven by species count
+    // - border: green outline with transparent center, always opaque
+    const squareSize = 10;
+
+    const fillCanvas = document.createElement('canvas');
+    fillCanvas.width = squareSize; fillCanvas.height = squareSize;
+    const fctx = fillCanvas.getContext('2d');
+    fctx.fillStyle = '#ffffff';
+    fctx.fillRect(0, 0, squareSize, squareSize);
+    const fillData = fctx.getImageData(0, 0, squareSize, squareSize);
+    map.addImage('ebird-square-fill', { width: squareSize, height: squareSize, data: fillData.data }, { sdf: true });
+
+    const borderCanvas = document.createElement('canvas');
+    borderCanvas.width = squareSize; borderCanvas.height = squareSize;
+    const bctx = borderCanvas.getContext('2d');
+    bctx.strokeStyle = '#b05aaa';
+    bctx.lineWidth = 2;
+    bctx.strokeRect(1, 1, squareSize - 2, squareSize - 2);
+    const borderData = bctx.getImageData(0, 0, squareSize, squareSize);
+    map.addImage('ebird-square-border', { width: squareSize, height: squareSize, data: borderData.data });
+
+    map.addSource('ebird-obs', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    const ebirdLayout = { 'icon-allow-overlap': true, 'icon-size': ['interpolate', ['linear'], ['zoom'], 0, 0.8, 8, 1.2] };
+    map.addLayer({
+      id: 'ebird-points-fill',
+      type: 'symbol',
+      source: 'ebird-obs',
+      layout: { ...ebirdLayout, 'icon-image': 'ebird-square-fill' },
+      paint: { 'icon-color': ['interpolate', ['linear'], ['get', 'species_count'], 0, '#ffffff', 50, '#b05aaa'] }
+    });
+    map.addLayer({
+      id: 'ebird-points-border',
+      type: 'symbol',
+      source: 'ebird-obs',
+      layout: { ...ebirdLayout, 'icon-image': 'ebird-square-border' }
+    });
+
+    fetch(EBIRD_GEOJSON_URL)
+      .then(r => r.json())
+      .then(fc => {
+        fc.features.forEach(f => {
+          const checklists = f.properties.checklists;
+          const totalMin = checklists.reduce((sum, c) => sum + (c.duration_min || 0), 0);
+          const totalIndividuals = checklists.reduce((sum, c) => sum + (c.individual_count || 0), 0);
+          f.properties.total_minutes = totalMin;
+          f.properties.total_individuals = totalIndividuals;
+        });
+        map.getSource('ebird-obs').setData(fc);
+        applyEbirdDateFilter(startDate, endDate);
       })
-      .catch(function() {
-        waypointQuery.disabled = true;
-        waypointSearchBtn.disabled = true;
-        document.getElementById('waypoint-api-status').textContent = 'Search unavailable (API offline)';
+      .catch(() => {}); // Missing file → layer stays empty
+
+    // --- 4. SETUP INATURALIST OBSERVATIONS LAYER ---
+    map.addSource('inat-obs', {
+      type: 'geojson',
+      data: OBS_GEOJSON_URL
+    });
+
+    map.addLayer({
+      id: 'inat-points',
+      type: 'circle',
+      source: 'inat-obs',
+      paint: {
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 3, 8, 5],
+        'circle-stroke-color': '#74ac00', // iNat Green border
+        'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 0, 1, 8, 3],
+
+        // LOGIC: Color based on "counts" property; black for rarest sightings -> red -> white
+        'circle-color': [
+          'step',
+          ['to-number', ['get', 'global_count']],
+
+          '#000000',
+          5, '#4a0404',
+          20, '#7f0000',
+          75, '#b30000',
+          250, '#d73027',
+          1000, '#f46d43',
+          3500, '#fdae61',
+          10000, '#fee090',
+          25000, '#ffffbf',
+          50000, '#ffffff'
+        ]
+      }
+    });
+
+    applyInatDateFilter(startDate, endDate);
+
+    fetch(`${TRAVEL_LOG_API}/waypoints`, { headers: API_HEADERS })
+      .then(r => r.json())
+      .then(waypoints => {
+        const features = waypoints
+          .filter(w => w.coordinates)
+          .map(w => ({
+            type: 'Feature',
+            geometry: { type: 'Point', coordinates: w.coordinates },
+            properties: { id: w.id, name: w.name, description: w.description, photo_url: w.photo_url || null, trip: w.trip || null }
+          }));
+        map.getSource('waypoints').setData({ type: 'FeatureCollection', features });
+        applyWaypointFilter(currentTripSlug);
+      })
+      .catch(() => {
+        const toggle = document.getElementById('toggle-waypoints');
+        toggle.disabled = true;
+        toggle.closest('.legend-section-label').style.opacity = '0.4';
       });
+
+    // --- 5. LAYER TOGGLES ---
+    function setLayerGroupVisibility(layers, visible) {
+      const v = visible ? 'visible' : 'none';
+      layers.forEach(id => map.setLayoutProperty(id, 'visibility', v));
+    }
+    document.getElementById('toggle-gpx').addEventListener('change', e => {
+      setLayerGroupVisibility(['gpx-line', 'gpx-line-flight'], e.target.checked);
+    });
+    document.getElementById('toggle-waypoints').addEventListener('change', e => {
+      setLayerGroupVisibility(['waypoints'], e.target.checked);
+    });
+    document.getElementById('toggle-inat').addEventListener('change', e => {
+      setLayerGroupVisibility(['inat-points'], e.target.checked);
+    });
+    document.getElementById('toggle-ebird').addEventListener('change', e => {
+      setLayerGroupVisibility(['ebird-points-fill', 'ebird-points-border'], e.target.checked);
+    });
+
+    // --- 6. INTERACTION LOGIC ---
+
+    /**
+     * Change cursor to pointer when hovering over a point
+     */
+    map.on('mouseenter', 'inat-points', () => {
+      map.getCanvas().style.cursor = 'pointer';
+    });
+
+    map.on('mouseleave', 'inat-points', () => {
+      map.getCanvas().style.cursor = '';
+    });
+
+    map.on('mouseenter', 'ebird-points-border', () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'ebird-points-border', () => { map.getCanvas().style.cursor = ''; });
+    map.on('mouseenter', 'waypoints', () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'waypoints', () => { map.getCanvas().style.cursor = ''; });
+
+    map.on('click', (e) => {
+      const hits = map.queryRenderedFeatures(e.point, { layers: ['waypoints', 'inat-points', 'ebird-points-border'] });
+      if (!hits.length) return;
+
+      const feature = hits[0];
+      const props = feature.properties;
+      const coordinates = feature.geometry.coordinates.slice();
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+
+      let html;
+      if (feature.layer.id === 'waypoints') {
+        html = `<div class="popup-waypoint"><strong>${props.name}</strong>${props.photo_url ? `<img src="${props.photo_url}" class="obs-popup-img" alt="${props.name}" />` : ''}</div>`;
+      } else if (feature.layer.id === 'inat-points') {
+        const imgHtml = props.image_url ? `<img src="${props.image_url}" class="obs-popup-img" alt="Observation Photo" />` : '';
+        html = `<a href="${props.obs_url || '#'}" target="_blank" class="obs-popup-link">${imgHtml}${props.title || 'Observation'}</a>
+                <div class="obs-popup-count">${props.global_count || '[Unknown]'} global observations</div>`;
+      } else {
+        const checklists = JSON.parse(props.checklists || '[]').sort((a, b) => a.date.localeCompare(b.date) || a.start_time.localeCompare(b.start_time));
+        const datesStr = props.min_date === props.max_date ? props.min_date : `${props.min_date} – ${props.max_date}`;
+        const checklistRowsHtml = checklists.map(c => {
+          const durationStr = c.duration_min ? ` · ${c.duration_min} min` : '';
+          return `<div class="ebird-checklist-row">
+            <a href="${c.url}" target="_blank">${c.date} ${c.start_time}</a>
+            <span class="ebird-checklist-detail">${c.species_count} sp${durationStr}</span>
+          </div>`;
+        }).join('');
+        html = `<a href="${props.hotspot_url}" target="_blank" class="ebird-popup-title">${props.title}</a>
+                <div class="ebird-popup-meta">${props.species_count} species · ${props.total_individuals} birds · ${props.total_minutes} min</div>
+                <div class="ebird-popup-checklists">${checklistRowsHtml}</div>`;
+      }
+
+      if (currentPopup) { currentPopup.remove(); }
+      currentPopup = new maplibregl.Popup()
+        .setLngLat(coordinates)
+        .setHTML(html)
+        .addTo(map);
+      currentPopup.on('close', () => { currentPopup = null; });
+    });
+
+    // --- Right Click (Context Menu) for Coordinates ---
+
+    // 1. Prevent the default browser menu from appearing
+    map.getCanvas().addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // 2. Show coordinates on right-click
+    map.on('contextmenu', (e) => {
+      if (currentPopup) { currentPopup.remove(); currentPopup = null; }
+      const lat = e.lngLat.lat.toFixed(5);
+      const lon = e.lngLat.lng.toFixed(5);
+
+      currentPopup = new maplibregl.Popup({ closeButton: false }) // Hide the "x" since clicking elsewhere closes it
+        .setLngLat(e.lngLat)
+        .setHTML(`
+          <div style="text-align:center; font-size: 0.9em; padding: 5px;">
+            <strong>${lat}, ${lon}</strong><br>
+            <button onclick="navigator.clipboard.writeText('${lat}, ${lon}')" style="margin-top:5px; cursor:pointer;">
+              Copy to Clipboard
+            </button>
+          </div>
+        `)
+        .addTo(map);
+      currentPopup.on('close', () => { currentPopup = null; });
+    });
+  });
+}
+
+function updateMap(multiLineString, startDate, endDate, tripSlug) {
+  currentTripSlug = tripSlug;
+  // If the map isn't ready yet, wait for the first (and only) 'load' event,
+  // but still respect whichever tab was most recently clicked.
+  if (!mapReady) {
+    const scheduledRequestId = currentRequestId;
+    map.once('load', () => {
+      if (scheduledRequestId !== currentRequestId) return;
+      updateMap(multiLineString, startDate, endDate, tripSlug);
+    });
+    return;
   }
 
-})();
+  const source = map.getSource('gpx-track');
+  if (!source) return;
+
+  source.setData({ type: 'FeatureCollection', features: multiLineString });
+
+  applyInatDateFilter(startDate, endDate);
+  applyEbirdDateFilter(startDate, endDate);
+  applyWaypointFilter(tripSlug);
+
+  const bounds = getBounds(multiLineString);
+  // Ensure bounds are valid before fitting
+  if (!bounds.isEmpty()) {
+    map.fitBounds(bounds, { padding: 40 });
+  }
+}
+
+// Tab Click Event Listeners
+const buttons = document.querySelectorAll('.travel-tabs button');
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const start = btn.dataset.start;
+    const end = btn.dataset.end;
+    const tripSlug = btn.dataset.slug || null;  // null for the World tab
+    const requestId = ++currentRequestId;
+
+    if (currentPopup) { currentPopup.remove(); currentPopup = null; }
+
+    // UI Updates
+    buttons.forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+
+    // The World tab loads all tracks and combines them into one flat array
+    const trackPromise = tripSlug
+      ? loadGPX(tripSlug)
+      : Promise.all(ALL_TRIPS.map(loadGPX)).then(results => results.flat());
+
+    trackPromise.then(multiLine => {
+      // Ignore if a newer tab has been clicked since this request started
+      if (requestId !== currentRequestId) return;
+      if (multiLine.length === 0) return;
+
+      if (!map) initMap(multiLine, start, end, tripSlug);
+      else updateMap(multiLine, start, end, tripSlug);
+    }).catch(err => console.error("Error processing GPX:", err));
+  });
+});
+
+// Initialize First Tab (the same code path as clicking it)
+const firstTab = document.querySelector('.travel-tabs button.active');
+if (firstTab) {
+  firstTab.click();
+} else {
+  document.getElementById('map').innerHTML = '<p style="padding:20px; text-align:center;">No travels found.</p>';
+}
+
+// --- Waypoint search ---
+const waypointQuery = document.getElementById('waypoint-query');
+const waypointSearchBtn = document.getElementById('waypoint-search-btn');
+const waypointResults = document.getElementById('waypoint-search-results');
+
+function renderWaypointResults(data) {
+  if (!Array.isArray(data) || data.length === 0) {
+    waypointResults.innerHTML = '<p class="search-empty">No waypoints found. Try another search.</p>';
+    return;
+  }
+  waypointResults.innerHTML = data.map(item => {
+    const name = item.name || 'Unnamed';
+    const score = typeof item.score === 'number' ? item.score.toFixed(1) : item.score;
+    const dist = typeof item.distance === 'number' ? item.distance.toFixed(3) : item.distance;
+
+    const meta = [`Score: ${score}`];
+    if (item.distance != null) meta.push(`Distance: ${dist}`);
+    if (item.description_distance != null) meta.push(`Desc: ${item.description_distance.toFixed(3)}`);
+    if (item.photo_distance != null) meta.push(`Photo: ${item.photo_distance.toFixed(3)}`);
+
+    const photos = Array.isArray(item.photos) ? item.photos.slice(0, 5) : [];
+    const photosHtml = photos.length === 0 ? '' : `
+      <div class="waypoint-photos">
+        ${photos.map(photo => {
+          const caption = (photo.caption || '').replace(/"/g, '&quot;');
+          return `<img src="${photo.url || ''}" title="${caption}" alt="${caption}" />`;
+        }).join('')}
+      </div>`;
+
+    return `
+      <li class="waypoint-item">
+        <h4>${item.coordinates ? `<button data-coordinates="${item.coordinates}">${name}</button>` : name}</h4>
+        <div class="waypoint-meta">${meta.join(' &middot; ')}</div>
+        ${item.description ? `<p>${item.description}</p>` : ''}
+        ${photosHtml}
+      </li>`;
+  }).join('');
+}
+
+function doWaypointSearch() {
+  const q = (waypointQuery.value || '').trim();
+  if (!q) {
+    waypointResults.innerHTML = '<p class="search-empty">Enter a search term (e.g. ancient temples).</p>';
+    return;
+  }
+  waypointResults.innerHTML = '<p class="search-empty">Searching…</p>';
+  waypointSearchBtn.disabled = true;
+
+  const activeTab = document.querySelector('.travel-tabs button.active');
+  const tripSlug = activeTab ? activeTab.dataset.slug : '';
+  let url = `${TRAVEL_LOG_API}/waypoints/search?q=${encodeURIComponent(q)}`;
+  if (tripSlug) url += `&trip=${encodeURIComponent(tripSlug)}`;
+
+  fetch(url, { headers: API_HEADERS })
+    .then(r => {
+      if (r.status === 401) throw new Error('Invalid or missing site token. Set travel_log_site_token in _config.yml.');
+      if (!r.ok) throw new Error(`Search failed: ${r.status}`);
+      return r.json();
+    })
+    .then(renderWaypointResults)
+    .catch(err => {
+      waypointResults.innerHTML = `<p class="search-error">${err.message || 'Search failed.'}</p>`;
+    })
+    .finally(() => {
+      waypointSearchBtn.disabled = false;
+    });
+}
+
+if (waypointSearchBtn && waypointQuery) {
+  waypointSearchBtn.addEventListener('click', doWaypointSearch);
+  waypointQuery.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); doWaypointSearch(); }
+  });
+
+  waypointResults.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-coordinates]');
+    if (!btn || !map) return;
+    const coords = btn.dataset.coordinates.split(',').map(Number);
+    map.flyTo({ center: coords, zoom: 13 });
+  });
+
+  // Health check on page load — disable search if API is unreachable
+  fetch(`${TRAVEL_LOG_API}/health`, { headers: API_HEADERS })
+    .then(r => {
+      if (!r.ok) throw new Error(`API returned ${r.status}`);
+    })
+    .catch(() => {
+      waypointQuery.disabled = true;
+      waypointSearchBtn.disabled = true;
+      document.getElementById('waypoint-api-status').textContent = 'Search unavailable (API offline)';
+    });
+}
+
 </script>
 
 <p>A rough-and-ready view of my travels over an 18 month sabbatical. </p>

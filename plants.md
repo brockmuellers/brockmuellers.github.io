@@ -19,11 +19,9 @@ show_dead_plants: false
  
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.js"></script>
-<script>$(document).ready(function() {
-    $('#plants').DataTable({
-        "paging": false
-    });
-} );</script>
+<script type="module">
+$('#plants').DataTable({ paging: false });
+</script>
 
 {% include sourced_image.html image=page.image image_class="large-img"%}
 

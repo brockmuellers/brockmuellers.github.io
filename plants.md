@@ -66,7 +66,7 @@ show_dead_plants: false
                     <td data-order="{{ plant.light | replace: "full", "0" | replace: "part", "1" | replace: "indirect", "2" | replace: "shade", "3" }}">
                         {% assign light_amounts = plant.light | split: ";" %}
                         {% for amount in light_amounts %}
-                            <img src="{{ page.light_icons[amount] }}" class="icon">
+                            <img src="{{ page.light_icons[amount] }}" alt="{{ amount }}" class="icon">
                         {% endfor %}
                     </td>
 

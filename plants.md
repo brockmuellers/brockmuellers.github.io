@@ -5,10 +5,12 @@ permalink: /plants/
 
 image: /assets/images/botanical_gardens.jpg
 
-full_sun_image: /assets/images/plant_care/full_sun_64.png
-part_sun_image: /assets/images/plant_care/part_sun_64.png
-indirect_sun_image: /assets/images/plant_care/indirect_sun_64.png
-shade_image: /assets/images/plant_care/black_sun_64.png
+# Icon for each value in the plants.csv light column
+light_icons:
+  full: /assets/images/plant_care/full_sun_64.png
+  part: /assets/images/plant_care/part_sun_64.png
+  indirect: /assets/images/plant_care/indirect_sun_64.png
+  shade: /assets/images/plant_care/black_sun_64.png
 
 show_dead_plants: false
 ---
@@ -60,60 +62,22 @@ show_dead_plants: false
                         {% endif %}
                     </td>
 
-                    <td>
+                    <!-- data-order is the sort key DataTables uses for the column -->
+                    <td data-order="{{ plant.light | replace: "full", "0" | replace: "part", "1" | replace: "indirect", "2" | replace: "shade", "3" }}">
                         {% assign light_amounts = plant.light | split: ";" %}
-                        <!-- include hidden span with vals for column sorting -->
-                        <span hidden>{% for amount in light_amounts %}
-                            {% if amount == "full" %}0{% endif %}
-                            {% if amount == "part" %}1{% endif %}
-                            {% if amount == "indirect" %}2{% endif %}
-                            {% if amount == "shade" %}3{% endif %}
-                        {% endfor %} </span>
-                        <!-- light icons -->
                         {% for amount in light_amounts %}
-                            {% if amount == "full" %}
-                                <img src="{{page.full_sun_image}}" class="icon">
-                            {% endif %}
-                            {% if amount == "part" %}
-                                <img src="{{page.part_sun_image}}" class="icon">
-                            {% endif %}
-                            {% if amount == "indirect" %}
-                                <img src="{{page.indirect_sun_image}}" class="icon">
-                            {% endif %}
-                            {% if amount == "shade" %}
-                                <img src="{{page.shade_image}}" class="icon">
-                            {% endif %}
+                            <img src="{{ page.light_icons[amount] }}" class="icon">
                         {% endfor %}
                     </td>
 
                     <td>{% if plant.temp %}{{plant.temp}}°{% endif %}</td>
 
-                    <td>
-                        <!-- include hidden span with vals for column sorting -->
-                        <span hidden>
-                            {% if plant.water == "evenly moist" %}0{% endif %}
-                            {% if plant.water == "surface dry" %}1{% endif %}
-                            {% if plant.water == "partly dry" %}2{% endif %}
-                            {% if plant.water == "mostly dry" %}3{% endif %}
-                            {% if plant.water == "fully dry" %}4{% endif %}
-                        </span>
-                        {{plant.water}}
-                    </td>
+                    <td data-order="{{ plant.water | replace: "evenly moist", "0" | replace: "surface dry", "1" | replace: "partly dry", "2" | replace: "mostly dry", "3" | replace: "fully dry", "4" }}">{{plant.water}}</td>
 
                     <td>{{plant.humidity}}</td>
 
-                    <td>
-                        <!-- include hidden span with vals for column sorting -->
-                        <!-- assumes only "wk" or "mo" as time values -->
-                        <span hidden>
-                            {% if plant.feed contains "wk" %}
-                                0
-                            {% else %}
-                                1
-                            {% endif %}
-                        </span>
-                        {{plant.feed}}
-                    </td>
+                    <!-- assumes only "wk" or "mo" as time values -->
+                    <td data-order="{% if plant.feed contains "wk" %}0{% else %}1{% endif %}">{{plant.feed}}</td>
 
                     <td>
                         {{plant.notes}}
@@ -149,10 +113,10 @@ Current specimen count: {{specimen_count}}
 ### Key
 
 **Light**\\
-![full]({{page.full_sun_image}}){:class="icon"} Full sun (S window; prefer 50000+ lux)\\
-![part]({{page.part_sun_image}}){:class="icon"} Partial sun (direct morning/afternoon sun in E/W window; prefer 20000-50000 lux, can survive at 4000 lux)\\
-![indirect]({{page.indirect_sun_image}}){:class="icon"} Indirect sun (near a S/E/W window; prefer 10000-20000 lux, can survive at 2000 lux)\\
-![shade]({{page.shade_image}}){:class="icon"} Shade (N window or interior; prefer <10000 lux, can survive at 1000 lux)\\
+![full]({{page.light_icons.full}}){:class="icon"} Full sun (S window; prefer 50000+ lux)\\
+![part]({{page.light_icons.part}}){:class="icon"} Partial sun (direct morning/afternoon sun in E/W window; prefer 20000-50000 lux, can survive at 4000 lux)\\
+![indirect]({{page.light_icons.indirect}}){:class="icon"} Indirect sun (near a S/E/W window; prefer 10000-20000 lux, can survive at 2000 lux)\\
+![shade]({{page.light_icons.shade}}){:class="icon"} Shade (N window or interior; prefer <10000 lux, can survive at 1000 lux)\\
 Listed lux values are very rough estimations.\\
 Most plants can tolerate 2-3 hours of indoor direct sun per day, if properly acclimatized.
 

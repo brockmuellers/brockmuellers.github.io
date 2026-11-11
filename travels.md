@@ -241,6 +241,9 @@ const ALL_TRIPS = [
   {% endfor %}
 ];
 
+// Escape API data for use inside HTML templates, so "<", "&" and quotes show as text
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`);
+
 let map;
 let currentPopup = null;
 const loader = document.getElementById('loader');
@@ -573,23 +576,23 @@ function initMap(multiLineString, startDate, endDate, tripSlug) {
 
       let html;
       if (feature.layer.id === 'waypoints') {
-        html = `<div class="popup-waypoint"><strong>${props.name}</strong>${props.photo_url ? `<img src="${props.photo_url}" class="obs-popup-img" alt="${props.name}" />` : ''}</div>`;
+        html = `<div class="popup-waypoint"><strong>${esc(props.name)}</strong>${props.photo_url ? `<img src="${esc(props.photo_url)}" class="obs-popup-img" alt="${esc(props.name)}" />` : ''}</div>`;
       } else if (feature.layer.id === 'inat-points') {
-        const imgHtml = props.image_url ? `<img src="${props.image_url}" class="obs-popup-img" alt="Observation Photo" />` : '';
-        html = `<a href="${props.obs_url || '#'}" target="_blank" class="obs-popup-link">${imgHtml}${props.title || 'Observation'}</a>
-                <div class="obs-popup-count">${props.global_count || '[Unknown]'} global observations</div>`;
+        const imgHtml = props.image_url ? `<img src="${esc(props.image_url)}" class="obs-popup-img" alt="Observation Photo" />` : '';
+        html = `<a href="${esc(props.obs_url || '#')}" target="_blank" class="obs-popup-link">${imgHtml}${esc(props.title || 'Observation')}</a>
+                <div class="obs-popup-count">${esc(props.global_count || '[Unknown]')} global observations</div>`;
       } else {
         const checklists = JSON.parse(props.checklists || '[]').sort((a, b) => a.date.localeCompare(b.date) || a.start_time.localeCompare(b.start_time));
         const datesStr = props.min_date === props.max_date ? props.min_date : `${props.min_date} – ${props.max_date}`;
         const checklistRowsHtml = checklists.map(c => {
-          const durationStr = c.duration_min ? ` · ${c.duration_min} min` : '';
+          const durationStr = c.duration_min ? ` · ${esc(c.duration_min)} min` : '';
           return `<div class="ebird-checklist-row">
-            <a href="${c.url}" target="_blank">${c.date} ${c.start_time}</a>
-            <span class="ebird-checklist-detail">${c.species_count} sp${durationStr}</span>
+            <a href="${esc(c.url)}" target="_blank">${esc(c.date)} ${esc(c.start_time)}</a>
+            <span class="ebird-checklist-detail">${esc(c.species_count)} sp${durationStr}</span>
           </div>`;
         }).join('');
-        html = `<a href="${props.hotspot_url}" target="_blank" class="ebird-popup-title">${props.title}</a>
-                <div class="ebird-popup-meta">${props.species_count} species · ${props.total_individuals} birds · ${props.total_minutes} min</div>
+        html = `<a href="${esc(props.hotspot_url)}" target="_blank" class="ebird-popup-title">${esc(props.title)}</a>
+                <div class="ebird-popup-meta">${esc(props.species_count)} species · ${esc(props.total_individuals)} birds · ${esc(props.total_minutes)} min</div>
                 <div class="ebird-popup-checklists">${checklistRowsHtml}</div>`;
       }
 
@@ -711,9 +714,9 @@ function renderWaypointResults(data) {
     return;
   }
   waypointResults.innerHTML = data.map(item => {
-    const name = item.name || 'Unnamed';
-    const score = typeof item.score === 'number' ? item.score.toFixed(1) : item.score;
-    const dist = typeof item.distance === 'number' ? item.distance.toFixed(3) : item.distance;
+    const name = esc(item.name || 'Unnamed');
+    const score = typeof item.score === 'number' ? item.score.toFixed(1) : esc(item.score);
+    const dist = typeof item.distance === 'number' ? item.distance.toFixed(3) : esc(item.distance);
 
     const meta = [`Score: ${score}`];
     if (item.distance != null) meta.push(`Distance: ${dist}`);
@@ -724,16 +727,16 @@ function renderWaypointResults(data) {
     const photosHtml = photos.length === 0 ? '' : `
       <div class="waypoint-photos">
         ${photos.map(photo => {
-          const caption = (photo.caption || '').replace(/"/g, '&quot;');
-          return `<img src="${photo.url || ''}" title="${caption}" alt="${caption}" />`;
+          const caption = esc(photo.caption);
+          return `<img src="${esc(photo.url)}" title="${caption}" alt="${caption}" />`;
         }).join('')}
       </div>`;
 
     return `
       <li class="waypoint-item">
-        <h4>${item.coordinates ? `<button data-coordinates="${item.coordinates}">${name}</button>` : name}</h4>
+        <h4>${item.coordinates ? `<button data-coordinates="${esc(item.coordinates)}">${name}</button>` : name}</h4>
         <div class="waypoint-meta">${meta.join(' &middot; ')}</div>
-        ${item.description ? `<p>${item.description}</p>` : ''}
+        ${item.description ? `<p>${esc(item.description)}</p>` : ''}
         ${photosHtml}
       </li>`;
   }).join('');
@@ -761,7 +764,7 @@ function doWaypointSearch() {
     })
     .then(renderWaypointResults)
     .catch(err => {
-      waypointResults.innerHTML = `<p class="search-error">${err.message || 'Search failed.'}</p>`;
+      waypointResults.innerHTML = `<p class="search-error">${esc(err.message || 'Search failed.')}</p>`;
     })
     .finally(() => {
       waypointSearchBtn.disabled = false;

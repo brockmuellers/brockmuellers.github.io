@@ -18,6 +18,7 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
   .birdnet-link .emoji { font-size: 20px; line-height: 22px; position: relative; top: 2px; }
   .updated-at { font-size: 12px; color: #555; }
   .note { margin: 0.5em 0 1em; font-size: 11px; color: #999; }
+  .scroll-x { overflow-x: auto; }
 
   #bird-recent { border-collapse: collapse; font-size: 13px; }
   #bird-recent th { font-weight: normal; color: #666; font-size: 11px; }
@@ -62,7 +63,7 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
   </table>
   <p class="note">Using BirdNET-Pi's local time zone (Vancouver) for bird observations.</p>
   <h3>Detections — last 7 days</h3>
-  <div style="overflow-x:auto">
+  <div class="scroll-x">
     <table id="bird-heatmap"></table>
   </div>
 </div>

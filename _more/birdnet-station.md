@@ -273,7 +273,7 @@ fetch(url)
       tdSrc.className = "source";
       const tdMsg = tr.insertCell();
       tdMsg.textContent = e.msg;
-            return tr;
+      return tr;
     };
 
     const renderedGroups = groupedEvents.map(group => {

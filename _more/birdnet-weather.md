@@ -20,6 +20,7 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
   .chart-title { font-size: 11px; margin-bottom: 2px; }
   .chart-svg { display: block; width: 100%; height: auto; }
   .muted { color: #999; }
+  .harbour-note { color: #6b7280; }
   .caption { margin: 0 0 1.5em; font-size: 11px; color: #999; }
   .credits { margin: 1.5em 0 0; font-size: 11px; color: #999; }
   .swatch { display: inline-block; vertical-align: middle; }
@@ -148,8 +149,8 @@ fetch(url)
       const summaryDiv = document.getElementById("weather-summary");
 
       summaryDiv.appendChild(chipRow("Current", [
-        chip("Temp", fmtTemp(th && th.temp_c)),
-        chip("Humidity", fmtHum(th && th.humidity)),
+        chip("Temp", fmtTemp(th?.temp_c)),
+        chip("Humidity", fmtHum(th?.humidity)),
         chip("Rain today", fmtRain(today.rain_mm)),
         ...sensorWarnings("Thermometer", th),
         ...sensorWarnings("Rain gauge", rg),
@@ -171,7 +172,10 @@ fetch(url)
       const byT = new Map((data.hourly || []).map(w => [new Date(w.window_start).getTime(), w]));
       const times = [...byT.keys()].filter(t => t >= cutoff);
       const hours = [];
-      if (times.length) for (let t = Math.min(...times); t <= Math.max(...times); t += HOUR) hours.push({ ...byT.get(t), t });
+      if (times.length) {
+        const first = Math.min(...times), last = Math.max(...times);
+        for (let t = first; t <= last; t += HOUR) hours.push({ ...byT.get(t), t });
+      }
 
       const chartsDiv = document.getElementById("weather-charts");
       const W = 740, plotH = 90, H = plotH + 14, padL = 44, padR = 4, py = 6;
@@ -268,12 +272,14 @@ fetch(url)
         const g = Math.log(w.humidity.avg / 100) + 17.62 * w.temp_c.avg / (243.12 + w.temp_c.avg);
         return 243.12 * g / (17.62 - g);
       };
-      const tempTitle = `Temperature <span style="color:${COLOR.dew}">and dew point</span>` + (dT == null ? "" :
-        vsOm(useF ? `${(Math.abs(dT) * 9 / 5).toFixed(1)}°F` : `${Math.abs(dT).toFixed(1)}°C`, dT >= 0 ? "warmer" : "cooler"));
+      const tempVsOm = dT == null ? "" :
+        vsOm(useF ? `${(Math.abs(dT) * 9 / 5).toFixed(1)}°F` : `${Math.abs(dT).toFixed(1)}°C`, dT >= 0 ? "warmer" : "cooler");
+      const tempTitle = `Temperature <span style="color:${COLOR.dew}">and dew point</span>${tempVsOm}`;
       renderChart(tempTitle, COLOR.temp, fmtTemp, w => w.temp_c, false, omTemp, { getVal: dewPoint, color: COLOR.dew });
 
       const omHum = omSeries("relative_humidity_2m"), dH = avgDiff(omHum, w => w.humidity);
-      const humTitle = "Humidity" + (dH == null ? "" : vsOm(`${Math.abs(dH).toFixed(0)} points`, dH >= 0 ? "higher" : "lower"));
+      const humVsOm = dH == null ? "" : vsOm(`${Math.abs(dH).toFixed(0)} points`, dH >= 0 ? "higher" : "lower");
+      const humTitle = `Humidity${humVsOm}`;
       renderChart(humTitle, COLOR.humidity, fmtHum, w => w.humidity, false, omHum);
       renderChart("Rain per hour", COLOR.rain, fmtRain, w => w.rain_mm, true);
 
@@ -339,9 +345,13 @@ fetch(url)
           .map(d => [+d.window_start.slice(8), total += d.rain_mm]);
         // Harbour: stop at its first missing day, since a gap would undercount everything after it
         const hb = {};
-        ((ec && ec.features) || []).forEach(x => { hb[x.properties.LOCAL_DATE.slice(0, 10)] = x.properties.TOTAL_PRECIPITATION; });
+        (ec?.features ?? []).forEach(x => { hb[x.properties.LOCAL_DATE.slice(0, 10)] = x.properties.TOTAL_PRECIPITATION; });
         const harbour = [];
-        for (let day = 1, t = 0; hb[`${ym}-${pad(day)}`] != null; day++) harbour.push([day, t += hb[`${ym}-${pad(day)}`]]);
+        let harbourTotal = 0;
+        for (let day = 1; hb[`${ym}-${pad(day)}`] != null; day++) {
+          harbourTotal += hb[`${ym}-${pad(day)}`];
+          harbour.push([day, harbourTotal]);
+        }
         document.getElementById("month-rain-caption").style.display = myRain.length ? "" : "none";
         if (myRain.length) {
           const last = a => a.length ? a[a.length - 1][1] : 0;
@@ -357,7 +367,7 @@ fetch(url)
           });
           const todayDay = +todayStr.slice(8);
           const harbourNote = harbour.length
-            ? ` &nbsp; <span style="color:#6b7280">- - Vancouver Harbour: ${fmtRain(last(harbour))} through ${new Date(yr, mo - 1, harbour.length).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`
+            ? ` &nbsp; <span class="harbour-note">- - Vancouver Harbour: ${fmtRain(last(harbour))} through ${new Date(yr, mo - 1, harbour.length).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`
             : "";
           document.getElementById("month-rain-chart").innerHTML = `
             <div class="chart-title"><span style="color:${COLOR.rain}">● Rain so far: ${fmtRain(last(myRain))}</span>${harbourNote}

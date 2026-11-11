@@ -263,7 +263,7 @@ function getBounds(features) {
 
 // Load a trip's pre-generated GeoJSON (derived from GPX) with caching
 function loadGPX(tripSlug) {
-  const geojsonUrl = "{{ gpx_base }}" + tripSlug + ".geojson";
+  const geojsonUrl = `{{ gpx_base }}${tripSlug}.geojson`;
   if (gpxCache[geojsonUrl]) {
     return Promise.resolve(gpxCache[geojsonUrl]);
   }

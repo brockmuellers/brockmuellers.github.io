@@ -81,9 +81,11 @@ fetch(url)
     document.getElementById("generated-at-value").textContent =
       new Date(data.generated_at).toLocaleString('en-US');
 
-    // Observation timestamps are the station's local time with no offset ("2026-11-11 08:58:23").
-    // Treat them as UTC and format in UTC, so they show the station's clock as-is.
-    const obsTime = o => new Date(o.timestamp.replace(' ', 'T') + 'Z');
+    // Observation timestamps are station-local with no offset ("2026-11-11 08:58:23"), so borrow generated_at's.
+    // Known issue: browsers with pre-permanent-DST tz data show the table an hour off from the heatmap
+    // (which reads the hour straight from the string). Fix if needed: append 'Z' instead and format with timeZone: 'UTC'.
+    const offset = data.generated_at.slice(-6);  // e.g. "-07:00"
+    const obsTime = o => new Date(o.timestamp.replace(' ', 'T') + offset);
 
     // ---- Recent detections ----
     const recentBody = document.getElementById("bird-recent-body");
@@ -92,14 +94,13 @@ fetch(url)
       const tdName = tr.insertCell();
       tdName.textContent = o.common_name;
       const tdTime = tr.insertCell();
-      tdTime.textContent = obsTime(o).toLocaleString('en-US', { timeZone: 'UTC' });
+      tdTime.textContent = obsTime(o).toLocaleString('en-US', { timeZone: data.timezone });
       const tdConf = tr.insertCell();
       tdConf.textContent = `${Math.round(o.confidence * 100)}%`;
     });
 
     // ---- Detections per species and hour, last 7 days ----
-    // Station-local clock time of generated_at, on the same footing as obsTime
-    const cutoff = new Date(data.generated_at.slice(0, 19) + 'Z').getTime() - 7 * DAY;
+    const cutoff = new Date(data.generated_at).getTime() - 7 * DAY;
     const recent = data.recent_observations.filter(o => obsTime(o).getTime() > cutoff);
 
     const species = {};

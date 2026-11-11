@@ -8,27 +8,58 @@ summary: "Status and logs for echo-birdnet"
 
 echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr89/BirdNET-Pi) with [custom telemetry tools](https://github.com/brockmuellers/birdnet-tools).
 
+<style>
+  .updated-at { margin: 0 0 1em; color: #555; font-size: 13px; }
+  #health-metrics { margin: 0 0 1em; display: flex; flex-direction: column; gap: 8px; }
+  #metric-charts { margin: 0 0 1.5em; display: flex; flex-wrap: wrap; gap: 16px; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .chip-row-label { font-size: 11px; color: #999; width: 60px; flex-shrink: 0; }
+  .chip { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 12px; }
+  .chip-label { opacity: 0.7; }
+
+  .chart { display: flex; flex-direction: column; gap: 2px; }
+  .chart-title { font-size: 11px; color: #999; display: flex; gap: 8px; align-items: center; }
+  .chart-body { display: flex; gap: 3px; align-items: flex-start; }
+  .chart-y-labels { display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: #bbb; text-align: right; }
+  .chart svg { display: block; border-radius: 3px; background: #f9fafb; }
+
+  .filters { margin: 0 0 1em; padding-top: 0.75em; border-top: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 6px; }
+  .filters .chip-row-label { color: #666; }
+  .small-btn { font-size: 11px; padding: 2px 8px; border: 1px solid #ccc; border-radius: 3px; background: #fff; cursor: pointer; color: #333; }
+  .small-btn.off { background: #e9ecef; color: #999; text-decoration: line-through; }
+  .show-more { margin-top: 8px; font-size: 12px; padding: 4px 12px; }
+
+  #event-log { border-collapse: collapse; font-size: 13px; width: 100%; }
+  #event-log th { font-weight: normal; color: #666; font-size: 11px; }
+  #event-log th, #event-log td { text-align: left; padding: 3px 12px 3px 0; }
+  #event-log th:last-child, #event-log td:last-child { padding: 3px 0; }
+  #event-log .time, #event-log .level { white-space: nowrap; }
+  #event-log td.time, #event-log td.source { color: #555; }
+  #event-log .level-INFO { color: #2d6a4f; }
+  #event-log .level-WARN { color: #b45309; }
+  #event-log .level-ERROR { color: #b91c1c; font-weight: bold; }
+  #event-log td.group-toggle {
+    padding: 6px 0; text-align: center; background-color: #f9fafb; cursor: pointer; color: #0366d6; font-size: 11px;
+    border-top: 1px dashed #e1e4e8; border-bottom: 1px dashed #e1e4e8;
+  }
+</style>
+
 <div id="machine-status">Loading...</div>
 <div id="machine-content" style="display:none">
-  <p style="margin:0 0 1em;color:#555;font-size:13px"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
-  <div id="health-metrics" style="margin:0 0 1em;display:flex;flex-direction:column;gap:8px"></div>
-  <div id="metric-charts" style="margin:0 0 1.5em;display:flex;flex-wrap:wrap;gap:16px"></div>
-  <div style="margin:0 0 1em;padding-top:0.75em;border-top:1px solid #e5e7eb;display:flex;flex-direction:column;gap:6px">
-    <div id="level-filters" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
-      <span style="font-size:11px;color:#666;font-weight:normal;width:60px;flex-shrink:0">Levels:</span>
+  <p class="updated-at"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
+  <div id="health-metrics"></div>
+  <div id="metric-charts"></div>
+  <div class="filters">
+    <div id="level-filters" class="chip-row">
+      <span class="chip-row-label">Levels:</span>
     </div>
-    <div id="source-filters" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
-      <span style="font-size:11px;color:#666;font-weight:normal;width:60px;flex-shrink:0">Sources:</span>
+    <div id="source-filters" class="chip-row">
+      <span class="chip-row-label">Sources:</span>
     </div>
   </div>
-  <table id="event-log" style="border-collapse:collapse;font-size:13px;width:100%">
+  <table id="event-log">
     <thead>
-      <tr>
-        <th style="text-align:left;padding:3px 12px 3px 0;font-weight:normal;color:#666;font-size:11px;white-space:nowrap">Time</th>
-        <th style="text-align:left;padding:3px 12px 3px 0;font-weight:normal;color:#666;font-size:11px">Level</th>
-        <th style="text-align:left;padding:3px 12px 3px 0;font-weight:normal;color:#666;font-size:11px">Source</th>
-        <th style="text-align:left;padding:3px 0;font-weight:normal;color:#666;font-size:11px">Message</th>
-      </tr>
+      <tr><th class="time">Time</th><th>Level</th><th>Source</th><th>Message</th></tr>
     </thead>
     <tbody id="event-log-body"></tbody>
   </table>
@@ -38,11 +69,6 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
 <script type="module">
 const url = "{{ page.event_log_url }}";
 
-const LEVEL_STYLE = {
-  "INFO":  "color:#2d6a4f",
-  "WARN":  "color:#b45309",
-  "ERROR": "color:#b91c1c;font-weight:bold"
-};
 
 fetch(url)
   .then(r => {
@@ -98,16 +124,18 @@ fetch(url)
     const chip = (label, value, color, id) => {
       const el = document.createElement("span");
       if (id) el.id = id;
-      el.style.cssText = `display:inline-block;padding:3px 10px;border-radius:4px;font-size:12px;background:${BG[color]};color:${FG[color]}`;
-      el.innerHTML = `<span style='opacity:0.7'>${label}:</span> ${value}`;
+      el.className = "chip";
+      el.style.background = BG[color];
+      el.style.color = FG[color];
+      el.innerHTML = `<span class="chip-label">${label}:</span> ${value}`;
       return el;
     };
 
     const metricSection = (sectionLabel, metrics) => {
       const row = document.createElement("div");
-      row.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;align-items:center";
+      row.className = "chip-row";
       const lbl = document.createElement("span");
-      lbl.style.cssText = "font-size:11px;color:#999;width:60px;flex-shrink:0";
+      lbl.className = "chip-row-label";
       lbl.textContent = sectionLabel;
       row.appendChild(lbl);
       metrics.forEach(m => row.appendChild(chip(m.label, m.fmt(m.value), chipColor(m), m.id)));
@@ -120,7 +148,7 @@ fetch(url)
 
     setInterval(() => {
       const el = document.getElementById("upload-chip");
-      if (el) el.innerHTML = `<span style='opacity:0.7'>Upload:</span> ${fmtUploadAge()}`;
+      if (el) el.innerHTML = `<span class="chip-label">Upload:</span> ${fmtUploadAge()}`;
     }, 60000);
 
     const CHART_METRICS = [
@@ -158,15 +186,15 @@ fetch(url)
         const yf = chartYScale(vMin, vMax, plotH, py);
         const midnightTt = tt.filter(t => fmtTime(t) === '00:00');
         const wrap = document.createElement("div");
-        wrap.style.cssText = "display:flex;flex-direction:column;gap:2px";
+        wrap.className = "chart";
         wrap.innerHTML = `
-          <div style="font-size:11px;color:#999;display:flex;gap:8px;align-items:center">${titleHtml}</div>
-          <div style="display:flex;gap:3px;align-items:flex-start">
-            <div style="display:flex;flex-direction:column;justify-content:space-between;font-size:9px;color:#bbb;text-align:right;height:${plotH}px">
+          <div class="chart-title">${titleHtml}</div>
+          <div class="chart-body">
+            <div class="chart-y-labels" style="height:${plotH}px">
               <span>${fmt(vMax)}</span>
               <span>${fmt(vMin)}</span>
             </div>
-            <svg width="${W}" height="${H}" style="display:block;border-radius:3px;background:#f9fafb">
+            <svg width="${W}" height="${H}">
               ${buildInnerSvg(xf, yf)}
               <text x="${px}" y="${H - 2}" text-anchor="start" font-size="9" fill="#bbb">${fmtTime(t0)}</text>
               <text x="${W - px}" y="${H - 2}" text-anchor="end" font-size="9" fill="#bbb">${fmtTime(t1)}</text>
@@ -236,17 +264,16 @@ fetch(url)
       if (isHidden) tr.style.display = "none";
       const tdTs = tr.insertCell();
       tdTs.textContent = new Date(e.ts).toLocaleString('en-US', { timeZone: data.timezone });
-      tdTs.style.cssText = "padding:3px 12px 3px 0;color:#555;white-space:nowrap";
+      tdTs.className = "time";
       const tdLevel = tr.insertCell();
       tdLevel.textContent = e.level;
-      tdLevel.style.cssText = `padding:3px 12px 3px 0;white-space:nowrap;${LEVEL_STYLE[e.level] || ""}`;
+      tdLevel.className = `level level-${e.level}`;
       const tdSrc = tr.insertCell();
       tdSrc.textContent = e.source;
-      tdSrc.style.cssText = "padding:3px 12px 3px 0;color:#555";
+      tdSrc.className = "source";
       const tdMsg = tr.insertCell();
       tdMsg.textContent = e.msg;
-      tdMsg.style.cssText = "padding:3px 0";
-      return tr;
+            return tr;
     };
 
     const renderedGroups = groupedEvents.map(group => {
@@ -259,7 +286,7 @@ fetch(url)
         toggleTr = tbody.insertRow();
         const toggleTd = toggleTr.insertCell();
         toggleTd.colSpan = 4;
-        toggleTd.style.cssText = "padding:6px 0; text-align:center; background-color:#f9fafb; cursor:pointer; color:#0366d6; font-size:11px; border-top: 1px dashed #e1e4e8; border-bottom: 1px dashed #e1e4e8;";
+        toggleTd.className = "group-toggle";
         toggleTd.textContent = `▼ Expand ${group.length - 1} identical lines`;
         hiddenRows = group.slice(1).map(e => renderRow(e, true));
         toggleTd.addEventListener("click", () => {
@@ -294,14 +321,14 @@ fetch(url)
     allLevels.forEach(lvl => {
       const btn = document.createElement("button");
       btn.textContent = lvl;
-      btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#fff;cursor:pointer;color:#333";
+      btn.className = "small-btn";
       btn.addEventListener("click", () => {
         if (hiddenLevels.has(lvl)) {
           hiddenLevels.delete(lvl);
-          btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#fff;cursor:pointer;color:#333";
+          btn.classList.remove("off");
         } else {
           hiddenLevels.add(lvl);
-          btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#e9ecef;cursor:pointer;color:#999;text-decoration:line-through";
+          btn.classList.add("off");
         }
         applyFilter();
       });
@@ -311,15 +338,15 @@ fetch(url)
     allSources.forEach(src => {
       const btn = document.createElement("button");
       btn.textContent = src;
-      btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#fff;cursor:pointer;color:#333";
+      btn.className = "small-btn";
       btn.dataset.source = src;
       btn.addEventListener("click", () => {
         if (hiddenSources.has(src)) {
           hiddenSources.delete(src);
-          btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#fff;cursor:pointer;color:#333";
+          btn.classList.remove("off");
         } else {
           hiddenSources.add(src);
-          btn.style.cssText = "font-size:11px;padding:2px 8px;border:1px solid #ccc;border-radius:3px;background:#e9ecef;cursor:pointer;color:#999;text-decoration:line-through";
+          btn.classList.add("off");
         }
         applyFilter();
       });
@@ -331,7 +358,7 @@ fetch(url)
     if (!showAll) {
       const showMoreBtn = document.createElement("button");
       showMoreBtn.textContent = `Show all (${renderedGroups.length - INITIAL_LIMIT} more groups)`;
-      showMoreBtn.style.cssText = "margin-top:8px;font-size:12px;padding:4px 12px;border:1px solid #ccc;border-radius:3px;background:#fff;cursor:pointer;color:#333";
+      showMoreBtn.className = "small-btn show-more";
       showMoreBtn.addEventListener("click", () => {
         showAll = true;
         showMoreBtn.remove();

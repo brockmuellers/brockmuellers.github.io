@@ -5,41 +5,70 @@ permalink: /birds/
 birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
 ---
 
+<style>
+  .birdnet-links { display: flex; align-items: center; gap: 12px; margin-bottom: 1em; }
+  /* "a." so these beat minima's a:visited and a:hover */
+  a.birdnet-link {
+    display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+    padding: 6px 14px; border: 2px solid #2d6a4f; border-radius: 4px; background: #f0f7f4;
+    color: #2d6a4f; text-decoration: none; font-size: 15px; line-height: 1;
+  }
+  .birdnet-link img { height: 22px; width: auto; display: block; }
+  .birdnet-link .label { position: relative; top: 1px; }
+  .birdnet-link .emoji { font-size: 20px; line-height: 22px; position: relative; top: 2px; }
+  .updated-at { font-size: 12px; color: #555; }
+  .note { margin: 0.5em 0 1em; font-size: 11px; color: #999; }
+
+  #bird-recent { border-collapse: collapse; font-size: 13px; }
+  #bird-recent th { font-weight: normal; color: #666; font-size: 11px; }
+  #bird-recent th, #bird-recent td { text-align: left; padding: 3px 12px 3px 0; }
+  #bird-recent td + td { color: #555; }
+  #bird-recent th:last-child, #bird-recent td:last-child { text-align: right; padding: 3px 0; }
+
+  #bird-heatmap { border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+  #bird-heatmap th.name { min-width: 140px; padding: 2px 8px; }
+  #bird-heatmap td.name { text-align: right; padding: 3px 8px; }
+  #bird-heatmap th.bar { width: 120px; padding: 2px 4px; font-weight: normal; color: #666; font-size: 11px; }
+  #bird-heatmap td.bar { width: 120px; padding: 3px 4px; }
+  #bird-heatmap .hour { width: 24px; text-align: center; padding: 2px 1px; font-size: 11px; }
+  #bird-heatmap th.hour { font-weight: normal; }
+  #bird-heatmap th.noon { color: #2d6a4f; }
+  #bird-heatmap td.hour { border: 1px solid #f0f0f0; }
+  .bird-bar {
+    display: flex; align-items: center; justify-content: flex-end; box-sizing: border-box;
+    height: 18px; min-width: 2px; padding-right: 3px; background: #2d6a4f; color: #fff; font-size: 11px;
+  }
+</style>
+
 <div id="birds-status">Loading bird data...</div>
 <div id="birds-content" style="display:none">
-  <div style="display:flex;align-items:center;gap:12px;margin-bottom:1em">
-    <a href="/birdnet-station/" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:2px solid #2d6a4f;border-radius:4px;text-decoration:none;font-size:15px;line-height:1;color:#2d6a4f;background:#f0f7f4;flex-shrink:0">
-      <img src="/assets/images/birdnet_logo.png" style="height:22px;width:auto;display:block">
-      <span style="position:relative;top:1px">BirdNET Station</span>
+  <div class="birdnet-links">
+    <a class="birdnet-link" href="/birdnet-station/">
+      <img src="/assets/images/birdnet_logo.png">
+      <span class="label">BirdNET Station</span>
     </a>
-    <a href="/birdnet-weather/" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:2px solid #2d6a4f;border-radius:4px;text-decoration:none;font-size:15px;line-height:1;color:#2d6a4f;background:#f0f7f4;flex-shrink:0">
-      <span style="font-size:20px;line-height:22px;position:relative;top:2px">🌦</span>
-      <span style="position:relative;top:1px">Weather</span>
+    <a class="birdnet-link" href="/birdnet-weather/">
+      <span class="emoji">🌦</span>
+      <span class="label">Weather</span>
     </a>
-    <span style="font-size:12px;color:#555">Updated at: <span id="generated-at-value"></span></span>
+    <span class="updated-at">Updated at: <span id="generated-at-value"></span></span>
   </div>
   <h3>Recent detections</h3>
-  <table id="bird-recent" style="border-collapse:collapse;font-size:13px">
+  <table id="bird-recent">
     <thead>
-      <tr>
-        <th style="text-align:left;padding:3px 12px 3px 0;font-weight:normal;color:#666;font-size:11px">Species</th>
-        <th style="text-align:left;padding:3px 12px 3px 0;font-weight:normal;color:#666;font-size:11px">Time</th>
-        <th style="text-align:right;padding:3px 0;font-weight:normal;color:#666;font-size:11px">Confidence</th>
-      </tr>
+      <tr><th>Species</th><th>Time</th><th>Confidence</th></tr>
     </thead>
     <tbody id="bird-recent-body"></tbody>
   </table>
-  <p style="margin:0.5em 0 1em;font-size:11px;color:#999">Using BirdNET-Pi's local time zone (Vancouver) for bird observations.</p>
+  <p class="note">Using BirdNET-Pi's local time zone (Vancouver) for bird observations.</p>
   <h3>Detections — last 7 days</h3>
   <div style="overflow-x:auto">
-    <table id="bird-heatmap" style="border-collapse:collapse;font-size:13px;white-space:nowrap"></table>
+    <table id="bird-heatmap"></table>
   </div>
 </div>
 
 <script type="module">
 const url = "{{ page.birds_data_url }}";
-const GREEN = "#2d6a4f";
-const BAR_WIDTH = 120;
 const DAY = 24 * 60 * 60 * 1000;
 
 fetch(url)
@@ -62,13 +91,10 @@ fetch(url)
       const tr = recentBody.insertRow();
       const tdName = tr.insertCell();
       tdName.textContent = o.common_name;
-      tdName.style.cssText = "padding:3px 12px 3px 0";
       const tdTime = tr.insertCell();
       tdTime.textContent = obsTime(o).toLocaleString('en-US', { timeZone: 'UTC' });
-      tdTime.style.cssText = "padding:3px 12px 3px 0;color:#555";
       const tdConf = tr.insertCell();
       tdConf.textContent = `${Math.round(o.confidence * 100)}%`;
-      tdConf.style.cssText = "text-align:right;padding:3px 0;color:#555";
     });
 
     // ---- Detections per species and hour, last 7 days ----
@@ -91,17 +117,15 @@ fetch(url)
 
     // Header row
     const headerRow = table.createTHead().insertRow();
-    const addTh = (text, css = "") => {
+    const addTh = (text, className) => {
       const th = document.createElement("th");
       th.textContent = text;
-      th.style.cssText = css;
+      th.className = className;
       headerRow.appendChild(th);
     };
-    addTh("", "min-width:140px;padding:2px 8px");
-    addTh("Detections", `width:${BAR_WIDTH}px;padding:2px 4px;font-weight:normal;color:#666;font-size:11px`);
-    for (let h = 0; h < 24; h++) {
-      addTh(h, "width:24px;text-align:center;padding:2px 1px;font-weight:normal;font-size:11px" + (h === 12 ? `;color:${GREEN}` : ""));
-    }
+    addTh("", "name");
+    addTh("Detections", "bar");
+    for (let h = 0; h < 24; h++) addTh(h, h === 12 ? "hour noon" : "hour");
 
     // Data rows
     const tbody = table.createTBody();
@@ -111,19 +135,19 @@ fetch(url)
 
       const tdName = tr.insertCell();
       tdName.textContent = name;
-      tdName.style.cssText = "text-align:right;padding:3px 8px";
+      tdName.className = "name";
 
       const tdBar = tr.insertCell();
-      tdBar.style.cssText = `padding:3px 4px;width:${BAR_WIDTH}px`;
+      tdBar.className = "bar";
       const bar = document.createElement("div");
-      const pct = Math.round(s.total / maxTotal * 100);
-      bar.style.cssText = `background:${GREEN};height:18px;width:${pct}%;min-width:2px;display:flex;align-items:center;justify-content:flex-end;padding-right:3px;box-sizing:border-box;color:#fff;font-size:11px`;
+      bar.className = "bird-bar";
+      bar.style.width = `${Math.round(s.total / maxTotal * 100)}%`;
       bar.textContent = s.total;
       tdBar.appendChild(bar);
 
       s.hours.forEach(count => {
         const tdH = tr.insertCell();
-        tdH.style.cssText = "width:24px;text-align:center;padding:2px 1px;font-size:11px;border:1px solid #f0f0f0";
+        tdH.className = "hour";
         if (count > 0) {
           const alpha = 0.2 + (count / maxHour) * 0.8;
           tdH.style.backgroundColor = `rgba(45,106,79,${alpha.toFixed(2)})`;

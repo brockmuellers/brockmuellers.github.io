@@ -8,10 +8,36 @@ summary: "Temperature, humidity, and rain at echo-birdnet"
 
 Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCrosse Temperature and Humidity Sensor, AcuRite Self-Emptying Rain Collector.
 
+<style>
+  .updated-at, #weather-units { margin: 0 0 1em; color: #555; font-size: 13px; }
+  #weather-summary { margin: 0 0 1.5em; display: flex; flex-direction: column; gap: 8px; }
+  #weather-charts { margin: 0 0 0.5em; display: flex; flex-direction: column; gap: 16px; }
+  #month-chart, #month-rain-chart { margin: 0 0 0.5em; }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .chip-row-label { font-size: 11px; color: #999; width: 70px; flex-shrink: 0; }
+  .chip { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 12px; }
+  .chip-label { opacity: 0.7; }
+  .chart-title { font-size: 11px; margin-bottom: 2px; }
+  .chart-svg { display: block; width: 100%; height: auto; }
+  .muted { color: #999; }
+  .caption { margin: 0 0 1.5em; font-size: 11px; color: #999; }
+  .credits { margin: 1.5em 0 0; font-size: 11px; color: #999; }
+  .swatch { display: inline-block; vertical-align: middle; }
+  .swatch.no-data { width: 10px; height: 10px; background: #e5e7eb; }
+  .swatch.dashed { width: 14px; border-top: 1px dashed #9ca3af; }
+
+  #daily { border-collapse: collapse; font-size: 13px; }
+  #daily th { font-weight: normal; color: #666; font-size: 11px; }
+  #daily th, #daily td { text-align: right; padding: 3px 16px 3px 0; }
+  #daily th:first-child, #daily td:first-child { text-align: left; }
+  #daily th:last-child, #daily td:last-child { padding: 3px 0; }
+  #daily td + td { color: #555; }
+</style>
+
 <div id="weather-status">Loading...</div>
 <div id="weather-content" style="display:none">
-  <p style="margin:0 0 1em;color:#555;font-size:13px"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
-  <div id="weather-units" style="margin:0 0 1em;font-size:13px;color:#555">
+  <p class="updated-at"><strong>Updated at:</strong> <span id="generated-at-value"></span></p>
+  <div id="weather-units">
     Units:
     <label><input type="radio" name="temp-unit" value="F" checked> °F</label>
     <label><input type="radio" name="temp-unit" value="C"> °C</label>
@@ -19,38 +45,32 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
     <label><input type="radio" name="rain-unit" value="in" checked> in</label>
     <label><input type="radio" name="rain-unit" value="mm"> mm</label>
   </div>
-  <div id="weather-summary" style="margin:0 0 1.5em;display:flex;flex-direction:column;gap:8px"></div>
+  <div id="weather-summary"></div>
   <h3>Last 7 days</h3>
-  <div id="weather-charts" style="margin:0 0 0.5em;display:flex;flex-direction:column;gap:16px"></div>
-  <p style="margin:0 0 1.5em;font-size:11px;color:#999"><span style="display:inline-block;width:10px;height:10px;background:#e5e7eb;vertical-align:middle"></span> no data from sensor
-    &nbsp;·&nbsp; <span style="display:inline-block;width:14px;border-top:1px dashed #9ca3af;vertical-align:middle"></span> Open-Meteo's current readings for the area</p>
+  <div id="weather-charts"></div>
+  <p class="caption"><span class="swatch no-data"></span> no data from sensor
+    &nbsp;·&nbsp; <span class="swatch dashed"></span> Open-Meteo's current readings for the area</p>
   <div id="month-section" style="display:none">
     <h3 id="month-title"></h3>
-    <div id="month-chart" style="margin:0 0 0.5em"></div>
-    <p style="margin:0 0 1.5em;font-size:11px;color:#999">
+    <div id="month-chart"></div>
+    <p class="caption">
       Dots are this sensor's daily highs and lows (hollow = today so far). Bands show the normal range of highs and lows for this area (~10 km resolution), 1991–2020: the darker band is the 25th to 75th percentile, the lighter band is the 10th to 90th percentile, and the line is the median.
       This sensor may read consistently warmer or cooler than the area; see the temperature chart above for a comparison with current data.
     </p>
-    <div id="month-rain-chart" style="margin:0 0 0.5em"></div>
-    <p id="month-rain-caption" style="margin:0 0 1.5em;font-size:11px;color:#999">
+    <div id="month-rain-chart"></div>
+    <p id="month-rain-caption" class="caption">
       Line is this sensor's rain so far this month; dashed line is Environment Canada's Vancouver Harbour gauge, ~4 km away (posted a day or two late).
       Bands show the normal range of totals at that gauge by each day, 1991–2020, with the same percentiles as above. Rain varies a lot over short distances, so expect some difference.
     </p>
   </div>
   <h3>Daily</h3>
-  <table style="border-collapse:collapse;font-size:13px">
+  <table id="daily">
     <thead>
-      <tr>
-        <th style="text-align:left;padding:3px 16px 3px 0;font-weight:normal;color:#666;font-size:11px">Date</th>
-        <th style="text-align:right;padding:3px 16px 3px 0;font-weight:normal;color:#666;font-size:11px">Low</th>
-        <th style="text-align:right;padding:3px 16px 3px 0;font-weight:normal;color:#666;font-size:11px">High</th>
-        <th style="text-align:right;padding:3px 16px 3px 0;font-weight:normal;color:#666;font-size:11px">Humidity</th>
-        <th style="text-align:right;padding:3px 0;font-weight:normal;color:#666;font-size:11px">Rain</th>
-      </tr>
+      <tr><th>Date</th><th>Low</th><th>High</th><th>Humidity</th><th>Rain</th></tr>
     </thead>
     <tbody id="daily-body"></tbody>
   </table>
-  <p style="margin:1.5em 0 0;font-size:11px;color:#999">Model and historical weather data by <a href="https://open-meteo.com/">Open-Meteo.com</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>).
+  <p class="credits">Model and historical weather data by <a href="https://open-meteo.com/">Open-Meteo.com</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>).
     Rain data from <a href="https://climate.weather.gc.ca/">Environment and Climate Change Canada</a>; contains information licensed under the <a href="https://open.canada.ca/en/open-government-licence-canada">Open Government Licence – Canada</a>.</p>
 </div>
 
@@ -95,15 +115,17 @@ fetch(url)
       // ---- Summary chips ----
       const chip = (label, value, color = "neutral") => {
         const el = document.createElement("span");
-        el.style.cssText = `display:inline-block;padding:3px 10px;border-radius:4px;font-size:12px;background:${BG[color]};color:${FG[color]}`;
-        el.innerHTML = `<span style='opacity:0.7'>${label}:</span> ${value}`;
+        el.className = "chip";
+        el.style.background = BG[color];
+        el.style.color = FG[color];
+        el.innerHTML = `<span class="chip-label">${label}:</span> ${value}`;
         return el;
       };
       const chipRow = (rowLabel, chips) => {
         const row = document.createElement("div");
-        row.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;align-items:center";
+        row.className = "chip-row";
         const lbl = document.createElement("span");
-        lbl.style.cssText = "font-size:11px;color:#999;width:70px;flex-shrink:0";
+        lbl.className = "chip-row-label";
         lbl.textContent = rowLabel;
         row.appendChild(lbl);
         chips.forEach(c => row.appendChild(c));
@@ -218,8 +240,8 @@ fetch(url)
 
         const wrap = document.createElement("div");
         wrap.innerHTML = `
-          <div style="font-size:11px;color:${color};margin-bottom:2px">${title}</div>
-          <svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%;height:auto">
+          <div class="chart-title" style="color:${color}">${title}</div>
+          <svg viewBox="0 0 ${W} ${H}" class="chart-svg">
             <rect x="${padL}" y="0" width="${W - padL - padR}" height="${plotH}" fill="#f9fafb"/>
             ${svg}
             <text x="${padL - 4}" y="${py + 3}" text-anchor="end" font-size="9" fill="#999">${fmt(vMax)}</text>
@@ -237,7 +259,7 @@ fetch(url)
           .map(w => getVal(w).avg - (ref.get(w.t) + ref.get(w.t + HOUR)) / 2);
         return diffs.length ? diffs.reduce((s, x) => s + x, 0) / diffs.length : null;
       };
-      const vsOm = (mag, word) => ` <span style="color:#999">· this week the sensor averaged ${mag} ${word} than Open-Meteo's current readings (dashed line)</span>`;
+      const vsOm = (mag, word) => ` <span class="muted">· this week the sensor averaged ${mag} ${word} than Open-Meteo's current readings (dashed line)</span>`;
 
       const omTemp = omSeries("temperature_2m"), dT = avgDiff(omTemp, w => w.temp_c);
       // Dew point from the hour's average temperature and humidity (Magnus formula)
@@ -285,7 +307,7 @@ fetch(url)
           `<text x="${f(xd(day))}" y="${mTotal - 2}" text-anchor="middle" font-size="9" fill="#999">${day}</text>`).join("");
         // Plot frame with min/max labels on the y axis
         const frame = (svg, yLabelMax, yLabelMin) => `
-          <svg viewBox="0 0 ${W} ${mTotal}" style="display:block;width:100%;height:auto">
+          <svg viewBox="0 0 ${W} ${mTotal}" class="chart-svg">
             <rect x="${padL}" y="0" width="${W - padL - padR}" height="${mH}" fill="#f9fafb"/>
             ${svg}${dayLabels}
             <text x="${padL - 4}" y="${mPy + 3}" text-anchor="end" font-size="9" fill="#999">${yLabelMax}</text>
@@ -306,7 +328,7 @@ fetch(url)
         document.getElementById("month-title").textContent =
           `${new Date(yr, mo - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} vs. normal`;
         document.getElementById("month-chart").innerHTML = `
-          <div style="font-size:11px;margin-bottom:2px"><span style="color:${HI}">● Daily high</span> &nbsp; <span style="color:${LO}">● Daily low</span></div>
+          <div class="chart-title"><span style="color:${HI}">● Daily high</span> &nbsp; <span style="color:${LO}">● Daily low</span></div>
           ${frame(svg, fmtTemp(vMax), fmtTemp(vMin))}`;
 
         // Rain so far this month: running totals for this sensor and Vancouver Harbour, over the normal range
@@ -338,8 +360,8 @@ fetch(url)
             ? ` &nbsp; <span style="color:#6b7280">- - Vancouver Harbour: ${fmtRain(last(harbour))} through ${new Date(yr, mo - 1, harbour.length).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>`
             : "";
           document.getElementById("month-rain-chart").innerHTML = `
-            <div style="font-size:11px;margin-bottom:2px"><span style="color:${COLOR.rain}">● Rain so far: ${fmtRain(last(myRain))}</span>${harbourNote}
-              <span style="color:#999">· normal by today: ${fmtRain(rainRows[todayDay - 1][2])}</span></div>
+            <div class="chart-title"><span style="color:${COLOR.rain}">● Rain so far: ${fmtRain(last(myRain))}</span>${harbourNote}
+              <span class="muted">· normal by today: ${fmtRain(rainRows[todayDay - 1][2])}</span></div>
             ${frame(rsvg, fmtRain(rMax), fmtRain(0))}`;
         }
         document.getElementById("month-section").style.display = "block";
@@ -351,18 +373,13 @@ fetch(url)
         const tr = tbody.insertRow();
         // window_start is a bare local date ("2026-11-09"), which JS parses as UTC midnight, so format it in UTC too
         const label = new Date(d.window_start).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
-        const cells = [
-          [i === 0 ? `${label} (so far)` : label, "left"],
-          [fmtTemp(d.temp_c && d.temp_c.min), "right"],
-          [fmtTemp(d.temp_c && d.temp_c.max), "right"],
-          [fmtHum(d.humidity && d.humidity.avg), "right"],
-          [fmtRain(d.rain_mm), "right"],
-        ];
-        cells.forEach(([text, align], j) => {
-          const td = tr.insertCell();
-          td.textContent = text;
-          td.style.cssText = `text-align:${align};padding:3px ${j === cells.length - 1 ? 0 : 16}px 3px 0;${j > 0 ? "color:#555" : ""}`;
-        });
+        [
+          i === 0 ? `${label} (so far)` : label,
+          fmtTemp(d.temp_c && d.temp_c.min),
+          fmtTemp(d.temp_c && d.temp_c.max),
+          fmtHum(d.humidity && d.humidity.avg),
+          fmtRain(d.rain_mm),
+        ].forEach(text => { tr.insertCell().textContent = text; });
       });
     };
 

@@ -19,9 +19,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
 
   .chart { display: flex; flex-direction: column; gap: 2px; }
   .chart-title { font-size: 11px; color: #999; display: flex; gap: 8px; align-items: center; }
-  .chart-body { display: flex; gap: 3px; align-items: flex-start; }
-  .chart-y-labels { display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: #bbb; text-align: right; }
-  .chart svg { display: block; border-radius: 3px; background: #f9fafb; }
+  .chart svg { display: block; }
 
   .filters { margin: 0 0 1em; padding-top: 0.75em; border-top: 1px solid #e5e7eb; display: flex; flex-direction: column; gap: 6px; }
   .filters .chip-row-label { color: #666; }
@@ -152,10 +150,10 @@ fetch(url)
     }, 60000);
 
     const CHART_METRICS = [
-      { key: "temp_c",              label: "Temperature", ...T.temp,   fmt: v => `${v.toFixed(1)}°C` },
-      { key: "memory_available_mb", label: "Memory Free", ...T.memory, fmt: v => `${Math.round(v)} MB` },
-      { key: "wifi_signal_dbm",     label: "WiFi Signal", ...T.wifi,   fmt: v => `${Math.round(v)} dBm` },
-      { label: "Disk I/O", fmt: v => `${v.toFixed(1)} MB`, series: [
+      { key: "temp_c",              label: "Temperature", ...T.temp,   unit: { suffix: "°C" } },
+      { key: "memory_available_mb", label: "Memory Free", ...T.memory, unit: { suffix: " MB" } },
+      { key: "wifi_signal_dbm",     label: "WiFi Signal", ...T.wifi,   unit: { suffix: " dBm" } },
+      { label: "Disk I/O", unit: { suffix: " MB" }, series: [
         { key: "disk_io_read_mb",  label: "Read",  color: "#2563eb" },
         { key: "disk_io_write_mb", label: "Write", color: "#c026d3" },
       ]},
@@ -171,7 +169,7 @@ fetch(url)
       const chartsDiv = document.getElementById("metric-charts");
       const fmtTime = ms => new Date(ms).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: data.timezone, hour12: false });
       const fmtDate = ms => new Date(ms).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', timeZone: data.timezone });
-      const W = 275, plotH = 70, H = plotH + 12, px = 4, py = 6;
+      const W = 315, plotH = 70, H = plotH + 12, padL = 40, px = 4, py = 6;
       const CHART_STROKE = { green: "#16a34a", yellow: "#ca8a04", red: "#dc2626", neutral: "#6b7280" };
 
       // Band and avg-line segments between consecutive points; colorFn(i) colors segment i
@@ -180,27 +178,23 @@ fetch(url)
       const buildLineSvg = (vals, tt, xf, yf, colorFn) =>
         vals.slice(0, -1).map((v, i) => chartLine(xf(tt[i]), v, xf(tt[i+1]), vals[i+1], yf, colorFn(i))).join('');
 
-      const renderChart = (titleHtml, tt, vMin, vMax, fmt, buildInnerSvg) => {
+      const renderChart = (titleHtml, tt, vMin, vMax, unit, buildInnerSvg) => {
         const t0 = tt[0], t1 = tt[tt.length - 1], tr = t1 - t0;
-        const xf = t => px + ((t - t0) / tr) * (W - 2 * px);
-        const yf = chartYScale(vMin, vMax, plotH, py);
+        const xf = t => padL + ((t - t0) / tr) * (W - padL - px);
+        const axis = chartAxis(vMin, vMax, 4, unit);
+        const yf = chartYScale(axis.lo, axis.hi, plotH, py);
         const midnightTt = tt.filter(t => fmtTime(t) === '00:00');
         const wrap = document.createElement("div");
         wrap.className = "chart";
         wrap.innerHTML = `
           <div class="chart-title">${titleHtml}</div>
-          <div class="chart-body">
-            <div class="chart-y-labels" style="height:${plotH}px">
-              <span>${fmt(vMax)}</span>
-              <span>${fmt(vMin)}</span>
-            </div>
-            <svg width="${W}" height="${H}">
-              ${buildInnerSvg(xf, yf)}
-              <text x="${px}" y="${H - 2}" text-anchor="start" font-size="9" fill="#bbb">${fmtTime(t0)}</text>
-              <text x="${W - px}" y="${H - 2}" text-anchor="end" font-size="9" fill="#bbb">${fmtTime(t1)}</text>
-              ${midnightTt.map(t => `<text x="${xf(t).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="9" fill="#bbb">${fmtDate(t)}</text>`).join('')}
-            </svg>
-          </div>`;
+          <svg width="${W}" height="${H}">
+            <rect x="${padL}" y="0" width="${W - padL}" height="${plotH}" rx="3" fill="#f9fafb"/>
+            ${midnightTt.map(t => `<line x1="${xf(t).toFixed(1)}" y1="0" x2="${xf(t).toFixed(1)}" y2="${plotH}" stroke="#e5e7eb"/>`).join('')}
+            ${chartGrid(axis, yf, padL, W - px)}
+            ${buildInnerSvg(xf, yf)}
+            ${midnightTt.map(t => `<text x="${xf(t).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="9" fill="#bbb">${fmtDate(t)}</text>`).join('')}
+          </svg>`;
         chartsDiv.appendChild(wrap);
       };
 
@@ -211,7 +205,7 @@ fetch(url)
           const tt = ww.map(w => new Date(w.window_start).getTime());
           const allVals = ww.flatMap(w => metric.series.flatMap(s => [w[s.key].min, w[s.key].max]));
           const titleHtml = `<span>${metric.label}</span>${metric.series.map(s => `<span style="color:${s.color}">&#9679; ${s.label}</span>`).join('')}`;
-          renderChart(titleHtml, tt, Math.min(...allVals), Math.max(...allVals), metric.fmt, (xf, yf) => {
+          renderChart(titleHtml, tt, Math.min(...allVals), Math.max(...allVals), metric.unit, (xf, yf) => {
             const bandsSvg = metric.series.map(s =>
               buildBandSvg(ww.map(w => w[s.key]), tt, xf, yf, () => s.color)
             ).join('');
@@ -227,7 +221,7 @@ fetch(url)
         const vals = windows.map(w => w[metric.key]);
         const allVals = vals.flatMap(v => [v.min, v.max]);
         const pointColors = vals.map(v => chipColor({ ...metric, value: v.avg }));
-        renderChart(metric.label, times, Math.min(...allVals), Math.max(...allVals), metric.fmt, (xf, yf) => {
+        renderChart(metric.label, times, Math.min(...allVals), Math.max(...allVals), metric.unit, (xf, yf) => {
           const bandSvg = buildBandSvg(vals, times, xf, yf, i => {
             const c = chipColor({ ...metric, value: metric.higher ? vals[i].min : vals[i].max });
             return CHART_STROKE[c];

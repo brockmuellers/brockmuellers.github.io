@@ -227,7 +227,6 @@ permalink: /travels/
   const gpxCache = {}; // Cache to store parsed coordinates
   const OBS_GEOJSON_URL = "{{ obs_file }}"; // Liquid variable from above
   const EBIRD_GEOJSON_URL = "{{ ebird_file }}";
-  let ebirdFeatures = null; // Cached after first fetch
   const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
   const TRAVEL_LOG_API = "{{ site.travel_log_api }}";
 
@@ -280,24 +279,12 @@ permalink: /travels/
   }
 
   // Filter eBird checklists by date range using min_date/max_date properties.
-  // Logs any locations that straddle the trip boundary (only one date boundary within range).
   function applyEbirdDateFilter(start, end) {
     if (!map || !map.getLayer('ebird-points-border')) return;
     if (start && end) {
       const filter = ['all', ['<=', ['get', 'min_date'], end], ['>=', ['get', 'max_date'], start]];
       map.setFilter('ebird-points-fill', filter);
       map.setFilter('ebird-points-border', filter);
-      if (ebirdFeatures) {
-        ebirdFeatures.forEach(f => {
-          const minD = f.properties.min_date;
-          const maxD = f.properties.max_date;
-          const minInRange = minD >= start && minD <= end;
-          const maxInRange = maxD >= start && maxD <= end;
-          if (minInRange !== maxInRange) {
-            console.log('[eBird] Straddling location:', f.properties.title, { min_date: minD, max_date: maxD, start, end });
-          }
-        });
-      }
     } else {
       map.setFilter('ebird-points-fill', ['==', '1', '0']);
       map.setFilter('ebird-points-border', ['==', '1', '0']);
@@ -478,7 +465,6 @@ permalink: /travels/
             f.properties.total_minutes = totalMin;
             f.properties.total_individuals = totalIndividuals;
           });
-          ebirdFeatures = fc.features;
           map.getSource('ebird-obs').setData(fc);
           applyEbirdDateFilter(startDate, endDate);
         })

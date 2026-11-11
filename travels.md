@@ -164,11 +164,12 @@ permalink: /travels/
   {% assign start_date = item.start %}
   {% assign end_date = item.end %}
 
-  {% assign name_parts = filename | replace: '.gpx', '' | replace: '-', ' ' | split: ' ' %}
+  {% assign slug = filename | replace: '.gpx', '' %}
+  {% assign name_parts = slug | replace: '-', ' ' | split: ' ' %}
   {% capture tab_label %}{% for p in name_parts %}{{ p | capitalize }} {% endfor %}{% endcapture %}
 
   <button type="button" role="tab"
-          data-gpx="{{ gpx_base }}{{ filename }}"
+          data-slug="{% unless filename == 'WORLD' %}{{ slug }}{% endunless %}"
           data-start="{{ start_date }}"
           data-end="{{ end_date }}"
           aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
@@ -230,11 +231,14 @@ permalink: /travels/
   const TRAVEL_LOG_SITE_TOKEN = "{{ site.travel_log_site_token | default: '' }}";
   const TRAVEL_LOG_API = "{{ site.travel_log_api }}";
 
-  // Logic for WORLD placeholder: Create a list of all real GPX files
-  const ALL_TRACKS = [
+  const API_HEADERS = { 'Accept': 'application/json' };
+  if (TRAVEL_LOG_SITE_TOKEN) API_HEADERS['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
+
+  // Every real trip, for the World tab (e.g. "west-coast")
+  const ALL_TRIPS = [
     {% for item in site.data.travels %}
       {% unless item.file == 'WORLD' %}
-        "{{ gpx_base }}{{ item.file }}",
+        "{{ item.file | replace: '.gpx', '' }}",
       {% endunless %}
     {% endfor %}
   ];
@@ -256,9 +260,9 @@ permalink: /travels/
     return bounds;
   }
 
-  // Load pre-generated GeoJSON (derived from GPX) with caching
-  function loadGPX(url) {
-    const geojsonUrl = url.replace('.gpx', '.geojson');
+  // Load a trip's pre-generated GeoJSON (derived from GPX) with caching
+  function loadGPX(tripSlug) {
+    const geojsonUrl = "{{ gpx_base }}" + tripSlug + ".geojson";
     if (gpxCache[geojsonUrl]) {
       return Promise.resolve(gpxCache[geojsonUrl]);
     }
@@ -516,9 +520,7 @@ permalink: /travels/
 
       applyInatDateFilter(startDate, endDate);
 
-      const waypointHeaders = { 'Accept': 'application/json' };
-      if (TRAVEL_LOG_SITE_TOKEN) waypointHeaders['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
-      fetch(TRAVEL_LOG_API + '/waypoints', { headers: waypointHeaders })
+      fetch(TRAVEL_LOG_API + '/waypoints', { headers: API_HEADERS })
         .then(r => r.json())
         .then(waypoints => {
           const features = waypoints
@@ -674,11 +676,9 @@ permalink: /travels/
   const buttons = document.querySelectorAll('.travel-tabs button');
   buttons.forEach(btn => {
     btn.addEventListener('click', function() {
-      const url = this.getAttribute('data-gpx');
       const start = this.getAttribute('data-start');
       const end = this.getAttribute('data-end');
-      // Strip path prefix and .gpx extension, e.g. "/assets/gpx/west-coast.gpx" → "west-coast"
-      const tripSlug = url.includes('WORLD') ? null : url.replace(/^.*\//, '').replace('.gpx', '');
+      const tripSlug = this.dataset.slug || null;  // null for the World tab
       const requestId = ++currentRequestId;
 
       if (currentPopup) { currentPopup.remove(); currentPopup = null; }
@@ -693,13 +693,13 @@ permalink: /travels/
 
       // Check if this is the "World View" tab
       let trackPromise;
-      if (url.includes('WORLD')) {
+      if (!tripSlug) {
         // Load ALL tracks and combine them into one flat array
-        trackPromise = Promise.all(ALL_TRACKS.map(u => loadGPX(u)))
+        trackPromise = Promise.all(ALL_TRIPS.map(loadGPX))
                               .then(results => results.flat());
       } else {
         // Load just the single track
-        trackPromise = loadGPX(url);
+        trackPromise = loadGPX(tripSlug);
       }
 
       trackPromise.then(multiLine => {
@@ -767,16 +767,10 @@ permalink: /travels/
     waypointSearchBtn.disabled = true;
 
     const activeTab = document.querySelector('.travel-tabs button.active');
-    const activeGpx = activeTab ? activeTab.getAttribute('data-gpx') : '';
-    const isWorld = activeGpx.includes('WORLD');
-    // Strip path prefix and .gpx extension from data-gpx, e.g. "/assets/gpx/west-coast.gpx" → "west-coast"
-    const tripSlug = isWorld ? null : activeGpx.replace(/^.*\//, '').replace('.gpx', '');
+    const tripSlug = activeTab ? activeTab.dataset.slug : '';
     const url = TRAVEL_LOG_API + '/waypoints/search?q=' + encodeURIComponent(q) +
       (tripSlug ? '&trip=' + encodeURIComponent(tripSlug) : '');
-    const headers = { 'Accept': 'application/json' };
-    if (TRAVEL_LOG_SITE_TOKEN) headers['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
-
-    fetch(url, { headers: headers })
+    fetch(url, { headers: API_HEADERS })
       .then(function(r) {
         if (!r.ok) throw new Error(r.status === 401 ? 'Invalid or missing site token. Set travel_log_site_token in _config.yml.' : 'Search failed: ' + r.status);
         return r.json();
@@ -806,9 +800,7 @@ permalink: /travels/
     });
 
     // Health check on page load — disable search if API is unreachable
-    var healthHeaders = { 'Accept': 'application/json' };
-    if (TRAVEL_LOG_SITE_TOKEN) healthHeaders['X-Site-Token'] = TRAVEL_LOG_SITE_TOKEN;
-    fetch(TRAVEL_LOG_API + '/health', { headers: healthHeaders })
+    fetch(TRAVEL_LOG_API + '/health', { headers: API_HEADERS })
       .then(function(r) {
         if (!r.ok) throw new Error('API returned ' + r.status);
       })

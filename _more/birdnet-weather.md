@@ -182,10 +182,18 @@ fetch(url)
       const localHour = ms => parseInt(new Date(ms).toLocaleString('en-US', { hour: 'numeric', hourCycle: 'h23', timeZone: tz }));
       const fmtDate = ms => new Date(ms).toLocaleDateString('en-US', { weekday: 'short', month: 'numeric', day: 'numeric', timeZone: tz });
 
+      // Display units for axis ticks (see chartAxis)
+      const UNIT = {
+        temp: useF ? { suffix: "°F", to: c => c * 9 / 5 + 32, from: f => (f - 32) * 5 / 9 } : { suffix: "°C" },
+        hum: { suffix: "%" },
+        rain: useIn ? { suffix: " in", to: mm => mm / 25.4, from: i => i * 25.4 } : { suffix: " mm" },
+      };
+
+      // unit is one of UNIT, for the y axis.
       // getVal(w) returns a number (bars) or {min,max,avg} (band + line), or undefined if missing.
       // ref (optional) is a Map of hour start ms -> value, drawn as a dashed gray comparison line.
       // extra (optional) is {getVal, color}: a second series (one number per hour) drawn as a thin line.
-      const renderChart = (title, color, fmt, getVal, bars, ref, extra) => {
+      const renderChart = (title, color, unit, getVal, bars, ref, extra) => {
         if (hours.length < 2) return;
         const present = hours.filter(w => getVal(w) != null);
         if (!present.length) return;
@@ -197,10 +205,11 @@ fetch(url)
         const refVals = [...refPts.map(([, v]) => v), ...extraVals];
         const vMin = bars ? 0 : Math.min(...present.map(w => getVal(w).min), ...refVals);
         const vMax = bars ? Math.max(...present.map(getVal)) : Math.max(...present.map(w => getVal(w).max), ...refVals);
-        const yf = chartYScale(vMin, vMax, plotH, py);
+        const axis = chartAxis(vMin, vMax, 5, unit);
+        const yf = chartYScale(axis.lo, axis.hi, plotH, py);
         const f = n => n.toFixed(1);
 
-        let svg = "";
+        let svg = chartGrid(axis, yf, padL, W - padR);
         // Gray slots where the sensor wasn't heard
         hours.forEach(w => {
           if (getVal(w) == null) svg += `<rect x="${f(xf(w.t))}" y="${py}" width="${f(xf(w.t + HOUR) - xf(w.t))}" height="${plotH - 2 * py}" fill="#e5e7eb"/>`;
@@ -248,8 +257,6 @@ fetch(url)
           <svg viewBox="0 0 ${W} ${H}" class="chart-svg">
             <rect x="${padL}" y="0" width="${W - padL - padR}" height="${plotH}" fill="#f9fafb"/>
             ${svg}
-            <text x="${padL - 4}" y="${py + 3}" text-anchor="end" font-size="9" fill="#999">${fmt(vMax)}</text>
-            <text x="${padL - 4}" y="${plotH - py + 3}" text-anchor="end" font-size="9" fill="#999">${fmt(vMin)}</text>
           </svg>`;
         chartsDiv.appendChild(wrap);
       };
@@ -275,13 +282,13 @@ fetch(url)
       const tempVsOm = dT == null ? "" :
         vsOm(useF ? `${(Math.abs(dT) * 9 / 5).toFixed(1)}°F` : `${Math.abs(dT).toFixed(1)}°C`, dT >= 0 ? "warmer" : "cooler");
       const tempTitle = `Temperature <span style="color:${COLOR.dew}">and dew point</span>${tempVsOm}`;
-      renderChart(tempTitle, COLOR.temp, fmtTemp, w => w.temp_c, false, omTemp, { getVal: dewPoint, color: COLOR.dew });
+      renderChart(tempTitle, COLOR.temp, UNIT.temp, w => w.temp_c, false, omTemp, { getVal: dewPoint, color: COLOR.dew });
 
       const omHum = omSeries("relative_humidity_2m"), dH = avgDiff(omHum, w => w.humidity);
       const humVsOm = dH == null ? "" : vsOm(`${Math.abs(dH).toFixed(0)} points`, dH >= 0 ? "higher" : "lower");
       const humTitle = `Humidity${humVsOm}`;
-      renderChart(humTitle, COLOR.humidity, fmtHum, w => w.humidity, false, omHum);
-      renderChart("Rain per hour", COLOR.rain, fmtRain, w => w.rain_mm, true);
+      renderChart(humTitle, COLOR.humidity, UNIT.hum, w => w.humidity, false, omHum);
+      renderChart("Rain per hour", COLOR.rain, UNIT.rain, w => w.rain_mm, true);
 
       // ---- This month vs. normal ----
       if (clim && days.length) {
@@ -299,7 +306,8 @@ fetch(url)
         const xd = day => padL + ((day - 0.5) / nDays) * (W - padL - padR);  // day 1..nDays, centered in its slot
         const vMin = Math.min(...norm.map(n => n.low[0]), ...mine.map(d => d.temp_c.min));
         const vMax = Math.max(...norm.map(n => n.high[4]), ...mine.map(d => d.temp_c.max));
-        const yf = chartYScale(vMin, vMax, mH, mPy);
+        const axis = chartAxis(vMin, vMax, 8, UNIT.temp);
+        const yf = chartYScale(axis.lo, axis.hi, mH, mPy);
         const f = n => n.toFixed(1);
         // Normal bands (p10–p90, p25–p75) and median line, from one [p10, p25, p50, p75, p90] row per day
         const bands = (rows, yf, color) => {
@@ -309,15 +317,16 @@ fetch(url)
           return area(0, 4, 0.1) + area(1, 3, 0.15) +
             `<polyline points="${pts(2).join(" ")}" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.6"/>`;
         };
-        const dayLabels = [1, 5, 10, 15, 20, 25, nDays].map(day =>
+        const labelDays = [1, 5, 10, 15, 20, 25, nDays];
+        const dayLines = labelDays.map(day =>
+          `<line x1="${f(xd(day))}" y1="0" x2="${f(xd(day))}" y2="${mH}" stroke="#e5e7eb"/>`).join("");
+        const dayLabels = labelDays.map(day =>
           `<text x="${f(xd(day))}" y="${mTotal - 2}" text-anchor="middle" font-size="9" fill="#999">${day}</text>`).join("");
-        // Plot frame with min/max labels on the y axis
-        const frame = (svg, yLabelMax, yLabelMin) => `
+        // Plot frame with gridlines and axis labels
+        const frame = (svg, axis, yf) => `
           <svg viewBox="0 0 ${W} ${mTotal}" class="chart-svg">
             <rect x="${padL}" y="0" width="${W - padL - padR}" height="${mH}" fill="#f9fafb"/>
-            ${svg}${dayLabels}
-            <text x="${padL - 4}" y="${mPy + 3}" text-anchor="end" font-size="9" fill="#999">${yLabelMax}</text>
-            <text x="${padL - 4}" y="${mH - mPy + 3}" text-anchor="end" font-size="9" fill="#999">${yLabelMin}</text>
+            ${dayLines}${chartGrid(axis, yf, padL, W - padR)}${svg}${dayLabels}
           </svg>`;
 
         let svg = "";
@@ -335,7 +344,7 @@ fetch(url)
           `${new Date(yr, mo - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} vs. normal`;
         document.getElementById("month-chart").innerHTML = `
           <div class="chart-title"><span style="color:${HI}">● Daily high</span> &nbsp; <span style="color:${LO}">● Daily low</span></div>
-          ${frame(svg, fmtTemp(vMax), fmtTemp(vMin))}`;
+          ${frame(svg, axis, yf)}`;
 
         // Rain so far this month: running totals for this sensor and Vancouver Harbour, over the normal range
         const rainNorm = clim.rain_mtd[pad(mo)];
@@ -356,7 +365,8 @@ fetch(url)
         if (myRain.length) {
           const last = a => a.length ? a[a.length - 1][1] : 0;
           const rMax = Math.max(rainRows[nDays - 1][4], last(myRain), last(harbour));
-          const ry = chartYScale(0, rMax, mH, mPy);
+          const rAxis = chartAxis(0, rMax, 8, UNIT.rain);
+          const ry = chartYScale(rAxis.lo, rAxis.hi, mH, mPy);
           const line = (pts, attrs) => `<polyline points="${pts.map(([day, v]) => `${f(xd(day))},${f(ry(v))}`).join(" ")}" fill="none" ${attrs}/>`;
           let rsvg = bands(rainRows, ry, COLOR.rain);
           if (harbour.length) rsvg += line(harbour, `stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4 3"`);
@@ -372,7 +382,7 @@ fetch(url)
           document.getElementById("month-rain-chart").innerHTML = `
             <div class="chart-title"><span style="color:${COLOR.rain}">● Rain so far: ${fmtRain(last(myRain))}</span>${harbourNote}
               <span class="muted">· normal by today: ${fmtRain(rainRows[todayDay - 1][2])}</span></div>
-            ${frame(rsvg, fmtRain(rMax), fmtRain(0))}`;
+            ${frame(rsvg, rAxis, ry)}`;
         }
         document.getElementById("month-section").style.display = "block";
       }

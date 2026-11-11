@@ -8,6 +8,33 @@ function chartYScale(vMin, vMax, plotH, py) {
   return v => plotH - py - ((v - vMin) / vRange) * (plotH - 2 * py);
 }
 
+// Round y-axis ticks covering vMin..vMax: at most maxTicks of them, stepping by 1, 2 or 5 × a power of ten.
+// unit is {suffix, to, from}; the optional to/from convert data to display units and back, so ticks land on round display values.
+// Returns {lo, hi, ticks}: the range snapped out to the outer ticks, and ticks as {v, label}, both in data units.
+function chartAxis(vMin, vMax, maxTicks, unit) {
+  const same = v => v, to = unit.to || same, from = unit.from || same;
+  const lo = to(vMin), hi = vMax > vMin ? to(vMax) : lo + 1;  // Flat data (e.g. no rain) still gets a range
+  for (let mag = 10 ** Math.floor(Math.log10((hi - lo) / maxTicks)); ; mag *= 10) {
+    for (const step of [mag, 2 * mag, 5 * mag]) {
+      const first = Math.floor(lo / step), last = Math.ceil(hi / step);
+      if (last - first >= maxTicks) continue;
+      const decimals = Math.max(0, Math.ceil(-Math.log10(step) - 1e-9));
+      const ticks = [];
+      for (let i = first; i <= last; i++) ticks.push({ v: from(i * step), label: (i * step).toFixed(decimals) + unit.suffix });
+      return { lo: from(first * step), hi: from(last * step), ticks };
+    }
+  }
+}
+
+// Light horizontal gridlines across x1..x2 at each tick, with labels to the left of x1
+function chartGrid(axis, yf, x1, x2) {
+  return axis.ticks.map(t => {
+    const y = yf(t.v);
+    return `<line x1="${x1}" y1="${y.toFixed(1)}" x2="${x2}" y2="${y.toFixed(1)}" stroke="#e5e7eb"/>` +
+      `<text x="${x1 - 4}" y="${(y + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="#999">${t.label}</text>`;
+  }).join("");
+}
+
 // Shaded min–max band between two points
 function chartBand(x1, a, x2, b, yf, color) {
   const f = n => n.toFixed(1);

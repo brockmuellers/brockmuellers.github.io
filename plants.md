@@ -74,8 +74,8 @@ $('#plants').DataTable({ paging: false });
 
                     <td>{{plant.humidity}}</td>
 
-                    <!-- assumes only "wk" or "mo" as time values -->
-                    <td data-order="{% if plant.feed contains "wk" %}0{% else %}1{% endif %}">{{plant.feed}}</td>
+                    <!-- weeks before months, then by the text ("1 mo" < "2 mo"); assumes only "wk" or "mo" and single-digit counts -->
+                    <td data-order="{% if plant.feed contains "wk" %}0{% else %}1{% endif %} {{plant.feed}}">{{plant.feed}}</td>
 
                     <td>
                         {{plant.notes}}

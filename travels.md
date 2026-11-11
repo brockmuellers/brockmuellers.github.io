@@ -713,31 +713,10 @@ permalink: /travels/
     });
   });
 
-  // Initialize First Tab
+  // Initialize First Tab (the same code path as clicking it)
   const firstTab = document.querySelector('.travel-tabs button.active');
   if (firstTab) {
-    const initialUrl = firstTab.getAttribute('data-gpx');
-    const start = firstTab.getAttribute('data-start');
-    const end = firstTab.getAttribute('data-end');
-    const tripSlug = initialUrl.includes('WORLD') ? null : initialUrl.replace(/^.*\//, '').replace('.gpx', '');
-    const initialRequestId = ++currentRequestId;
-
-    let trackPromise;
-    if (initialUrl.includes('WORLD')) {
-      // If the first tab is World, load ALL tracks
-      trackPromise = Promise.all(ALL_TRACKS.map(u => loadGPX(u)))
-                            .then(results => results.flat());
-    } else {
-      // Otherwise, load the single file
-      trackPromise = loadGPX(initialUrl);
-    }
-
-    trackPromise.then(multiLine => {
-       if (initialRequestId !== currentRequestId) return;
-       // We allow map init even if multiline is empty, provided we have dates?
-       // For now, assume we need a track to start the map.
-       if (multiLine.length > 0) initMap(multiLine, start, end, tripSlug);
-    }).catch(err => console.error("Error loading initial tab:", err));
+    firstTab.click();
   } else {
      document.getElementById('map').innerHTML = '<p style="padding:20px; text-align:center;">No travels found.</p>';
   }

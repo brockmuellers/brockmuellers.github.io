@@ -687,6 +687,8 @@ buttons.forEach(btn => {
     trackPromise.then(multiLine => {
       // Ignore if a newer tab has been clicked since this request started
       if (requestId !== currentRequestId) return;
+      // We allow map init even if multiline is empty, provided we have dates?
+      // For now, assume we need a track to start the map.
       if (multiLine.length === 0) return;
 
       if (!map) initMap(multiLine, start, end, tripSlug);

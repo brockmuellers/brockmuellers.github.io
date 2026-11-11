@@ -86,7 +86,7 @@ Weather at [echo-birdnet]({% link _more/birdnet-station.md %}). Sensors: LaCross
     .then(([data, clim, om, ec]) => {
       const tz = data.timezone;
       document.getElementById("generated-at-value").textContent =
-        new Date(data.generated_at).toLocaleString('en-US', { timeZone: tz });
+        new Date(data.generated_at).toLocaleString('en-US');  // Viewer's time zone
 
       const render = () => {
         document.getElementById("weather-summary").innerHTML = "";

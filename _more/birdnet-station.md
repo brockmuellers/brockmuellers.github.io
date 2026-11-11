@@ -52,7 +52,7 @@ echo-birdnet — Raspberry Pi running [BirdNET-Pi](https://github.com/mcguirepr8
     })
     .then(data => {
       document.getElementById("generated-at-value").textContent =
-        new Date(data.generated_at).toLocaleString('en-US', { timeZone: data.timezone });
+        new Date(data.generated_at).toLocaleString('en-US');  // Viewer's time zone
 
       const h = data.health;
       const healthDiv = document.getElementById("health-metrics");

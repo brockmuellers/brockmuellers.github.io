@@ -29,6 +29,7 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
     </thead>
     <tbody id="bird-recent-body"></tbody>
   </table>
+  <p style="margin:0.5em 0 1em;font-size:11px;color:#999">Using BirdNET-Pi's local time zone (Vancouver) for bird observations.</p>
   <h3>Detections — last 7 days</h3>
   <div style="overflow-x:auto">
     <table id="bird-heatmap" style="border-collapse:collapse;font-size:13px;white-space:nowrap"></table>
@@ -47,8 +48,13 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
       return r.json();
     })
     .then(function(data) {
+      // "Updated at" is in the viewer's time zone; observation times are in the station's
       document.getElementById("generated-at-value").textContent =
-        new Date(data.generated_at).toLocaleString('en-US', { timeZone: data.timezone });
+        new Date(data.generated_at).toLocaleString('en-US');
+
+      // Observation timestamps are the station's local time with no offset ("2026-11-11 08:58:23").
+      // Treat them as UTC and format in UTC, so they show the station's clock as-is.
+      var obsTime = function(o) { return new Date(o.timestamp.replace(' ', 'T') + 'Z'); };
 
       var recentBody = document.getElementById("bird-recent-body");
       var top5 = data.recent_observations.slice(0, 5);
@@ -58,16 +64,17 @@ birds_data_url: https://birdnet-data.brockmuellers.com/birdnet-data.json
         tdName.textContent = o.common_name;
         tdName.style.cssText = "padding:3px 12px 3px 0";
         var tdTime = tr.insertCell();
-        tdTime.textContent = new Date(o.timestamp.replace(' ', 'T')).toLocaleString('en-US', { timeZone: data.timezone });
+        tdTime.textContent = obsTime(o).toLocaleString('en-US', { timeZone: 'UTC' });
         tdTime.style.cssText = "padding:3px 12px 3px 0;color:#555";
         var tdConf = tr.insertCell();
         tdConf.textContent = Math.round(o.confidence * 100) + "%";
         tdConf.style.cssText = "text-align:right;padding:3px 0;color:#555";
       });
 
-      var cutoff = new Date(data.generated_at).getTime() - 7 * 24 * 60 * 60 * 1000;
+      // Station-local clock time of generated_at, on the same footing as obsTime
+      var cutoff = new Date(data.generated_at.slice(0, 19) + 'Z').getTime() - 7 * 24 * 60 * 60 * 1000;
       var recent = data.recent_observations.filter(function(o) {
-        return new Date(o.timestamp.replace(' ', 'T')).getTime() > cutoff;
+        return obsTime(o).getTime() > cutoff;
       });
 
       var species = {};
